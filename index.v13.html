@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>광맥 탐사대</title>
+<style>
+  :root { --sat:env(safe-area-inset-top); --bg:#141018; --ink:#f3e9d2; --dim:#b9ad96; --gold:#f2b632; --plate:rgba(20,14,22,.78); }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--ink); font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif; word-break:keep-all; overflow:hidden; touch-action:manipulation; user-select:none; -webkit-user-select:none; }
+  #cv { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  .panel { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; opacity:0; transform:translateY(12px); transition:opacity .25s ease-out, transform .25s ease-out; pointer-events:none; }
+  #menu { justify-content:flex-start; padding-top:calc(22vh + env(safe-area-inset-top)); }
+  .panel.show { opacity:1; transform:none; pointer-events:auto; }
+  .logo { font-size:40px; font-weight:800; color:var(--gold); text-shadow:0 2px 0 #7a4a10, 0 6px 18px rgba(0,0,0,.6); margin:0 0 8px; }
+  .sub { font-size:15px; color:var(--dim); margin:0 0 32px; text-align:center; line-height:1.5; }
+  .btn { min-height:56px; padding:0 32px; border:0; border-radius:16px; font-size:19px; font-weight:700; color:#2a1a08; background:linear-gradient(#ffd166,#e9a52b); box-shadow:0 6px 0 #8a5a12, 0 10px 24px rgba(0,0,0,.5); cursor:pointer; transition:transform .12s ease-out, box-shadow .12s ease-out; }
+  .btn:active { transform:translateY(3px); box-shadow:0 3px 0 #8a5a12, 0 6px 12px rgba(0,0,0,.5); }
+  .btn.sec { min-height:44px; font-size:15px; background:rgba(255,255,255,.08); color:var(--ink); box-shadow:none; border:1px solid rgba(255,255,255,.18); }
+  button:focus-visible, input:focus-visible { outline:3px solid #4da3ff !important; outline-offset:2px; }
+  #kbHint { font-size:12px; color:var(--dim); margin-top:16px; }
+  /* HUD 보조 버튼 */
+  #logBtn { position:fixed; right:12px; top:calc(12px + env(safe-area-inset-top)); min-height:44px; padding:0 14px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:var(--plate); color:var(--ink); font:700 13px/1 inherit; display:none; cursor:pointer; }
+  #logBtn.on { display:block; }
+  #shop .item { flex:none; }
+  /* 상점 */
+  #shop { position:fixed; left:0; right:0; bottom:0; padding:8px 12px calc(8px + env(safe-area-inset-bottom)); background:linear-gradient(transparent, rgba(12,8,14,.94) 12%); display:none; flex-direction:column; gap:8px; }
+  #shop .tabs { display:flex; align-items:center; gap:6px; }
+  #shop .tab { min-height:36px; padding:0 9px; border-radius:10px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05); color:var(--dim); font:700 14px inherit; cursor:pointer; white-space:nowrap; }
+  #shop .tab.on { background:rgba(242,182,50,.16); color:var(--gold); border-color:rgba(242,182,50,.5); }
+  #shop .tab.new::after { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--gold); margin-left:4px; vertical-align:middle; }
+  #shop .ps { display:none; }   /* +/초는 HUD가 보여준다 — 탭 4개가 들어가야 해서 뺐다 */
+  #shop .list { display:flex; flex-direction:column; gap:8px; max-height:212px; overflow-y:auto; padding-right:2px; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+  @media (min-width: 760px) {
+    #shop { left:auto; top:0; bottom:0; width:360px; padding:calc(16px + env(safe-area-inset-top)) 16px 16px; background:rgba(12,8,14,.94); border-left:1px solid rgba(255,255,255,.1); }
+    #shop .list { max-height:none; flex:1; }
+    #logBtn { right:372px; }
+  }
+  #shop.on { display:flex; }
+  .item { display:flex; align-items:center; gap:12px; min-height:52px; padding:6px 12px; border-radius:12px; background:var(--plate); border:1px solid rgba(255,255,255,.12); color:var(--ink); text-align:left; font:inherit; cursor:pointer; transition:transform .12s ease-out; }
+  .item:active { transform:scale(.97); }
+  .item[disabled] { opacity:.5; cursor:default; }
+  .item.can { border-color:rgba(242,182,50,.55); box-shadow:inset 0 0 0 1px rgba(242,182,50,.25); }
+  .item .bar { height:3px; border-radius:2px; background:rgba(255,255,255,.1); margin-top:5px; overflow:hidden; }
+  .item .bar i { display:block; height:100%; background:var(--gold); }
+  .item .eta { font-size:11px; color:var(--dim); font-variant-numeric:tabular-nums; }
+  #shop .mult { display:flex; gap:4px; margin-left:auto; }
+  #shop .mult button { min-height:36px; min-width:34px; padding:0 5px; border-radius:10px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05); color:var(--dim); font:700 12px inherit; cursor:pointer; }
+  #shop .mult button.on { color:var(--gold); border-color:rgba(242,182,50,.5); }
+  #logBtn.badge::after { content:''; position:absolute; top:-4px; right:-4px; width:12px; height:12px; border-radius:50%; background:#f2b632; box-shadow:0 0 0 2px var(--bg); }
+  .item .ic { width:36px; height:36px; flex:none; }
+  .item .t { flex:1; min-width:0; }
+  .item .n { font-size:15px; font-weight:700; }
+  .item .d { font-size:12px; color:var(--dim); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .item .c { font-size:15px; font-weight:800; color:var(--gold); font-variant-numeric:tabular-nums; }
+  .item .cnt { font-size:12px; color:var(--dim); text-align:right; }
+  /* 일지 */
+  #over .card { width:min(100%, 340px); padding:24px; border-radius:20px; background:rgba(20,14,22,.94); border:1px solid rgba(255,255,255,.14); text-align:center; }
+  #over h2 { margin:0 0 4px; font-size:26px; color:var(--gold); }
+  #over .stat { display:flex; justify-content:space-between; font-size:15px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.1); }
+  #over .stat b { font-variant-numeric:tabular-nums; }
+  #codex { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:16px 0 8px; }
+  .ore { display:flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:13px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05); }
+  .ore i { width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid rgba(0,0,0,.5); }
+  .ore.off { opacity:.35; }
+  #over p.q { font-size:14px; color:var(--dim); margin:16px 0 8px; }
+  #nick { width:100%; min-height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06); color:var(--ink); font-size:16px; padding:0 12px; margin-bottom:8px; }
+  /* 3택1 */
+  #pick .card { width:min(100%, 340px); padding:20px; border-radius:20px; background:rgba(20,14,22,.94); border:1px solid rgba(255,255,255,.14); text-align:center; }
+  #pick h2 { margin:0 0 4px; font-size:22px; color:var(--gold); }
+  #pick .cards { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+  .perk { display:flex; align-items:center; gap:12px; min-height:60px; padding:10px 14px; border-radius:14px; border:1px solid rgba(242,182,50,.35); background:rgba(255,255,255,.05); color:var(--ink); text-align:left; font:inherit; cursor:pointer; transition:transform .12s ease-out; }
+  .perk:active { transform:scale(.97); }
+  .perk .n { font-size:16px; font-weight:800; color:var(--gold); }
+  .perk .d { font-size:13px; color:var(--dim); margin-top:2px; }
+  /* 발견 카드 */
+  #disc { position:fixed; left:50%; top:calc(140px + env(safe-area-inset-top)); transform:translate(-50%, 0) scale(.9); display:flex; align-items:center; gap:14px; padding:12px 18px 12px 12px; border-radius:16px; background:rgba(20,14,22,.92); border:1px solid rgba(242,182,50,.6); opacity:0; transition:opacity .2s, transform .2s; pointer-events:none; }
+  #disc.show { opacity:1; transform:translate(-50%, 0) scale(1); }
+  #disc canvas { width:56px; height:56px; }
+  #disc .k { font-size:11px; color:var(--dim); letter-spacing:.08em; }
+  #disc .n { font-size:20px; font-weight:800; color:var(--gold); }
+  #village { width:100%; height:64px; display:block; margin:12px 0 4px; }
+  .vlist { display:flex; justify-content:space-between; font-size:11px; color:var(--dim); margin-bottom:8px; }
+  .vlist span.on { color:var(--gold); }
+  .row2 { display:flex; gap:8px; }
+  .row2 .btn { flex:1; padding:0 8px; font-size:15px; }
+  #chalHud { position:fixed; left:50%; transform:translateX(-50%); top:calc(100px + env(safe-area-inset-top)); padding:6px 14px; border-radius:999px; background:rgba(163,58,58,.85); color:#fff; font:800 15px inherit; font-variant-numeric:tabular-nums; display:none; }
+  #chalHud.on { display:block; }
+  #loadBox { display:flex; width:min(100%, 320px); } #loadBox.hide { display:none; } #loadBox input { min-width:0; flex:1 1 0; } #loadBox #loadNick { flex:1.6 1 0; } #loadBox button { flex:none; padding:0 12px; }
+  #toast { position:fixed; left:50%; bottom:calc(380px + env(safe-area-inset-bottom)); transform:translateX(-50%) scale(.9); padding:10px 16px; border-radius:12px; background:var(--plate); border:1px solid rgba(242,182,50,.5); color:var(--ink); font-size:14px; opacity:0; transition:opacity .15s, transform .15s; pointer-events:none; white-space:nowrap; }
+  #toast.show { opacity:1; transform:translateX(-50%) scale(1); }
+  @media (prefers-reduced-motion: reduce) { .panel { transition-duration:.15s; } }
+</style>
+</head>
+<body>
+<canvas id="cv" aria-label="광맥 탐사대 게임 화면"></canvas>
+
+<div id="menu" class="panel show">
+  <h1 class="logo">광맥 탐사대</h1>
+  <p class="sub">동굴 바닥의 광석을 탭하세요.<br>치명타가 터지면 크게 깨집니다.</p>
+  <button class="btn" id="startBtn" style="padding:0 44px">캐러 가기</button>
+  <button class="btn sec" id="loadBtn" style="margin-top:16px;min-height:44px;padding:0 8px;font-size:13px;background:none;border-color:transparent;color:var(--dim)">다른 기기의 기록 불러오기</button>
+  <div id="loadBox" class="hide" style="gap:8px;margin-top:8px"><input id="loadNick" aria-label="닉네임" maxlength="12" placeholder="닉네임" style="flex:2;min-height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font-size:16px;padding:0 12px"><input id="loadPin" aria-label="PIN" inputmode="numeric" maxlength="4" placeholder="PIN" style="flex:1;min-height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font-size:16px;padding:0 12px"><button class="btn sec" id="loadGo" style="min-height:44px">가져오기</button></div>
+  <div id="loadMsg" style="font-size:12px;color:var(--dim);margin-top:6px;min-height:14px"></div>
+  <div id="kbHint" hidden>Space 로 가장 가까운 광석을 캘 수 있어요</div>
+</div>
+
+<button id="logBtn" aria-label="채굴 일지 열기">일지</button>
+<div id="shop"></div>
+
+<div id="over" class="panel">
+  <div class="card">
+    <div style="font-size:12px;color:var(--dim);letter-spacing:.08em">MINING LOG</div>
+    <h2>채굴 일지</h2>
+    <div class="stat"><span>동굴 단계</span><b id="ovStage">1</b></div>
+    <div class="stat"><span>캔 광석 (누적)</span><b id="ovOre">0</b></div>
+    <div class="stat"><span>치명타 / 탭</span><b id="ovCrit">0</b></div>
+    <div class="stat"><span>고른 광맥</span><b id="ovPerks" style="font-size:13px;max-width:60%;text-align:right">아직 없음</b></div>
+    <div class="stat"><span>정령석 · 영구 배율</span><b id="ovGems">0 · ×1.0</b></div>
+    <div id="codex"></div>
+    <canvas id="village" width="600" height="128" aria-label="마을"></canvas>
+    <div class="vlist" id="vlist"></div>
+    <div class="row2"><button class="btn sec" id="prestigeBtn">광맥 봉인</button><button class="btn sec" id="chalBtn">주간 챌린지 3분</button></div>
+    <div style="height:8px"></div>
+    <p class="q">다른 기기에서도 이어가려면 — 닉네임 + PIN 4자리</p>
+    <div class="row2"><input id="nick" aria-label="닉네임" maxlength="12" placeholder="닉네임" style="flex:2;margin:0"><input id="pin" aria-label="PIN 4자리" inputmode="numeric" maxlength="4" placeholder="PIN" style="flex:1;margin:0;min-height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font-size:16px;padding:0 12px"></div>
+    <div id="cloudMsg" style="font-size:12px;color:var(--dim);margin:6px 0 8px;min-height:14px"></div>
+    <button class="btn sec" id="cloudBtn" style="width:100%">서버에 저장</button>
+    <div style="height:8px"></div>
+    <button class="btn" id="nextBtn" style="width:100%">계속 캐기</button>
+    <div style="height:8px"></div>
+    <button class="btn sec" id="againBtn" style="width:100%">처음부터 다시</button>
+  </div>
+</div>
+
+<div id="offline" class="panel">
+  <div class="card" style="width:min(100%,340px);padding:24px;border-radius:20px;background:rgba(20,14,22,.94);border:1px solid rgba(255,255,255,.14);text-align:center">
+    <div style="font-size:12px;color:var(--dim);letter-spacing:.08em">WELCOME BACK</div>
+    <h2 style="margin:4px 0;font-size:24px;color:var(--gold)">자리 비운 동안</h2>
+    <div id="offTime" style="font-size:14px;color:var(--dim)"></div>
+    <div id="offGain" style="font-size:36px;font-weight:800;color:var(--gold);margin:12px 0">0</div>
+    <div id="offNote" style="font-size:13px;color:var(--dim);margin-bottom:16px"></div>
+    <button class="btn" id="offBtn" style="width:100%">받기</button>
+  </div>
+</div>
+<div id="chalEnd" class="panel">
+  <div class="card" style="width:min(100%,340px);padding:24px;border-radius:20px;background:rgba(20,14,22,.94);border:1px solid rgba(255,255,255,.14);text-align:center">
+    <div style="font-size:12px;color:var(--dim);letter-spacing:.08em">WEEKLY CHALLENGE</div>
+    <h2 style="margin:4px 0;font-size:24px;color:var(--gold)">3분 종료</h2>
+    <div id="chalScore" style="font-size:36px;font-weight:800;color:var(--gold);margin:12px 0">0</div>
+    <div id="chalBest" style="font-size:13px;color:var(--dim);margin-bottom:12px"></div>
+    <input id="chalNick" aria-label="닉네임" maxlength="12" placeholder="닉네임" style="width:100%;min-height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font-size:16px;padding:0 12px;margin-bottom:8px">
+    <button class="btn" id="chalSubmit" style="width:100%">랭킹에 올리기</button>
+    <div id="chalMsg" style="font-size:13px;color:var(--dim);margin:8px 0"></div>
+    <ol id="chalTop" style="text-align:left;font-size:13px;color:var(--dim);margin:0 0 12px;padding-left:24px;max-height:150px;overflow-y:auto"></ol>
+    <button class="btn sec" id="chalBack" style="width:100%">광산으로</button>
+  </div>
+</div>
+<div id="chalHud">5:00</div>
+<div id="pick" class="panel">
+  <div class="card">
+    <div style="font-size:12px;color:var(--dim);letter-spacing:.08em">NEW VEIN</div>
+    <h2>광맥이 갈라졌다</h2>
+    <div style="font-size:14px;color:var(--dim)">하나만 고를 수 있어요. 이 광산에서 영구히 남습니다.</div>
+    <div class="cards" id="pickCards"></div>
+  </div>
+</div>
+<div id="disc"><canvas width="112" height="112"></canvas><div><div class="k">NEW ORE</div><div class="n" id="discName">석탄</div></div></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ───────── 광석 ─────────
+const ORES = [
+  { id:'coal',     name:'석탄',   c:'#23222c', hi:'#8f97b8', hp:6 },
+  { id:'iron',     name:'철',     c:'#7d5a48', hi:'#d9a58a', hp:15 },
+  { id:'copper',   name:'구리',   c:'#a3562a', hi:'#ffb37a', hp:38 },
+  { id:'silver',   name:'은',     c:'#8f98a6', hi:'#ffffff', hp:95 },
+  { id:'gold',     name:'금',     c:'#c8891c', hi:'#ffe08a', hp:240 },
+  { id:'amethyst', name:'자수정', c:'#6b3fa0', hi:'#d9b3ff', hp:600 },
+  { id:'jade',     name:'옥',     c:'#2f7a58', hi:'#a8f0c8', hp:1500 },
+  { id:'obsidian', name:'흑요석', c:'#1a1024', hi:'#b08cff', hp:3800 },
+].map((o, t) => ({ ...o, val: Math.pow(1.15, t) }));          // HP당 가치 — 완만하게 (sim v2: 1.6이면 돈이 인플레해 티어가 5분 만에 다 열림)
+function wallMix(s) {
+  const c = Math.min((s - 1) * 0.7, ORES.length - .5), maxT = Math.min(s - 1, ORES.length - 1); const w = [];
+  for (let t = 0; t <= maxT; t++) w.push(Math.exp(-((t - c) ** 2) / 1.1));
+  const sum = w.reduce((a, b) => a + b, 0); return w.map(x => x / sum);
+}
+function hashStr(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function pickTier(s, rnd = Math.random) { const w = wallMix(s); let r = rnd(); for (let t = 0; t < w.length; t++) { r -= w[t]; if (r <= 0) return t; } return w.length - 1; }
+const nodeCount = s => 30 + Math.min(34, 4 * (s - 1));     // 30 → 64개, 작고 흩어져 있다
+const gridSize  = s => 12 + Math.min(10, s - 1);            // 동굴 바닥 12×12 → 22×22 (가로세로 2배)
+const stageHpMul = s => Math.pow(1.12, s - 1);           // 단계마다 광석 강도 +12% (기하) — 선형이면 후반에 단계가 초당 하나씩 넘어간다
+const stageValMul = s => Math.pow(1.02, s - 1);           // 깊은 단계 광석은 조금 더 비싸다
+
+// ───────── 경제 ─────────
+const TIERS = [
+  { id:'lead',  name:'대장의 팔심',  c0:15,    p:0.16,  desc:'탐사대장이 쉬지 않고 캔다',  sprite:'hero' },
+  { id:'app',   name:'견습 광부',    c0:150,   p:1.2,   desc:'같이 들어가 캔다',           sprite:'#6e8f5a' },
+  { id:'vet',   name:'숙련 광부',    c0:1500,  p:9,     desc:'정확하고 빠르다',            sprite:'#8a6a4a' },
+  { id:'cart',  name:'광차',         c0:1.5e4, p:64,    desc:'캔 광석을 실어 나른다' },
+  { id:'drill', name:'증기 드릴',    c0:1.5e5, p:480,   desc:'김을 뿜으며 바닥을 갉는다' },
+  { id:'blast', name:'폭파 기술자',  c0:1.5e6, p:3600,  desc:'한 번에 넓게 깬다',          sprite:'#a33a3a' },
+  { id:'golem', name:'채굴 골렘',    c0:1.5e7, p:2.8e4, desc:'지치지 않는 돌팔' },
+  { id:'sprit', name:'광맥 정령',    c0:1.5e8, p:2.2e5, desc:'광맥 자체가 열린다' },
+];   // 생산은 sim v2 기준 ×0.4 (첫 환생 활성 ≈12분 · 방치 ≈25분, 구매 대기 ≤ 300s)
+const MILESTONES = [10, 25, 50, 100, 200];
+const tierMul = n => Math.pow(2, MILESTONES.filter(m => n >= m).length);
+// 장비 — 치명타는 확률 × 피해량 두 축
+const GEAR = [
+  { id:'pick',  name:'곡괭이',    c0:20,  g:1.5, max:99, desc:l => `탭 위력 ${fmt(tapDmg(l) * (S.perks.tap || 1))} → ${fmt(tapDmg(l + 1) * (S.perks.tap || 1))}` },
+  { id:'edge',  name:'숫돌',      c0:60,  g:1.7, max:15, desc:l => `치명타 확률 ${Math.round(critChance(l) * 100)}% → ${Math.round(critChance(l + 1) * 100)}%` },
+  { id:'blast', name:'화약',      c0:120, g:1.8, max:20, desc:l => `치명타 피해 ×${critMul(l).toFixed(2)} → ×${critMul(l + 1).toFixed(2)}` },
+  { id:'cart',  name:'광차 바퀴', c0:200, g:1.6, max:20, desc:l => `모든 광석 가치 +${5 * l}% → +${5 * (l + 1)}%` },
+];
+const GROWTH = 1.14;
+const tapDmg = lv => 1 + 0.8 * lv;
+const gearLv = id => S.gear[id] || 0;
+const gearCost = gr => gr.c0 * Math.pow(gr.g, gearLv(gr.id)) * costMul();
+const critChance = (l = gearLv('edge')) => Math.min(.75, .10 + .02 * l + (S.perks.critC || 0) + (S.chal ? 0 : mercCrit()));
+const critMul    = (l = gearLv('blast')) => (2 + .15 * l) * (S.perks.critM || 1);
+const PERKS = [
+  { id:'critM',  n:'벼락 화약',    d:'치명타 피해 ×1.25',                     f:S => S.perks.critM = (S.perks.critM || 1) * 1.25 },
+  { id:'critC',  n:'매의 눈',      d:'치명타 확률 +8%p',                      f:S => S.perks.critC = (S.perks.critC || 0) + .08 },
+  { id:'fever',  n:'긴 흥분',      d:'광맥 흥분 지속 +5초',                    f:S => S.perks.fever = (S.perks.fever || 0) + 5 },
+  { id:'help',   n:'튼튼한 견습',  d:'견습 광부 생산 ×1.5',                   f:S => S.perks.help = (S.perks.help || 1) * 1.5 },
+  { id:'crew',   n:'장인의 손',    d:'숙련 광부 생산 ×1.5',                   f:S => S.perks.crew = (S.perks.crew || 1) * 1.5 },
+  { id:'cheap',  n:'단골 대장간',  d:'모든 구매 비용 −10%',                    f:S => S.perks.cheap = (S.perks.cheap || 1) * 0.9 },
+  { id:'value',  n:'좋은 눈',      d:'모든 광석 가치 +20%',                    f:S => S.perks.value = (S.perks.value || 1) * 1.2 },
+  { id:'splash', n:'광맥 울림',    d:'치명타가 옆 광석에도 30% 튄다',           f:S => S.perks.splash = (S.perks.splash || 0) + .3 },
+  { id:'tap',    n:'무쇠 팔뚝',    d:'탭 위력 ×1.5',                          f:S => S.perks.tap = (S.perks.tap || 1) * 1.5 },
+];
+
+const PRESTIGE_T = 2e8;                                   // 누적 채굴이 이만큼이면 봉인 가능
+const gemsFor = mined => Math.floor(Math.sqrt(mined / PRESTIGE_T));
+const permMul = () => S.chal ? 1 : 1 + 0.1 * (S.gems || 0);   // 정령석 1개 = 전 생산 +10% (챌린지에선 0)
+const VILLAGE = [
+  { id:'smith',  n:'대장간', need:1,  d:'시작 시 견습 광부 3명' },
+  { id:'inn',    n:'주막',   need:3,  d:'오프라인 수익 75%' },
+  { id:'market', n:'장터',   need:6,  d:'모든 비용 −10%' },
+  { id:'shrine', n:'사당',   need:10, d:'오프라인 100% · 12시간' },
+];
+const villageHas = id => !S.chal && (S.gems || 0) >= VILLAGE.find(v => v.id === id).need;
+const costMul = () => (S.perks.cheap || 1) * (villageHas('market') ? .9 : 1);
+// ───────── 강화소 · 용병 고용소 (Week 2 — sim/idle-sim-v3.mjs 통과값) ─────────
+// 강화: 곡괭이 규격 = 채굴 피해 전체 배율. 환생·챌린지에서 +0 (유지하면 2회차 환생이 3분으로 무너진다)
+const ENH_MAX = 15, ENH_TABLE = [[100,0,0,0],[95,0,0,0],[90,0,0,0],[80,0,0,0],[70,0,0,0],[60,0,0,0],[50,0,0,0],   // [성공, −1, −2, 파괴] % — 나머지 유지
+  [45,20,0,0],[40,25,0,0],[35,25,5,0],[30,20,5,3],[25,20,5,5],[20,15,8,7],[12,12,8,9],[5,10,5,10]];
+const enhMul  = (L = S.enh || 0) => (1 + .15 * Math.min(L, 7)) * Math.pow(1.25, Math.max(0, L - 7));   // +7 ×2.05 · +10 ×4 · +15 ×12.2
+const enhCost = (L = S.enh || 0) => 2000 * Math.pow(2, L) * costMul();
+// 용병: 슬롯 3, 가격 = 현재 초당 수익 × N초 (인플레 무관). 환생 시 계약 종료
+const MERC_G = [{ n:'일반', c:'#9a9aaa', b:.10, cb:.03, p:10 }, { n:'희귀', c:'#4da3ff', b:.20, cb:.06, p:20 }, { n:'영웅', c:'#f2b632', b:.35, cb:.10, p:35 }];
+const MERC_T = [{ n:'채굴꾼', d:g => `채굴 피해 +${Math.round(MERC_G[g].b * 100)}%` }, { n:'감별사', d:g => `광석 가치 +${Math.round(MERC_G[g].b * 100)}%` }, { n:'폭파꾼', d:g => `치명타 확률 +${Math.round(MERC_G[g].cb * 100)}%p` }];
+const MERC_A = ['돌', '무', '철', '흑', '백', '청', '은', '검', '바', '큰'], MERC_B = ['산', '쇠', '석', '벽', '불', '한', '수', '목', '랑', '골'], MERC_C = ['#6e8f5a', '#8a6a4a', '#5a6e8f', '#8f5a6e', '#6a8a8a', '#a07a3a'];
+const mercName = m => { const r = mulberry(m.seed); return MERC_A[r() * MERC_A.length | 0] + MERC_B[r() * MERC_B.length | 0]; };
+const mercCoat = m => MERC_C[m.seed % MERC_C.length];
+const mercDmg  = () => (S.mercs || []).reduce((a, m) => a * (m.k === 0 ? 1 + MERC_G[m.g].b : 1), 1);
+const mercVal  = () => (S.mercs || []).reduce((a, m) => a * (m.k === 1 ? 1 + MERC_G[m.g].b : 1), 1);
+const mercCrit = () => (S.mercs || []).reduce((a, m) => a + (m.k === 2 ? MERC_G[m.g].cb : 0), 0);
+const mercCost = m => Math.max(50, perSec() * incomeMul() * MERC_G[m.g].p);
+const dmgMul = () => (S.chal ? 1 : enhMul() * mercDmg());
+const incomeMul = () => permMul() * (S.perks.value || 1) * (1 + .05 * gearLv('cart')) * (S.chal ? 1 : mercVal());   // 광석 1HP당 가치에 곱하는 것 전부
+const tabsAvail = () => [['gear', '장비'], ['crew', '인력']].concat(S.chal ? [] : [(S.stage >= 2 || S.enh > 0) && ['enh', '강화'], (S.stage >= 3 || (S.mercs || []).length) && ['merc', '용병']].filter(Boolean));
+// 랭킹 (주간 챌린지 전용 — 일반 플레이 점수는 절대 올리지 않는다)
+const SB_URL = 'https://fpjgjwazqpfiffnsgume.supabase.co', SB_KEY = 'sb_publishable_I1YgcnYNBOaGy0WwozO2wQ_PGwsLtU5', SLUG = 'vein-expedition';
+const sbHeaders = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+function isoWeek(d = new Date()) { const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7)); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); const w = Math.ceil(((t - y0) / 86400000 + 1) / 7); return `${t.getUTCFullYear()}w${String(w).padStart(2, '0')}`; }
+const CHAL_ID = () => SLUG + '#' + isoWeek(), CHAL_SEC = 180;   // 3분 (2026-09-14 확정)
+// 플레이 로그 (load/start/over) — 주간 리포트·6일차 밸런싱 데이터원. 실패해도 게임엔 영향 없음
+function logEvent(event, score = null) { try { fetch(`${SB_URL}/rest/v1/play_events`, { method:'POST', headers:{ ...sbHeaders, Prefer:'return=minimal' }, body:JSON.stringify({ game_id:SLUG, event, score, variant:event === 'over' && S.chal ? 'challenge' : null }), keepalive:true }).catch(() => {}); } catch(e) {} }
+async function sha256(str) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+const store = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(e){} } };
+
+// ───────── 상태 ─────────
+const S = { mode:'menu', ore:0, mined:0, tiers:[1,0,0,0,0,0,0,0], crit:0, taps:0, t0:0, time:0, stage:1,
+  mult:1,
+  nodes:[], combo:0, comboT:0, shake:0, stop:0, punch:0, fever:0, expand:0, codex:[], perks:{}, perkIds:[], perkLog:[], gear:{}, tab:'gear', autoAcc:0, grid:12, enh:0, enhBest:0, mercs:[], offers:[], offerAt:0,
+  gems:0, prestiges:0, totalMined:0, lastSeen:0, chal:null };
+const M = []; // 광부들 (0 = 탐사대장)
+const P = [], F = [];
+const DUST = Array.from({length:26}, () => ({ x:Math.random(), y:Math.random(), s:Math.random()*1.4+.4, v:Math.random()*.02+.01 }));
+
+// ───────── 캔버스·쿼터뷰 레이아웃 ─────────
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+let W = 390, H = 844, DPR = 1, L = {}, ISO = { tw:48, th:24, ox:0, oy:0, wh:80 };
+const WIDE = () => W >= 760;
+function resize() {
+  DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+  cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const top = 12 + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0);
+  const areaX = 0, areaW = WIDE() ? W - 360 : W, areaBottom = WIDE() ? H - 16 : H - 296;
+  L = { top, areaX, areaW, cx: areaX + areaW / 2, areaY: top + 108, areaH: areaBottom - (top + 108) };
+  fitIso();
+}
+function fitIso() { // 바닥 마름모가 화면 폭·높이에 들어가도록 타일 크기 계산
+  const n = S.grid, ratio = .62;                       // 타일 세로/가로 비 — 0.5보다 세워서 폰 세로 화면을 더 쓴다
+  const tw = Math.min((L.areaW - 8) / n, (L.areaH - 60) / (n * ratio) / 1);
+  const th = tw * ratio, wh = Math.max(70, Math.min(140, th * 3));
+  ISO = { tw, th, wh, ox: L.cx, oy: L.areaY + wh + 8 + Math.max(0, (L.areaH - wh - 30 - n * th) / 2) };
+}
+const iso = (u, v) => ({ x: ISO.ox + (u - v) * ISO.tw / 2, y: ISO.oy + (u + v) * ISO.th / 2 });
+addEventListener('resize', () => { resize(); layoutNodes(); });
+
+// ───────── 오디오 ─────────
+let AC = null;
+function audio() { try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch(e) {} }
+function tone(f, dur, type = 'sine', vol = .12, slide = 0) { try { if (!AC) return; const o = AC.createOscillator(), g = AC.createGain(); o.type = type; o.frequency.setValueAtTime(f, AC.currentTime); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f + slide), AC.currentTime + dur); g.gain.setValueAtTime(vol, AC.currentTime); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + dur); o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime + dur); } catch(e) {} }
+function noise(dur, vol = .1, hp = 800) { try { if (!AC) return; const n = AC.sampleRate * dur | 0, b = AC.createBuffer(1, n, AC.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n); const s = AC.createBufferSource(); s.buffer = b; const f = AC.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = hp; const g = AC.createGain(); g.gain.value = vol; s.connect(f).connect(g).connect(AC.destination); s.start(); } catch(e) {} }
+const snd = {
+  start() { tone(220, .25, 'triangle', .1); setTimeout(() => tone(330, .3, 'triangle', .1), 120); },
+  hit()   { tone(90, .12, 'square', .08, -40); noise(.08, .06, 1500); },
+  crit(c) { const f = 880 * Math.pow(2, Math.min(c, 8) / 12); tone(f, .18, 'triangle', .12, 200); noise(.05, .05, 4000); },
+  buy()   { tone(660, .08, 'sine', .1); setTimeout(() => tone(990, .12, 'sine', .1), 70); },
+  brk()   { tone(60, .3, 'sawtooth', .1, -30); noise(.2, .12, 400); },
+  expand(){ noise(.6, .14, 200); [220, 277, 330, 440].forEach((f, i) => setTimeout(() => tone(f, .5, 'triangle', .1), 200 + i * 110)); },
+  disc()  { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tone(f, .35, 'sine', .09), i * 90)); },
+  pick()  { tone(392, .2, 'triangle', .1); setTimeout(() => tone(523, .3, 'triangle', .1), 150); },
+};
+
+
+// ───────── 동굴 바닥·노드 ─────────
+function buildWall() {
+  S.grid = gridSize(S.stage); fitIso();
+  const n = nodeCount(S.stage), pts = [], rnd = mulberry((S.wallSeed || 0) + S.stage * 7919 + 13);   // 챌린지는 wallSeed = 주차 해시 → 전원 같은 광산
+  let tries = 0; // 포아송 배치 — 서로 1.15타일 이상 떨어뜨린다
+  while (pts.length < n && tries++ < 4000) { const u = .7 + rnd() * (S.grid - 1.4), v = .7 + rnd() * (S.grid - 1.4); if (pts.every(p => Math.hypot(p[0] - u, p[1] - v) > 1.3)) pts.push([u, v]); }
+  S.nodes = pts.map(([u, v], i) => { const t = pickTier(S.stage, rnd); const o = ORES[t]; const hp = Math.round(o.hp * stageHpMul(S.stage)); return { t, hp, max:hp, u, v, size:.55 + rnd() * .5, seed:rnd() * 1e6 | 0, born:S.time + i * .04 }; });
+  layoutNodes(); for (const m of M) m.target = null;
+}
+function layoutNodes() { for (const nd of S.nodes) { const p = iso(nd.u, nd.v); nd.gx = p.x; nd.gy = p.y; nd.r = Math.min(ISO.th * .95, 26) * nd.size; } }
+function alive() { return S.nodes.filter(n => n.hp > 0); }
+function nearestNode(x, y) { let best = null, bd = 1e9; for (const nd of alive()) { const d = Math.hypot(nd.gx - x, (nd.gy - nd.r * .4 - y) * 1.3); if (d < bd) { bd = d; best = nd; } } return bd < 48 ? best : null; }
+function standSpot(nd, m) { // 노드 앞(화면 아래쪽) 좌우 중 바닥 안쪽에 선다
+  const right = nd.u < S.grid - 1.6; m.flip = right ? -1 : 1;
+  const cl = k => Math.max(.4, Math.min(S.grid - .4, k));
+  const p = right ? iso(cl(nd.u + .75), cl(nd.v + .35)) : iso(cl(nd.u + .35), cl(nd.v + .75)); return { x:p.x, y:p.y + 2 };
+}
+function rollCrit() { return Math.random() < critChance(); }
+function tap(x, y) {
+  if (S.mode !== 'play' || S.expand > 0) return; audio();
+  const hero = M[0];
+  let nd = (x == null) ? alive().sort((a, b) => Math.hypot(a.gx - hero.x, a.gy - hero.y) - Math.hypot(b.gx - hero.x, b.gy - hero.y))[0] : nearestNode(x, y);
+  if (!nd) return;
+  S.taps++; hero.swing = 1; hero.target = nd; const sp = standSpot(nd, hero); hero.tx = sp.x; hero.ty = sp.y;
+  const crit = rollCrit();
+  let dmg = tapDmg(gearLv('pick')) * (S.perks.tap || 1) * (crit ? critMul() : 1) * (S.fever > 0 ? 2 : 1);
+  if (crit) { S.crit++; S.combo++; S.comboT = 2.5; snd.crit(S.combo); if (S.combo === 3) { S.fever = 10 + (S.perks.fever || 0); toast(`광맥 흥분! ${S.fever}초간 ×2`); S.combo = 0; } } else snd.hit();
+  hitNode(nd, dmg, crit, true);
+}
+function hitNode(nd, dmg, crit, manual, noSplash) {
+  const o = ORES[nd.t]; const d = Math.min(dmg * dmgMul(), nd.hp); nd.hp -= d; const v = d * o.val * stageValMul(S.stage) * incomeMul(); S.ore += v; S.mined += v; S.totalMined += v;
+  nd.sq = 1;                                                    // 스쿼시
+  if (manual) { S.shake = crit ? 6 : 2; if (crit) S.stop = Math.max(S.stop, .12); float(nd.gx, nd.gy - nd.r * 2, '+' + fmt(v), crit ? '치명타!' : '', crit); }
+  else if (crit) float(nd.gx, nd.gy - nd.r * 2, '+' + fmt(v), '', true);
+  chips(nd.gx, nd.gy - nd.r * .6, crit ? 12 : 4, o);
+  if (!S.codex.includes(o.id)) { S.codex.push(o.id); discover(o); }
+  if (crit && !noSplash && S.perks.splash) for (const nb of alive()) if (nb !== nd && Math.hypot(nb.u - nd.u, nb.v - nd.v) < 2.2) hitNode(nb, dmg * S.perks.splash, false, false, true);
+  if (nd.hp <= 0) { snd.brk(); chips(nd.gx, nd.gy - nd.r * .6, 18, o); S.shake = Math.max(S.shake, 4); if (manual) S.stop = Math.max(S.stop, .06); for (const m of M) if (m.target === nd) m.target = null; if (!alive().length) expandCave(); }
+}
+function expandCave() {
+  S.expand = 1.2; snd.expand(); S.stage++; S.shake = 8; S.stop = .15; S.punch = 1;   // 카메라 펀치
+  setTimeout(() => { buildWall(); toast(`동굴이 넓어졌다 — ${S.stage}단계`); save(); if (S.stage >= 3 && (S.stage - 3) % 3 === 0) setTimeout(openPick, 700);
+    if (!S.chal && S.stage === 2) setTimeout(() => { toast('강화소가 문을 열었다 — 상점 [강화]'); renderShop(true); }, 2000);
+    if (!S.chal && S.stage === 3) setTimeout(() => { toast('용병 고용소가 문을 열었다 — 상점 [용병]'); renderShop(true); }, 2600); }, 600);
+}
+// ── 광부 엔티티
+function syncMiners() {
+  const want = [{ k:0, n:1, coat:'#e6d3b3', sc:.6 }];
+  TIERS.forEach((t, i) => { if (i > 0 && t.sprite) want.push({ k:i, n:Math.min(S.tiers[i], 5), coat:t.sprite, sc:.46 }); });
+  for (const w of want) { const have = M.filter(m => m.k === w.k).length; for (let i = have; i < w.n; i++) { const p = iso(S.grid * .5 + (Math.random() - .5), S.grid + .8); M.push({ k:w.k, coat:w.coat, sc:w.sc, x:p.x, y:p.y, tx:p.x, ty:p.y, swing:0, target:null, cd:Math.random(), flip:1, gait:Math.random() * 6 }); } }
+}
+function tierDps(i) { const mul = i === 1 ? (S.perks.help || 1) : i === 2 ? (S.perks.crew || 1) : 1; return S.tiers[i] * TIERS[i].p * tierMul(S.tiers[i]) * mul; }
+function minerDps(m) { const vis = M.filter(x => x.k === m.k).length; return tierDps(m.k) / vis; }
+function swingPeriod(m) { const n = S.tiers[m.k], ms = MILESTONES.filter(x => n >= x).length; return Math.max(.3, (m.k === 0 ? 1.0 : .9) * Math.pow(.93, Math.min(n, 10)) * Math.pow(.8, ms)); }
+function updateMiners(dt) {
+  if (S.expand > 0) return;
+  const a = alive(); if (!a.length) return;
+  for (const m of M) {
+    if (!m.target || m.target.hp <= 0) {
+      const load = nd => M.filter(x => x.target === nd).length;
+      m.target = a.slice().sort((p, q) => (load(p) - load(q)) || (Math.hypot(p.gx - m.x, p.gy - m.y) - Math.hypot(q.gx - m.x, q.gy - m.y)))[0];
+      const sp = standSpot(m.target, m); m.tx = sp.x; m.ty = sp.y;
+    }
+    const dx = m.tx - m.x, dy = m.ty - m.y, d = Math.hypot(dx, dy), sp = 200 * dt;
+    if (d > 2) { const k = Math.min(1, sp / d); m.x += dx * k; m.y += dy * k; m.gait += dt * 14; m.moving = true; } else m.moving = false;
+    m.swing = Math.max(0, m.swing - dt * 6);
+    if (!m.moving) { const dps = minerDps(m); if (dps > 0) { m.cd -= dt; if (m.cd <= 0) { const period = swingPeriod(m); m.cd += period; m.swing = 1; const c = rollCrit(); hitNode(m.target, dps * period * (c ? critMul() : 1), c, false); } } }
+  }
+  S.autoAcc += dt; if (S.autoAcc >= .5) { S.autoAcc -= .5; let dps = 0; TIERS.forEach((t, i) => { if (i > 0 && !t.sprite) dps += tierDps(i); }); if (dps > 0) { const nd = a[Math.floor(Math.random() * a.length)]; hitNode(nd, dps * .5, false, false); } }
+}
+function openPick() {
+  if (S.mode !== 'play') return; S.mode = 'pick'; snd.pick(); document.getElementById('shop').classList.remove('on');
+  const prng = S.chal ? mulberry(S.wallSeed + S.stage * 31) : Math.random; const pool = PERKS.slice().sort(() => prng() - .5).slice(0, 3);
+  document.getElementById('pickCards').innerHTML = pool.map((pk, i) => `<button class="perk" data-i="${i}"><div><div class="n">${pk.n}</div><div class="d">${pk.d}</div></div></button>`).join('');
+  [...document.getElementById('pickCards').children].forEach((b, i) => b.addEventListener('click', () => { pool[i].f(S); S.perkIds = (S.perkIds || []).concat(pool[i].id); S.perkLog = (S.perkLog || []).concat(pool[i].n); S.mode = 'play'; document.getElementById('pick').classList.remove('show'); document.getElementById('shop').classList.add('on'); snd.buy(); toast(`${pool[i].n} — 남았다`); renderShop(true); save(); }));
+  document.getElementById('pick').classList.add('show');
+}
+function discover(o) {
+  snd.disc(); const el = document.getElementById('disc'); document.getElementById('discName').textContent = o.name;
+  const c = el.querySelector('canvas'), g = c.getContext('2d'); g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, 56, 56);
+  drawNode(g, { t:ORES.indexOf(o), hp:1, max:1, heat:1, hot:true, seed:7, born:-1, r:22, gx:28, gy:28 }, 0);
+  el.classList.add('show'); clearTimeout(discover.t); discover.t = setTimeout(() => el.classList.remove('show'), 1800);
+}
+function perSec() { return TIERS.reduce((s, t, i) => s + tierDps(i), 0) * dmgMul(); }
+
+// ── 강화소: 시도 1회 = 확률표 한 줄
+function enhance() {
+  if (S.mode !== 'play' || S.chal) return; audio();
+  const L = S.enh || 0; if (L >= ENH_MAX) return; const c = enhCost(L); if (S.ore < c) return; S.ore -= c;
+  const [s, d1, d2, b] = ENH_TABLE[L], r = Math.random() * 100; let n = L, msg;
+  if (r < s) { n = L + 1; msg = `강화 성공 — 곡괭이 +${n} (피해 ×${enhMul(n).toFixed(2)})`; snd.disc(); S.punch = 1; }
+  else if (r < s + d1) { n = L - 1; msg = `강화 실패 — +${n}으로 하락`; snd.brk(); S.shake = 6; }
+  else if (r < s + d1 + d2) { n = L - 2; msg = `강화 실패 — +${n}으로 2단계 하락`; snd.brk(); S.shake = 8; }
+  else if (r < s + d1 + d2 + b) { n = 0; msg = '곡괭이가 부서졌다 — +0 (새 곡괭이 지급)'; snd.brk(); S.shake = 14; S.stop = .15; S.flash = 1; }
+  else { msg = `강화 실패 — +${L} 유지`; snd.hit(); S.shake = 3; }
+  S.enh = Math.max(0, n); S.enhBest = Math.max(S.enhBest || 0, S.enh); toast(msg); renderShop(true); save();
+}
+// ── 용병 고용소: 제안 3명, 5분마다 갱신
+function genOffers() { S.offers = [0, 1, 2].map(() => { const r = Math.random(); return { seed:Math.random() * 1e9 | 0, g:r < .7 ? 0 : r < .95 ? 1 : 2, k:Math.random() * 3 | 0 }; }); S.offerAt = S.time + 300; shopEl.dataset.tab = ''; }
+function mercFull(o) { return S.mercs.length >= 3 && Math.min(...S.mercs.map(m => m.g)) >= o.g; }   // 슬롯이 찼고 더 높은 등급도 아니면 못 산다
+function hire(i) {
+  if (S.mode !== 'play' || S.chal) return; audio();
+  const o = S.offers[i]; if (!o || mercFull(o)) return; const c = mercCost(o); if (S.ore < c) return; S.ore -= c;
+  if (S.mercs.length >= 3) { const w = S.mercs.reduce((a, m, j) => m.g < S.mercs[a].g ? j : a, 0); toast(`${mercName(S.mercs[w])} 계약 종료 → ${mercName(o)} 합류`); S.mercs[w] = o; } else { S.mercs.push(o); toast(`${mercName(o)} (${MERC_G[o.g].n} ${MERC_T[o.k].n}) 합류`); }
+  S.offers.splice(i, 1); snd.disc(); renderShop(true); save();
+}
+
+function buy(i) {
+  if (S.mode !== 'play') return; audio();
+  const off = costMul();
+  if (typeof i === 'string') { const gr = GEAR.find(g => g.id === i); const l = gearLv(i), room = gr.max - l; if (room <= 0) return; const k = Math.max(1, Math.min(room, S.mult === 'max' ? gearMaxBuy(gr) : S.mult)); const c = gearBulk(gr, k); if (S.ore < c) return; S.ore -= c; S.gear[i] = l + k; }
+  else { const n = S.tiers[i], k = S.mult === 'max' ? Math.max(1, maxBuy(TIERS[i].c0, n)) : S.mult; const c = bulkCost(TIERS[i].c0, n, k); if (S.ore < c) return; S.ore -= c; S.tiers[i] += k; if (n === 0 && i > 0) { toast(`${TIERS[i].name} 합류 — 손을 떼도 캡니다`); snd.disc(); } const hit = MILESTONES.filter(m => m > n && m <= S.tiers[i]); if (hit.length) { toast(`${TIERS[i].name} ${hit[hit.length - 1]}명 — 생산 ×${Math.pow(2, hit.length)}!`); snd.disc(); } }
+  snd.buy(); syncMiners(); renderShop(true); save();
+}
+function freshRun() {
+  Object.assign(S, { ore:0, mined:0, tiers:TIERS.map((_, i) => i ? 0 : 1), crit:0, taps:0, combo:0, fever:0, stage:1, expand:0, perks:{}, perkIds:[], perkLog:[], gear:{}, tab:'gear', autoAcc:0, enh:0, mercs:[], offers:[], offerAt:0, wallSeed:S.chal ? hashStr(CHAL_ID()) : (Math.random() * 1e9 | 0) });
+  if (villageHas('smith')) S.tiers[1] = 3;
+}
+function enterPlay() {
+  S.mode = 'play'; S.t0 = performance.now() - S.time * 1000; M.length = 0; buildWall(); syncMiners();
+  ['menu', 'over', 'offline', 'chalEnd'].forEach(id => document.getElementById(id).classList.remove('show'));
+  document.getElementById('shop').classList.add('on'); document.getElementById('logBtn').classList.add('on'); shopEl.dataset.tab = ''; renderShop(true);
+}
+function startGame() {
+  audio(); snd.start(); logEvent('start');
+  const sv = load();
+  if (sv && !S.chal) { applySave(sv); const off = offlineGain(sv.lastSeen); enterPlay(); if (off) showOffline(off); else toast('이어서 캔다'); }
+  else { S.gems = S.gems || 0; freshRun(); S.codex = S.codex || []; enterPlay(); }
+  save();
+}
+function gameOver() {
+  if (S.mode !== 'play' || S.chal) return; S.mode = 'log';
+  document.getElementById('shop').classList.remove('on'); document.getElementById('logBtn').classList.remove('on');
+  document.getElementById('ovStage').textContent = S.stage + '단계';
+  document.getElementById('ovCrit').textContent = `${S.crit}/${S.taps} · ${Math.round(critChance() * 100)}% ×${critMul().toFixed(1)}`;
+  document.getElementById('ovPerks').textContent = (S.perkLog || []).join(' · ') || '아직 없음';
+  document.getElementById('ovGems').textContent = `${S.gems} · ×${permMul().toFixed(1)}`;
+  document.getElementById('codex').innerHTML = ORES.map(o => `<span class="ore ${S.codex.includes(o.id) ? '' : 'off'}"><i style="background:${o.c}"></i>${S.codex.includes(o.id) ? o.name : '???'}</span>`).join('');
+  const g = gemsFor(S.mined), pb = document.getElementById('prestigeBtn');
+  pb.textContent = g > 0 ? `광맥 봉인 +${g}석` : `봉인까지 ${fmt(S.mined)}/${fmt(PRESTIGE_T)}`; pb.disabled = g <= 0;
+  document.getElementById('vlist').innerHTML = VILLAGE.map(v => `<span class="${villageHas(v.id) ? 'on' : ''}">${v.n} ${villageHas(v.id) ? '' : v.need + '석'}</span>`).join('');
+  drawVillage(document.getElementById('village'));
+  const metaOn = (S.gems || 0) > 0 || S.prestiges > 0 || g > 0; ['village', 'vlist', 'ovGems'].forEach(id => { const el = document.getElementById(id); (id === 'ovGems' ? el.parentElement : el).style.display = metaOn ? '' : 'none'; }); document.getElementById('prestigeBtn').parentElement.style.display = metaOn ? '' : 'none';
+  const cloudOn = metaOn || S.stage >= 3 || !!store.get('vein-pinhash'); ['cloudBtn', 'cloudMsg'].forEach(id => document.getElementById(id).style.display = cloudOn ? '' : 'none'); document.getElementById('nick').parentElement.style.display = cloudOn ? '' : 'none'; document.querySelector('#over p.q').style.display = cloudOn ? '' : 'none';
+  const nick = store.get('vein-nick'); if (nick) document.getElementById('nick').value = nick;
+  document.getElementById('cloudMsg').textContent = store.get('vein-pinhash') ? `${nick} 으로 서버 자동 저장 중` : '';
+  document.getElementById('over').classList.add('show'); countUp(document.getElementById('ovOre'), S.totalMined); save();
+}
+function resumeGame() { S.mode = 'play'; document.getElementById('over').classList.remove('show'); document.getElementById('shop').classList.add('on'); document.getElementById('logBtn').classList.add('on'); }
+// ── 세이브 (30초 간격 + 화면 이탈 + 구매·확장 직후)
+const SAVE_KEY = 'vein-expedition-save', BALANCE = 4;   // 밸런스 상수를 바꿀 때마다 +1 — 개발 중엔 옛 세이브를 버린다. 공개(listed=true) 뒤에는 올리지 말고 migrate() 로 이어준다
+function snapshot() { return { v:5, balance:BALANCE, wallSeed:S.wallSeed, ore:S.ore, mined:S.mined, totalMined:S.totalMined, tiers:S.tiers, gear:S.gear, perkIds:S.perkIds, perkLog:S.perkLog, codex:S.codex, stage:S.stage, gems:S.gems, prestiges:S.prestiges, crit:S.crit, taps:S.taps, time:S.time, enh:S.enh, enhBest:S.enhBest, mercs:S.mercs, offers:S.offers, offerAt:S.offerAt, lastSeen:Date.now() }; }
+function save() { if (S.chal || S.mode === 'menu') return; store.set(SAVE_KEY, JSON.stringify(snapshot())); cloudSave(); }
+let cloudLast = 0, cloudBusy = false;
+async function cloudSave(force) {
+  const nick = store.get('vein-nick'), hash = store.get('vein-pinhash'); if (!nick || !hash || cloudBusy) return;
+  if (!force && Date.now() - cloudLast < 30000) return; cloudBusy = true;
+  try { const r = await fetch(`${SB_URL}/rest/v1/rpc/weekly_save`, { method:'POST', headers:sbHeaders, keepalive:true, body:JSON.stringify({ p_game_id:SLUG, p_player:nick, p_pin_hash:hash, p_data:snapshot(), p_runs:S.prestiges || 0 }) });
+    const res = await r.json(); cloudLast = Date.now(); if (res === 'wrong_pin') { store.set('vein-pinhash', ''); toast('PIN이 달라 서버 저장이 꺼졌어요 — 일지에서 다시 등록'); } return res; }
+  catch(e) { return null; } finally { cloudBusy = false; }
+}
+async function registerCloud() {
+  const nick = document.getElementById('nick').value.trim(), pin = document.getElementById('pin').value.trim(), msg = document.getElementById('cloudMsg');
+  if (!nick) { msg.textContent = '닉네임을 적어주세요'; return; } if (!/^\d{4}$/.test(pin)) { msg.textContent = 'PIN은 숫자 4자리'; return; }
+  store.set('vein-nick', nick); store.set('vein-pinhash', await sha256(pin + ':' + SLUG)); msg.textContent = '저장 중…';
+  const res = await cloudSave(true);
+  msg.textContent = res === 'created' ? '서버에 새로 저장했어요 — 이제 30초마다 자동 저장' : res === 'saved' ? '서버 기록을 갱신했어요' : res === 'wrong_pin' ? '그 닉네임은 다른 PIN으로 등록돼 있어요' : '서버에 연결할 수 없어요';
+}
+async function loadCloud() {
+  const nick = document.getElementById('loadNick').value.trim(), pin = document.getElementById('loadPin').value.trim(), msg = document.getElementById('loadMsg');
+  if (!nick || !/^\d{4}$/.test(pin)) { msg.textContent = '닉네임과 PIN 4자리를 적어주세요'; return; } msg.textContent = '불러오는 중…';
+  try { const hash = await sha256(pin + ':' + SLUG);
+    const r = await fetch(`${SB_URL}/rest/v1/rpc/weekly_load`, { method:'POST', headers:sbHeaders, body:JSON.stringify({ p_game_id:SLUG, p_player:nick, p_pin_hash:hash }) }); const rows = await r.json();
+    if (!rows.length) { msg.textContent = '기록이 없거나 PIN이 달라요'; return; }
+    const j = rows[0].data; j.balance = BALANCE; j.lastSeen = j.lastSeen || Date.now(); store.set(SAVE_KEY, JSON.stringify(j)); store.set('vein-nick', nick); store.set('vein-pinhash', hash);
+    msg.textContent = '가져왔어요'; document.getElementById('startBtn').textContent = '이어서 캐기'; document.getElementById('loadBox').classList.add('hide');
+  } catch(e) { msg.textContent = '서버에 연결할 수 없어요'; }
+}
+document.getElementById('cloudBtn').addEventListener('click', registerCloud);
+document.getElementById('loadBtn').addEventListener('click', () => { document.getElementById('loadBox').classList.toggle('hide'); });
+document.getElementById('loadGo').addEventListener('click', loadCloud);
+function load() { try { const j = JSON.parse(store.get(SAVE_KEY) || 'null'); if (!j || j.v < 4) return null; if (j.balance !== BALANCE) { store.set(SAVE_KEY + '-old', JSON.stringify(j)); return null; } return j; } catch(e) { return null; } }   // 밸런스가 바뀐 세이브는 -old 로 치워두고 새로 시작
+function applySave(j) {
+  Object.assign(S, { ore:j.ore, mined:j.mined, totalMined:j.totalMined || j.mined, tiers:TIERS.map((_, i) => j.tiers[i] || 0), gear:j.gear || {}, perks:{}, perkIds:j.perkIds || [], perkLog:j.perkLog || [], codex:j.codex || [], stage:j.stage || 1, wallSeed:j.wallSeed || (Math.random() * 1e9 | 0), gems:j.gems || 0, prestiges:j.prestiges || 0, crit:j.crit || 0, taps:j.taps || 0, time:j.time || 0, enh:j.enh || 0, enhBest:j.enhBest || 0, mercs:j.mercs || [], offers:j.offers || [], offerAt:j.offerAt || 0, combo:0, fever:0, expand:0, autoAcc:0, tab:'gear' });
+  for (const id of S.perkIds) { const pk = PERKS.find(p => p.id === id); if (pk) pk.f(S); }
+}
+function offlineGain(lastSeen) {
+  const cap = villageHas('shrine') ? 12 * 3600 : 8 * 3600, rate = villageHas('shrine') ? 1 : villageHas('inn') ? .75 : .5;
+  const el = Math.min(cap, (Date.now() - (lastSeen || Date.now())) / 1000); if (el < 60) return null;
+  const ps = perSec() * incomeMul(); const gain = ps * el * rate; if (gain < 1) return null;
+  S.ore += gain; S.mined += gain; S.totalMined += gain; return { el, gain, rate };
+}
+function showOffline(o) {
+  const h = Math.floor(o.el / 3600), m = Math.floor(o.el % 3600 / 60);
+  document.getElementById('offTime').textContent = (h ? h + '시간 ' : '') + m + '분 동안 탐사대가 캤어요';
+  document.getElementById('offNote').textContent = `오프라인 수익 ${Math.round(o.rate * 100)}%` + (villageHas('shrine') ? '' : ' · 마을 주막·사당을 지으면 올라갑니다');
+  S.mode = 'log'; document.getElementById('shop').classList.remove('on'); document.getElementById('offline').classList.add('show'); countUp(document.getElementById('offGain'), o.gain);
+}
+document.getElementById('offBtn').addEventListener('click', () => { S.mode = 'play'; document.getElementById('offline').classList.remove('show'); document.getElementById('shop').classList.add('on'); });
+setInterval(() => { if (S.mode === 'play') save(); }, 30000);
+document.addEventListener('visibilitychange', () => { if (document.hidden) { save(); cloudSave(true); if (S.mode !== 'menu') logEvent('over', Math.floor(S.totalMined)); } });
+addEventListener('pagehide', save);
+// ── 환생: 광맥 봉인
+function prestige() {
+  const g = gemsFor(S.mined); if (g <= 0 || S.mode !== 'log') return;
+  S.gems += g; S.prestiges++; snd.expand(); freshRun(); S.time = 0;
+  document.getElementById('over').classList.remove('show'); enterPlay(); toast(`광맥을 봉인했다 — 정령석 +${g} (영구 ×${permMul().toFixed(1)})`); save();
+}
+document.getElementById('prestigeBtn').addEventListener('click', prestige);
+function drawVillage(c) { // 정령석으로 자라는 마을 — 누적이 눈에 보이는 화면
+  const g = c.getContext('2d'); g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, 300, 64);
+  g.fillStyle = '#1c1420'; g.fillRect(0, 44, 300, 20); g.fillStyle = '#2a2030'; g.fillRect(0, 44, 300, 2);
+  VILLAGE.forEach((v, i) => {
+    const x = 20 + i * 72, on = villageHas(v.id);
+    g.globalAlpha = on ? 1 : .25;
+    g.fillStyle = on ? '#6b4a2e' : '#3a2f38'; g.fillRect(x, 22, 40, 22);
+    g.fillStyle = on ? '#8a5a2e' : '#4a3f48'; g.beginPath(); g.moveTo(x - 4, 24); g.lineTo(x + 20, 8 - i * 1.5); g.lineTo(x + 44, 24); g.closePath(); g.fill();
+    g.fillStyle = on ? '#ffd166' : '#555'; g.fillRect(x + 16, 30, 8, 14);
+    if (on) { g.fillStyle = 'rgba(255,209,102,.35)'; g.beginPath(); g.arc(x + 20, 36, 18, 0, 7); g.fill(); }
+    g.globalAlpha = 1; g.fillStyle = on ? '#f3e9d2' : '#7a7080'; g.font = '700 9px system-ui, sans-serif'; g.textAlign = 'center'; g.fillText(v.n, x + 20, 58);
+  });
+}
+// ── 주간 챌린지 5분: 새 세이브 상태(정령석 0·마을 없음)로 얼마나 캐는가
+function startChallenge() {
+  if (S.mode !== 'log') return; audio();
+  S.chal = { backup: snapshot(), t: CHAL_SEC, seed: CHAL_ID() };
+  Object.assign(S, { gems:0, codex:S.codex }); freshRun(); S.time = 0;
+  document.getElementById('over').classList.remove('show'); enterPlay(); document.getElementById('logBtn').classList.remove('on'); document.getElementById('chalHud').classList.add('on');
+  toast(`주간 챌린지 ${isoWeek()} — 3분, 전원 같은 광산`); snd.pick();
+}
+function endChallenge() {
+  const score = Math.floor(S.mined); S.mode = 'log'; document.getElementById('chalHud').classList.remove('on'); document.getElementById('shop').classList.remove('on');
+  const bestKey = 'vein-chal-' + CHAL_ID(); const best = Math.max(score, +(store.get(bestKey) || 0)); store.set(bestKey, best);
+  document.getElementById('chalScore').textContent = fmt(score); document.getElementById('chalBest').textContent = `이번 주 내 최고 ${fmt(best)} · ${CHAL_ID()}`;
+  const nick = store.get('vein-nick'); if (nick) document.getElementById('chalNick').value = nick; document.getElementById('chalMsg').textContent = '';
+  document.getElementById('chalEnd').classList.add('show'); S.chalScore = score; loadTop10();
+  logEvent('over', score);
+}
+async function loadTop10() {
+  const ol = document.getElementById('chalTop'); ol.innerHTML = '<li style="list-style:none;margin-left:-24px">불러오는 중…</li>';
+  try { const r = await fetch(`${SB_URL}/rest/v1/daily_rankings?game_id=eq.${encodeURIComponent(CHAL_ID())}&select=nickname,score&order=score.desc,created_at.asc&limit=10`, { headers:sbHeaders }); const rows = await r.json();
+    ol.innerHTML = rows.length ? rows.map(x => `<li><b style="color:var(--ink)">${String(x.nickname).replace(/[<>&]/g, '')}</b> · ${fmt(+x.score)}</li>`).join('') : '<li style="list-style:none;margin-left:-24px">이번 주 첫 도전자가 되어보세요</li>';
+  } catch(e) { ol.innerHTML = '<li style="list-style:none;margin-left:-24px">랭킹 서버에 연결할 수 없어요</li>'; }
+}
+async function submitChallenge() {
+  const nick = document.getElementById('chalNick').value.trim(); const msg = document.getElementById('chalMsg'); if (!nick) { msg.textContent = '닉네임을 적어주세요'; return; }
+  store.set('vein-nick', nick); msg.textContent = '올리는 중…';
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/daily_rankings`, { method:'POST', headers:sbHeaders, body:JSON.stringify({ game_id:CHAL_ID(), nickname:nick, score:S.chalScore }) });
+    if (!r.ok) throw new Error(r.status);
+    const h = await fetch(`${SB_URL}/rest/v1/daily_rankings?game_id=eq.${encodeURIComponent(CHAL_ID())}&score=gt.${S.chalScore}&select=id`, { method:'HEAD', headers:{ ...sbHeaders, Prefer:'count=exact' } });
+    const cr = h.headers.get('content-range'); const rank = cr ? parseInt(cr.split('/')[1], 10) + 1 : null;
+    msg.textContent = rank ? `${nick}님 — 이번 주 ${rank}위!` : '올렸어요'; loadTop10();
+  } catch(e) { msg.textContent = '랭킹 서버에 연결할 수 없어요 (기록은 이 기기에 남았습니다)'; }
+}
+function leaveChallenge() {
+  const b = S.chal.backup; S.chal = null; applySave(b); S.time = b.time || 0;
+  document.getElementById('chalEnd').classList.remove('show'); enterPlay(); save();
+}
+document.getElementById('chalBtn').addEventListener('click', startChallenge);
+document.getElementById('chalSubmit').addEventListener('click', submitChallenge);
+document.getElementById('chalBack').addEventListener('click', leaveChallenge);
+
+// ───────── 상점 DOM ─────────
+const shopEl = document.getElementById('shop');
+function bulkCost(c0, n, k) { return c0 * Math.pow(GROWTH, n) * (Math.pow(GROWTH, k) - 1) / (GROWTH - 1) * costMul(); }   // n명 보유에서 k명 등비 합
+function gearBulk(g, k) { const l = gearLv(g.id); return g.c0 * Math.pow(g.g, l) * (Math.pow(g.g, k) - 1) / (g.g - 1) * costMul(); }
+function gearMaxBuy(g) { const a = gearCost(g); if (S.ore < a) return 0; return Math.floor(Math.log(S.ore * (g.g - 1) / a + 1) / Math.log(g.g)); }
+function maxBuy(c0, n) { const a = c0 * Math.pow(GROWTH, n) * costMul(); if (S.ore < a) return 0; return Math.floor(Math.log(S.ore * (GROWTH - 1) / a + 1) / Math.log(GROWTH)); }
+function etaText(cost) { const need = cost - S.ore, ps = perSec() * incomeMul(); if (need <= 0 || ps <= 0) return ''; const sec = need / ps; return sec > 3600 ? '1시간+' : sec >= 60 ? `${Math.ceil(sec / 60)}분 뒤` : `${Math.ceil(sec)}초 뒤`; }
+function shopRows() {
+  if (S.tab === 'enh') { const L = S.enh || 0, [s, d1, d2, b] = ENH_TABLE[Math.min(L, ENH_MAX - 1)];
+    const desc = L >= ENH_MAX ? `피해 ×${enhMul(L).toFixed(1)} — 최고 단계` : `×${enhMul(L).toFixed(2)} → ×${enhMul(L + 1).toFixed(2)} · 성공 ${s}%` + (d1 + d2 ? ` 하락 ${d1 + d2}%` : '') + (b ? ` 파괴 ${b}%` : '');
+    return [{ key:'enh', name:`곡괭이 강화 +${L}`, desc, cost:enhCost(L), k:1, cnt:`최고 +${S.enhBest || 0}`, ic:'enh', maxed:L >= ENH_MAX, bar:L / ENH_MAX }]; }
+  if (S.tab === 'merc') { const left = Math.max(0, S.offerAt - S.time), tm = `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, '0')}`;
+    return S.mercs.map((m, i) => ({ key:'h' + i, name:`${mercName(m)} · ${MERC_G[m.g].n} ${MERC_T[m.k].n}`, desc:MERC_T[m.k].d(m.g), cost:0, k:1, cnt:'고용 중', ic:`merc:${m.seed}:${m.g}`, maxed:true, bar:null }))
+      .concat(S.offers.map((o, i) => { const full = mercFull(o); return { key:i, name:`${mercName(o)} · ${MERC_G[o.g].n} ${MERC_T[o.k].n}`, desc:MERC_T[o.k].d(o.g) + (full ? ' · 슬롯 가득 (더 높은 등급만 교체)' : ''), cost:mercCost(o), k:1, cnt:`새 제안 ${tm}`, ic:`merc:${o.seed}:${o.g}`, maxed:full, bar:null }; })); }
+  if (S.tab === 'gear') return GEAR.map(g => { const l = gearLv(g.id), room = g.max - l, k = Math.max(1, Math.min(room, S.mult === 'max' ? gearMaxBuy(g) : S.mult)); return { key:g.id, name:g.name, desc:l >= g.max ? '최대' : g.desc(l), cost:gearBulk(g, k), k, cnt:'Lv ' + l, ic:g.id, maxed:l >= g.max, bar:null }; });
+  const rows = [];
+  TIERS.forEach((t, i) => {
+    if (i > 0 && S.tiers[i - 1] < 1 && S.tiers[i] < 1) return;             // 앞 티어부터
+    const n = S.tiers[i], next = MILESTONES.find(m => m > n);
+    const k = S.mult === 'max' ? Math.max(1, maxBuy(t.c0, n)) : S.mult;
+    rows.push({ key:i, name:t.name, desc:`${t.desc} · +${fmt(TIERS[i].p * tierMul(n))}/초`, cost:bulkCost(t.c0, n, k), k, cnt:next ? `${n} / ${next}명` : n + '명', ic:t.id, bar:next ? n / next : 1 });
+  });
+  return rows;
+}
+function renderShop(rebuild) {
+  const tabs = tabsAvail(); if (!tabs.some(t => t[0] === S.tab)) { S.tab = 'gear'; rebuild = true; } const tabKey = S.tab + ':' + tabs.length;
+  const rows = shopRows();
+  const listEl = shopEl.querySelector('.list'); const keep = listEl ? listEl.scrollTop : 0;
+  if (listEl && listEl.children.length === rows.length && shopEl.dataset.tab === tabKey) rebuild = false; else rebuild = true;   // 구조가 같으면 값만 갱신, 다르면(탭 해금·제안 갱신) 다시 그린다
+  if (rebuild) { shopEl.dataset.tab = tabKey; shopEl.innerHTML = `<div class="tabs">` + tabs.map(([id, n]) => `<button class="tab ${S.tab === id ? 'on' : ''}" data-t="${id}">${n}</button>`).join('') +
+    (S.tab === 'enh' || S.tab === 'merc' ? '' : `<div class="mult">${[1, 10, 'max'].map(m => `<button data-m="${m}" class="${S.mult === m ? 'on' : ''}">${m === 'max' ? 'MAX' : '×' + m}</button>`).join('')}</div>`) +
+    `<span class="ps" id="psLabel"></span></div><div class="list">` +
+    rows.map(r => `<button class="item" data-k="${r.key}" aria-label="${r.name} 구매"><canvas class="ic" width="72" height="72"></canvas><div class="t"><div class="n">${r.name}</div><div class="d">${r.desc}</div>${r.bar != null ? '<div class="bar"><i></i></div>' : ''}</div><div style="text-align:right"><div class="c">${fmt(r.cost)}</div><div class="cnt">${r.cnt}</div><div class="eta"></div></div></button>`).join('') + '</div>';
+    const nl = shopEl.querySelector('.list'); if (nl) nl.scrollTop = keep; }
+  const items = shopEl.querySelectorAll('.item');
+  items.forEach((b, i) => { const r = rows[i]; if (!r) return; const can = !r.maxed && S.ore >= r.cost; b.disabled = !can; b.classList.toggle('can', can); b.querySelector('.c').textContent = r.maxed ? '—' : fmt(r.cost) + (r.k > 1 ? ` (×${r.k})` : ''); b.querySelector('.cnt').textContent = r.cnt; b.querySelector('.d').textContent = r.desc; b.querySelector('.eta').textContent = r.maxed || can ? '' : etaText(r.cost); const bar = b.querySelector('.bar i'); if (bar) bar.style.width = Math.round(r.bar * 100) + '%'; if (rebuild) drawIcon(b.querySelector('canvas'), r.ic); });
+  const ps = document.getElementById('psLabel'); if (ps) ps.textContent = `+${fmt(perSec())}/초`;
+}
+shopEl.addEventListener('pointerdown', e => { if (e.target.closest('button')) e.preventDefault(); });   // 포커스 스크롤 점프 방지
+shopEl.addEventListener('click', e => {
+  const tb = e.target.closest('.tab'); if (tb) { S.tab = tb.dataset.t; shopEl.dataset.tab = ''; renderShop(true); return; }
+  const mb = e.target.closest('.mult button'); if (mb) { S.mult = mb.dataset.m === 'max' ? 'max' : +mb.dataset.m; shopEl.dataset.tab = ''; renderShop(true); return; }
+  const b = e.target.closest('.item'); if (!b || b.disabled) return; const k = b.dataset.k;
+  if (S.tab === 'enh') enhance(); else if (S.tab === 'merc') hire(+k); else buy(S.tab === 'gear' ? k : +k);
+});
+function drawIcon(c, kind) {
+  const g = c.getContext('2d'); g.scale(2, 2); g.clearRect(0, 0, 36, 36);
+  const pick = (col = '#c9ccd3') => { g.save(); g.translate(18, 18); g.rotate(-.7); g.fillStyle = '#8b5a2b'; g.fillRect(-2, -4, 4, 20); g.fillStyle = col; g.beginPath(); g.moveTo(-11, -6); g.quadraticCurveTo(0, -12, 11, -6); g.lineTo(8, -3); g.quadraticCurveTo(0, -7, -8, -3); g.closePath(); g.fill(); g.restore(); };
+  const disc = (col, r = 11) => { const rg = g.createRadialGradient(14, 14, 2, 18, 18, r + 4); rg.addColorStop(0, shade(col, 60)); rg.addColorStop(1, shade(col, -40)); g.fillStyle = rg; g.beginPath(); g.arc(18, 18, r, 0, 7); g.fill(); g.strokeStyle = 'rgba(0,0,0,.5)'; g.lineWidth = 1.5; g.stroke(); };
+  switch (kind) {
+    case 'pick': pick(); break;
+    case 'enh': disc('#3a2a10', 15); pick('#ffd166'); break;
+    case 'edge': g.fillStyle = '#5a6270'; g.beginPath(); g.roundRect(6, 14, 24, 9, 3); g.fill(); g.fillStyle = '#9aa3b0'; g.fillRect(8, 15, 20, 3); g.strokeStyle = '#c9ccd3'; g.lineWidth = 2; g.beginPath(); g.moveTo(10, 11); g.lineTo(26, 7); g.stroke(); break;
+    case 'blast': disc('#a33a3a', 9); g.strokeStyle = '#e8c39e'; g.lineWidth = 2; g.beginPath(); g.moveTo(24, 10); g.quadraticCurveTo(28, 6, 30, 8); g.stroke(); g.fillStyle = '#ffd166'; g.beginPath(); g.arc(30, 8, 2.5, 0, 7); g.fill(); break;
+    case 'cart': g.fillStyle = '#6b5a4a'; g.beginPath(); g.moveTo(6, 10); g.lineTo(30, 10); g.lineTo(26, 24); g.lineTo(10, 24); g.closePath(); g.fill(); g.strokeStyle = '#150f0c'; g.lineWidth = 1.5; g.stroke(); g.fillStyle = '#2a2320'; [12, 24].forEach(x => { g.beginPath(); g.arc(x, 27, 3.5, 0, 7); g.fill(); }); g.fillStyle = '#17151d'; [11, 18, 25].forEach(x => { g.beginPath(); g.arc(x, 9, 4, 0, 7); g.fill(); }); break;
+    case 'lead': g.fillStyle = '#e8c39e'; g.beginPath(); g.ellipse(18, 20, 7, 11, .5, 0, 7); g.fill(); g.fillStyle = '#d2a679'; g.beginPath(); g.arc(23, 10, 5, 0, 7); g.fill(); g.strokeStyle = 'rgba(0,0,0,.25)'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(18, 20, 7, 11, .5, 0, 7); g.stroke(); break;
+    case 'app': drawMan(g, 18, 33, .3, 0, '#6e8f5a'); break;
+    case 'vet': drawMan(g, 18, 33, .3, .6, '#8a6a4a'); break;
+    case 'drill': g.fillStyle = '#7d8590'; g.fillRect(6, 13, 16, 10); g.fillStyle = '#c9ccd3'; g.beginPath(); g.moveTo(22, 12); g.lineTo(33, 18); g.lineTo(22, 24); g.closePath(); g.fill(); g.fillStyle = 'rgba(255,255,255,.35)'; [8, 12].forEach((x, i) => { g.beginPath(); g.arc(x, 8 - i * 2, 3, 0, 7); g.fill(); }); break;
+    case 'golem': disc('#5a5a6a', 12); g.fillStyle = '#ffd166'; g.beginPath(); g.arc(14, 15, 2, 0, 7); g.arc(22, 15, 2, 0, 7); g.fill(); g.strokeStyle = 'rgba(0,0,0,.5)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(10, 22); g.lineTo(26, 22); g.stroke(); break;
+    case 'sprit': { const rg = g.createRadialGradient(18, 18, 1, 18, 18, 14); rg.addColorStop(0, '#fff6c8'); rg.addColorStop(.5, 'rgba(242,182,50,.7)'); rg.addColorStop(1, 'rgba(242,182,50,0)'); g.fillStyle = rg; g.fillRect(0, 0, 36, 36); break; }
+    default: if (kind.startsWith('merc:')) { const [, seed, gr] = kind.split(':'); g.strokeStyle = MERC_G[+gr].c; g.lineWidth = 2.5; g.beginPath(); g.arc(18, 18, 16, 0, 7); g.stroke(); drawMan(g, 18, 33, .3, 0, mercCoat({ seed:+seed })); } else drawMan(g, 18, 33, .3, 0, '#a33a3a');
+  }
+}
+
+// ───────── 표현 ─────────
+function fmt(n) { if (n < 1000) return (Math.round(n * 10) / 10).toString().replace(/\.0$/, ''); const u = ['', 'K', 'M', 'B', 'T']; let i = 0; while (n >= 1000 && i < u.length - 1) { n /= 1000; i++; } return n.toFixed(n < 10 ? 1 : 0) + u[i]; }
+function chips(x, y, n, o) { for (let i = 0; i < n; i++) P.push({ x:x + (Math.random() - .5) * 20, y:y + (Math.random() - .5) * 20, vx:(Math.random() - .5) * 300, vy:-Math.random() * 280 - 60, r:Math.random() * 3 + 1.5, life:1, c:Math.random() < .4 ? o.hi : o.c }); }
+function float(x, y, txt, tag, crit) { F.push({ x:x + (Math.random() - .5) * 20, y, txt, tag, crit, life:1 }); }
+let toastT = 0; function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800); }
+function countUp(el, n) { const t0 = performance.now(); (function f() { const k = Math.min(1, (performance.now() - t0) / 500), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(n * e); if (k < 1) requestAnimationFrame(f); })(); }
+function mulberry(a) { return function() { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shade(hex, d) { const n = parseInt(hex.slice(1), 16); const f = c => Math.max(0, Math.min(255, c + d)); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; }
+
+function drawMan(g, x, y, s, swing, coat = '#e6d3b3', flip = 1, gait = 0) {
+  g.save(); g.translate(x, y); g.scale(s * flip, s);
+  g.fillStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.ellipse(0, 2, 26, 6, 0, 0, 7); g.fill();
+  const lg = Math.sin(gait) * 6;
+  g.fillStyle = '#3b3a4a'; g.fillRect(-16 + lg, -34, 13, 34); g.fillRect(3 - lg, -34, 13, 34);
+  g.fillStyle = '#26253a'; g.fillRect(-16, -6, 13, 6); g.fillRect(3, -6, 13, 6);
+  const cg = g.createLinearGradient(-20, -80, 20, -30); cg.addColorStop(0, coat); cg.addColorStop(1, shade(coat, -40));
+  g.fillStyle = cg; g.beginPath(); g.moveTo(-20, -78); g.lineTo(20, -78); g.lineTo(24, -34); g.lineTo(-24, -34); g.closePath(); g.fill();
+  g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 2; g.stroke();
+  g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(-4, -78); g.lineTo(6, -48); g.stroke();
+  g.strokeStyle = '#8a3b2b'; g.lineWidth = 3; g.beginPath(); g.moveTo(-22, -40); g.lineTo(22, -40); g.stroke();
+  g.fillStyle = '#e8c39e'; g.beginPath(); g.arc(0, -94, 17, 0, 7); g.fill();
+  g.fillStyle = '#2a1e1a'; g.beginPath(); g.arc(0, -100, 17, Math.PI, 0); g.fill();
+  g.fillStyle = '#c0392b'; g.fillRect(-18, -104, 36, 6);
+  g.fillStyle = '#2a1e1a'; g.beginPath(); g.arc(6, -92, 1.8, 0, 7); g.fill();
+  g.fillStyle = 'rgba(220,90,80,.5)'; g.beginPath(); g.arc(10, -86, 3.5, 0, 7); g.fill();
+  g.strokeStyle = 'rgba(0,0,0,.3)'; g.lineWidth = 1.5; g.beginPath(); g.arc(0, -94, 17, 0, 7); g.stroke();
+  const a = -3.6 + swing * 1.3;   // 어깨 뒤에서 들어 벽을 향해 내려친다
+  g.save(); g.translate(14, -70); g.rotate(a);
+  g.fillStyle = '#e8c39e'; g.fillRect(-5, 0, 10, 26);
+  g.fillStyle = '#8b5a2b'; g.fillRect(-3, 20, 6, 58); g.strokeStyle = 'rgba(0,0,0,.4)'; g.lineWidth = 1; g.strokeRect(-3, 20, 6, 58);
+  const mg = g.createLinearGradient(-22, 70, 22, 80); mg.addColorStop(0, '#e5e8ee'); mg.addColorStop(1, '#8d939e');
+  g.fillStyle = mg; g.beginPath(); g.moveTo(-26, 78); g.quadraticCurveTo(0, 66, 26, 78); g.lineTo(20, 84); g.quadraticCurveTo(0, 76, -20, 84); g.closePath(); g.fill();
+  g.strokeStyle = '#3a3d45'; g.lineWidth = 1.5; g.stroke();
+  g.restore(); g.restore();
+}
+
+
+// ── 쿼터뷰 광석: 옆면(어둡게) + 윗면(밝게) 두 층으로 입체감
+function drawNode(g, nd, t) {
+  const o = ORES[nd.t], age = Math.max(0, Math.min(1, (S.time - nd.born) / .3)), pop = 1 - Math.pow(1 - age, 3);
+  const r = nd.r * pop, x = nd.gx, y = nd.gy; if (r <= 0) return;
+  g.save(); if (nd.sq > 0) { const k = Math.sin(nd.sq * Math.PI); g.translate(x, y); g.scale(1 + .18 * k, 1 - .22 * k); g.translate(-x, -y); }
+  const hp = nd.hp / nd.max, h = r * .8, rnd = mulberry(nd.seed), n = 7, pts = [];
+  for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, rr = r * (.8 + rnd() * .35); pts.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr * .55]); }
+  const path = (dy) => { g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1] + dy) : g.moveTo(p[0], p[1] + dy)); g.closePath(); };
+  // 바닥 그림자
+  g.fillStyle = 'rgba(0,0,0,.4)'; g.beginPath(); g.ellipse(x + r * .15, y + r * .18, r * 1.15, r * .5, 0, 0, 7); g.fill();
+  // 옆면: 아래 윤곽과 위 윤곽 사이를 채운다
+  g.fillStyle = shade(o.c, -45); path(0); g.fill();
+  for (let i = 0; i < n; i++) { const a = pts[i], b = pts[(i + 1) % n]; if ((a[1] + b[1]) / 2 < y) continue; g.fillStyle = (a[0] + b[0]) / 2 < x ? shade(o.c, -30) : shade(o.c, -60); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.lineTo(b[0], b[1] - h); g.lineTo(a[0], a[1] - h); g.closePath(); g.fill(); }
+  // 윗면
+  const rg = g.createRadialGradient(x - r * .3, y - h - r * .25, r * .1, x, y - h, r * 1.1); rg.addColorStop(0, shade(o.c, 80)); rg.addColorStop(.6, o.c); rg.addColorStop(1, shade(o.c, -20));
+  g.fillStyle = rg; path(-h); g.fill();
+  g.save(); path(-h); g.clip();
+  for (let i = 0; i < 3; i++) { const px = x + (rnd() - .5) * r, py = y - h + (rnd() - .5) * r * .5, s = r * (.2 + rnd() * .2); g.fillStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.moveTo(px, py - s * .5); g.lineTo(px + s, py); g.lineTo(px, py + s * .4); g.lineTo(px - s * .8, py); g.closePath(); g.fill(); }
+  const cracks = Math.floor((1 - hp) * 4); g.strokeStyle = 'rgba(0,0,0,.7)'; g.lineWidth = 1.2;
+  for (let i = 0; i < cracks; i++) { const a = rnd() * 6.28; g.beginPath(); g.moveTo(x, y - h); g.lineTo(x + Math.cos(a) * r, y - h + Math.sin(a) * r * .5); g.stroke(); }
+  g.restore();
+  g.strokeStyle = 'rgba(0,0,0,.55)'; g.lineWidth = 1.2; path(-h); g.stroke();
+  g.strokeStyle = 'rgba(255,230,180,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(pts[4][0], pts[4][1] - h); g.lineTo(pts[5][0], pts[5][1] - h); g.lineTo(pts[6][0], pts[6][1] - h); g.stroke();
+  if (hp < 1) { g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(x - r, y + r * .5 + 3, r * 2, 3); g.fillStyle = o.hi; g.fillRect(x - r, y + r * .5 + 3, r * 2 * hp, 3); }
+  g.restore();
+}
+
+function drawBg(g, t) {
+  const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#0b0910'); bg.addColorStop(1, '#1a1220'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  g.fillStyle = 'rgba(255,220,170,.3)';
+  for (const p of DUST) { p.y -= p.v * .016; if (p.y < 0) { p.y = 1; p.x = Math.random(); } g.beginPath(); g.arc(p.x * W, p.y * H, p.s, 0, 7); g.fill(); }
+}
+// ── 쿼터뷰 동굴: 뒷벽 두 면 + 마름모 바닥 타일
+function drawCave(g, t) {
+  const n = S.grid, s = S.stage, hue = 262 - Math.min(40, s * 4), wh = ISO.wh, ex = S.expand > 0 ? 1 - Math.max(0, S.expand - .6) * .15 : 1;
+  const A = iso(0, 0), B = iso(n, 0), C = iso(n, n), D = iso(0, n);
+  g.save(); g.translate(ISO.ox, ISO.oy + n * ISO.th / 2); g.scale(ex, ex); g.translate(-ISO.ox, -(ISO.oy + n * ISO.th / 2));
+  // 뒷벽 왼쪽 (A→D 위로) / 오른쪽 (A→B 위로)
+  const wallL = g.createLinearGradient(D.x, 0, A.x, 0); wallL.addColorStop(0, `hsl(${hue},14%,${11 - s * .3}%)`); wallL.addColorStop(1, `hsl(${hue},14%,${19 - s * .3}%)`);
+  g.fillStyle = wallL; g.beginPath(); g.moveTo(A.x, A.y - wh); g.lineTo(D.x, D.y - wh); g.lineTo(D.x, D.y); g.lineTo(A.x, A.y); g.closePath(); g.fill();
+  const wallR = g.createLinearGradient(A.x, 0, B.x, 0); wallR.addColorStop(0, `hsl(${hue},14%,${22 - s * .3}%)`); wallR.addColorStop(1, `hsl(${hue},14%,${13 - s * .3}%)`);
+  g.fillStyle = wallR; g.beginPath(); g.moveTo(A.x, A.y - wh); g.lineTo(B.x, B.y - wh); g.lineTo(B.x, B.y); g.lineTo(A.x, A.y); g.closePath(); g.fill();
+  // 벽 질감 (암석 얼룩 + 갈라진 선)
+  const rnd = mulberry(s * 31 + 5); g.fillStyle = 'rgba(0,0,0,.25)';
+  for (let i = 0; i < 40; i++) { const k = rnd(), side = rnd() < .5; const p = side ? iso(0, k * n) : iso(k * n, 0); const yy = p.y - rnd() * wh; const rr = 3 + rnd() * 9; g.beginPath(); g.ellipse(p.x, yy, rr, rr * .5, side ? -.5 : .5, 0, 7); g.fill(); }
+  // 갱목 기둥 (모서리)
+  const post = (p, h) => { const wg = g.createLinearGradient(p.x - 5, 0, p.x + 5, 0); wg.addColorStop(0, '#5a3a1e'); wg.addColorStop(.5, '#8a5a2e'); wg.addColorStop(1, '#3f2814'); g.fillStyle = wg; g.fillRect(p.x - 5, p.y - h, 10, h); g.strokeStyle = 'rgba(0,0,0,.5)'; g.lineWidth = 1.5; g.strokeRect(p.x - 5, p.y - h, 10, h); };
+  post(A, wh + 6); post(B, wh + 4); post(D, wh + 4);
+  // 등불 (3단계마다 하나 — 뒷벽 위에 누적)
+  const lamps = 1 + Math.min(5, Math.floor(s / 3));
+  for (let i = 0; i < lamps; i++) { const side = i % 2 === 0, k = (Math.floor(i / 2) + .5) / 3; const p = side ? iso(0, k * n) : iso(k * n, 0); const ly = p.y - wh * .62, f = .8 + Math.sin(t * 7 + i) * .1; const lg = g.createRadialGradient(p.x, ly, 2, p.x, ly, 90 * f); lg.addColorStop(0, 'rgba(255,200,110,.5)'); lg.addColorStop(1, 'rgba(255,150,60,0)'); g.fillStyle = lg; g.fillRect(p.x - 90, ly - 90, 180, 180); g.fillStyle = '#d9a441'; g.beginPath(); g.roundRect(p.x - 5, ly - 7, 10, 14, 3); g.fill(); g.fillStyle = `rgba(255,235,160,${.6 + f * .4})`; g.fillRect(p.x - 2.5, ly - 4, 5, 8); }
+  // 바닥 타일
+  for (let u = 0; u < n; u++) for (let v = 0; v < n; v++) {
+    const p0 = iso(u, v), p1 = iso(u + 1, v), p2 = iso(u + 1, v + 1), p3 = iso(u, v + 1);
+    const li = ((u + v) % 2 ? 0 : 1.5) + (rnd() * 2);
+    g.fillStyle = `hsl(${hue},12%,${20 + li - s * .4}%)`; g.beginPath(); g.moveTo(p0.x, p0.y); g.lineTo(p1.x, p1.y); g.lineTo(p2.x, p2.y); g.lineTo(p3.x, p3.y); g.closePath(); g.fill();
+    g.strokeStyle = 'rgba(0,0,0,.18)'; g.lineWidth = 1; g.stroke();
+  }
+  // 바닥 잔돌
+  g.fillStyle = 'rgba(0,0,0,.22)'; for (let i = 0; i < 30; i++) { const p = iso(rnd() * n, rnd() * n); g.beginPath(); g.ellipse(p.x, p.y, 2 + rnd() * 4, 1 + rnd() * 2, 0, 0, 7); g.fill(); }
+  // 앞쪽 바닥 절벽 (두께)
+  g.fillStyle = `hsl(${hue},14%,9%)`; g.beginPath(); g.moveTo(D.x, D.y); g.lineTo(C.x, C.y); g.lineTo(C.x, C.y + 14); g.lineTo(D.x, D.y + 14); g.closePath(); g.fill();
+  g.beginPath(); g.moveTo(C.x, C.y); g.lineTo(B.x, B.y); g.lineTo(B.x, B.y + 14); g.lineTo(C.x, C.y + 14); g.closePath(); g.fill();
+  // 등불 바닥 광원
+  const gl = g.createRadialGradient(A.x, A.y + n * ISO.th / 2, 10, A.x, A.y + n * ISO.th / 2, n * ISO.th); gl.addColorStop(0, 'rgba(255,190,110,.14)'); gl.addColorStop(1, 'rgba(255,150,60,0)'); g.fillStyle = gl; g.beginPath(); g.moveTo(A.x, A.y); g.lineTo(B.x, B.y); g.lineTo(C.x, C.y); g.lineTo(D.x, D.y); g.closePath(); g.fill();
+  g.restore();
+}
+function drawHUD(g) {
+  const ps = perSec(), left = alive().length, total = S.nodes.length;
+  g.fillStyle = 'rgba(20,14,22,.78)'; g.beginPath(); g.roundRect(L.cx - 150, L.top + 8, 300, 84, 16); g.fill(); g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 1; g.stroke();
+  g.textAlign = 'center'; g.fillStyle = '#f2b632'; g.font = '800 34px system-ui, sans-serif'; g.fillText(fmt(S.ore), L.cx, L.top + 48);
+  g.fillStyle = '#b9ad96'; g.font = '600 13px system-ui, sans-serif'; g.fillText(`+${fmt(ps * incomeMul())}/초  ·  치명 ${Math.round(critChance() * 100)}% ×${critMul().toFixed(1)}` + (S.gems ? `  ·  정령석 ${S.gems}` : ''), L.cx, L.top + 72);
+  const mix = wallMix(S.stage), names = mix.map((w, t) => [w, t]).filter(x => x[0] >= .12).sort((a, b) => b[0] - a[0]).slice(0, 3).map(x => ORES[x[1]].name).join('·');
+  const by = L.areaY - 4;
+  g.fillStyle = 'rgba(20,14,22,.7)'; g.beginPath(); g.roundRect(L.areaX + 20, by, L.areaW - 40, 24, 8); g.fill();
+  g.textAlign = 'left'; g.fillStyle = '#f3e9d2'; g.font = '700 13px system-ui, sans-serif'; g.fillText(`동굴 ${S.stage}단계 · ${names}`, L.areaX + 30, by + 17);
+  g.textAlign = 'right'; g.fillStyle = '#b9ad96'; g.fillText(`남은 광석 ${left} / ${total}`, L.areaX + L.areaW - 30, by + 17);
+  const k = total ? 1 - left / total : 0; g.fillStyle = 'rgba(255,255,255,.1)'; g.fillRect(L.areaX + 20, by + 26, L.areaW - 40, 3); g.fillStyle = '#f2b632'; g.fillRect(L.areaX + 20, by + 26, (L.areaW - 40) * k, 3);
+  if (S.fever > 0) { g.textAlign = 'center'; g.fillStyle = '#ffd166'; g.font = '800 15px system-ui, sans-serif'; g.fillText(`광맥 흥분 ×2  ${Math.ceil(S.fever)}s`, L.cx, L.areaY + 46); }
+}
+
+// ───────── 루프 ─────────
+let last = performance.now();
+function frame(now) {
+  const rdt = Math.min(.05, (now - last) / 1000); last = now; const t = now / 1000;
+  let dt = rdt; if (S.stop > 0) { S.stop -= rdt; dt = 0; }   // 히트스톱: 치명타 120ms · 파괴 60ms · 확장 150ms (자동 채굴엔 없음)
+  S.time = (now - S.t0) / 1000;
+  if (S.mode === 'play' || S.mode === 'log' || S.mode === 'pick') {
+    updateMiners(dt);
+    if (S.fever > 0) S.fever -= dt; if (S.expand > 0) S.expand -= dt;
+    if (S.comboT > 0) { S.comboT -= dt; if (S.comboT <= 0) S.combo = 0; }
+    if (S.chal && S.mode === 'play') { S.chal.t -= dt; const el = document.getElementById('chalHud'); el.textContent = `${Math.floor(Math.max(0, S.chal.t) / 60)}:${String(Math.floor(Math.max(0, S.chal.t) % 60)).padStart(2, '0')}  ·  ${fmt(S.mined)}`; if (S.chal.t <= 0) endChallenge(); }
+    if (S.mode === 'play' && !S.chal && S.time >= S.offerAt) { genOffers(); renderShop(true); }
+    if (S.mode === 'play') { renderShop(false); document.getElementById('logBtn').classList.toggle('badge', !S.chal && gemsFor(S.mined) > 0); }
+  }
+  S.shake = Math.max(0, S.shake - rdt * 45); S.punch = Math.max(0, S.punch - rdt * 3);
+  for (const nd of S.nodes) if (nd.sq > 0) nd.sq = Math.max(0, nd.sq - rdt * 7);
+  ctx.save();
+  if (S.shake > 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches) ctx.translate((Math.random() - .5) * S.shake, (Math.random() - .5) * S.shake);
+  if (S.punch > 0) { const k = 1 + .04 * S.punch; ctx.translate(L.cx, L.areaY + L.areaH / 2); ctx.scale(k, k); ctx.translate(-L.cx, -(L.areaY + L.areaH / 2)); }
+  drawBg(ctx, t); drawCave(ctx, t);
+  // y 정렬: 광석과 광부를 같은 깊이 순서로
+  const items = S.nodes.filter(n => n.hp > 0).map(n => ({ y:n.gy, f:() => drawNode(ctx, n, t) }));
+  const msc = Math.pow(14 / S.grid, .4) * Math.min(1.3, ISO.th / 24);
+  if (S.mode !== 'menu') for (const m of M) items.push({ y:m.y, f:() => drawMan(ctx, m.x, m.y, m.sc * msc, m.swing, m.coat, m.flip, m.moving ? m.gait : 0) });
+  else { const p = iso(S.grid * .5, S.grid + .6); items.push({ y:p.y, f:() => drawMan(ctx, p.x, p.y, .6 * msc, .05 + Math.sin(t * 2) * .05, '#e6d3b3') }); }
+  items.sort((a, b) => a.y - b.y).forEach(i => i.f());
+  if (S.expand > 0) { ctx.fillStyle = `rgba(255,230,180,${Math.max(0, S.expand - .6) * .6})`; ctx.fillRect(0, 0, W, H); }
+  if (S.flash > 0) { ctx.fillStyle = `rgba(200,40,40,${S.flash * .35})`; ctx.fillRect(0, 0, W, H); S.flash = Math.max(0, S.flash - rdt * 3); }   // 강화 파괴
+  if (S.mode === 'menu') { ctx.fillStyle = 'rgba(6,4,10,.55)'; ctx.fillRect(0, 0, W, H); }   // 로비: 아직 등불을 안 켠 동굴
+  for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.vy += 900 * rdt; p.x += p.vx * rdt; p.y += p.vy * rdt; p.life -= rdt * 1.6; if (p.life <= 0) { P.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }
+  ctx.globalAlpha = 1; ctx.restore();
+  for (let i = F.length - 1; i >= 0; i--) { const f = F[i]; f.y -= 40 * rdt; f.life -= rdt * 1.4; if (f.life <= 0) { F.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, Math.min(1, f.life * 1.5)); ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.7)'; ctx.fillStyle = f.crit ? '#ffd166' : '#f3e9d2'; ctx.font = (f.crit ? '800 20px' : '700 15px') + ' system-ui, sans-serif'; ctx.strokeText(f.txt, f.x, f.y); ctx.fillText(f.txt, f.x, f.y); if (f.tag) { ctx.font = '800 13px system-ui, sans-serif'; ctx.strokeText(f.tag, f.x, f.y - 18); ctx.fillText(f.tag, f.x, f.y - 18); } }
+  ctx.globalAlpha = 1;
+  if (S.mode === 'play' || S.mode === 'pick') drawHUD(ctx);
+  requestAnimationFrame(frame);
+}
+
+// ───────── 입력·부팅 ─────────
+cv.addEventListener('pointerdown', e => { if (S.mode === 'play') { e.preventDefault(); tap(e.clientX, e.clientY); } });
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('logBtn').addEventListener('click', gameOver);
+document.getElementById('nextBtn').addEventListener('click', resumeGame);
+document.getElementById('againBtn').addEventListener('click', () => { const n = document.getElementById('nick').value.trim(); if (n) store.set('vein-nick', n); freshRun(); S.time = 0; document.getElementById('over').classList.remove('show'); enterPlay(); save(); });
+const kbIsTyping = () => /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName);
+let kbLock = false;
+addEventListener('keydown', e => { if (kbIsTyping() || e.repeat || e.metaKey || e.ctrlKey || e.altKey) return; if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); if (S.mode === 'menu') { kbLock = true; startGame(); } else if (!kbLock) tap(); } });
+addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') kbLock = false; });
+document.addEventListener('click', e => { if (e.detail === 0) return; const b = e.target.closest && e.target.closest('button'); if (b) b.blur(); }, true);
+if (!matchMedia('(pointer: coarse)').matches) document.getElementById('kbHint').hidden = false;
+resize(); S.t0 = performance.now(); buildWall(); // 로비 배경용 벽
+logEvent('load');
+{ const sv = load(); if (sv && (sv.totalMined > 0 || sv.gems > 0)) document.getElementById('startBtn').textContent = '이어서 캐기'; else if (store.get(SAVE_KEY + '-old')) document.getElementById('kbHint').insertAdjacentHTML('beforebegin', '<div style="font-size:12px;color:var(--dim);margin-top:12px">밸런스가 바뀌어 새 광산에서 시작해요</div>'); }
+requestAnimationFrame(frame);
+if (/[?&]test=1/.test(location.search)) window.GAME = { S, M, tap, startGame, gameOver, buy, enhance, hire, genOffers, enhMul, openPick, prestige, startChallenge, endChallenge, save, load, ORES, TIERS, GEAR, wallMix, iso };
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>픽셀 페이퍼돌 데모</title>
+<style>body{margin:0;background:#141018;color:#f3e9d2;font-family:system-ui,sans-serif;padding:16px}h1{font-size:18px;color:#f2b632}p{font-size:13px;color:#b9ad96;line-height:1.5}canvas{image-rendering:pixelated;display:block;background:#1a1220;border-radius:12px;margin:8px 0}.row{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:#b9ad96}</style></head><body>
+<h1>픽셀 페이퍼돌 — 16×24 몸통 + 장비 6슬롯 레이어</h1>
+<p>코드 안의 문자열 몇 줄로 그려지는 스프라이트. 강화 단계(+0/+5/+10/+15)마다 장비 색이 바뀌고, 용병 코트색·특기는 팔레트만 바꾼다. 스윙·피격·지침 애니메이션 포함. 총 데이터 ≈ 2KB.</p>
+<canvas id="c" width="480" height="200" style="width:100%;max-width:480px"></canvas>
+<div class="row"><span>왼쪽부터: 맨몸 · +0 장비 · +5 · +10 · +15 (금빛) · 영웅 용병 코트</span></div>
+<canvas id="d" width="480" height="120" style="width:100%;max-width:480px"></canvas>
+<div class="row"><span>동작: 대기 → 스윙 → 피격 → 지침(비틀)</span></div>
+<script>
+// 팔레트 인덱스 문자 → 색. '.' 투명. 몸통 16×24
+const PAL = { k:'#2a1e1a', s:'#e8c39e', S:'#c9925f', b:'#3b3a4a', B:'#26253a', r:'#c0392b', w:'#f3e9d2', e:'#2a1e1a', x:'#8b5a2b' };
+const BODY = [
+'......kkkk......','.....kkkkkk.....','.....rrrrrr.....','.....ssssss.....','.....sesses.....','.....ssssss.....','......ssss......','.....CCCCCC.....',
+'....CCCCCCCC....','...sCCCCCCCCs...','...sCCCCCCCCs...','...sCCCCCCCCs...','....CCCCCCCC....','....CCCCCCCC....','.....bbbbbb.....','.....bbbbbb.....',
+'.....bb..bb.....','.....bb..bb.....','.....bb..bb.....','.....bb..bb.....','.....BB..BB.....','.....BB..BB.....','....BBB..BBB....','................'];
+// 장비 레이어 (같은 16×24 격자, 'M' = 재질색으로 치환)
+const GEAR = {
+  h: ['.....MMMMMM.....','....MMMMMMMM....','....MMMMMMMM....'],                              // 투구 (y 0..2)
+  c: [null,null,null,null,null,null,null,'.....MMMMMM.....','....MMMMMMMM....','....MMMMMMMM....','....MMMMMMMM....','....MMMMMMMM....','....MMMMMMMM....','....MMMMMMMM....'],
+  g: [null,null,null,null,null,null,null,null,null,'...M........M...','...M........M...','...M........M...'],
+  l: Array(14).fill(null).concat(['.....MMMMMM.....','.....MMMMMM.....','.....MM..MM.....','.....MM..MM.....']),
+  b: Array(20).fill(null).concat(['.....MM..MM.....','.....MM..MM.....','....MMM..MMM....']),
+};
+const MAT = ['#8d939e', '#c9ccd3', '#4da3ff', '#ffd166'];   // +0 / +5 / +10 / +15
+const WEAP = ['#8b5a2b', '#c9ccd3', '#8fd3ff', '#ffd166'];
+function draw(g, x, y, s, opt) { // opt: {coat, tier, swing, hit, tired, flip}
+  const coat = opt.coat || '#6e8f5a', tier = opt.tier, sw = opt.swing || 0;
+  const put = (px, py, col) => { g.fillStyle = col; g.fillRect(x + (opt.flip ? 15 - px : px) * s, y + py * s, s, s); };
+  const wob = opt.tired ? Math.round(Math.sin(opt.t * 8)) : 0;
+  const rows = BODY.map((r, i) => r.replace(/C/g, 'C'));
+  for (let py = 0; py < 24; py++) for (let px = 0; px < 16; px++) { const ch = rows[py][px]; if (ch === '.') continue; put(px + (py < 14 ? wob : 0), py, ch === 'C' ? coat : PAL[ch]); }
+  if (tier != null) for (const [k, layer] of Object.entries(GEAR)) layer.forEach((r, py) => { if (!r) return; for (let px = 0; px < 16; px++) if (r[px] === 'M') put(px + (py < 14 ? wob : 0), py, MAT[tier]); });
+  // 무기: 오른손(x≈12,y≈10)에서 스윙 각도로 뻗는 선 — 3프레임
+  const wx = 12 + wob, wy = 10, ang = -1.2 + sw * 2.2; const col = tier == null ? PAL.x : WEAP[tier];
+  for (let i = 1; i <= 7; i++) { const px = Math.round(wx + Math.cos(ang) * i), py = Math.round(wy + Math.sin(ang) * i); put(px, py, i > 5 ? '#e5e8ee' : col); }
+  if (opt.hit) { g.fillStyle = 'rgba(255,80,80,.45)'; g.fillRect(x + 3 * s, y, 10 * s, 24 * s); }
+}
+const c = document.getElementById('c').getContext('2d'); c.imageSmoothingEnabled = false;
+[[null, '#6e8f5a'], [0, '#6e8f5a'], [1, '#8a6a4a'], [2, '#5a6e8f'], [3, '#8f5a6e'], [1, '#f2b632']].forEach(([tier, coat], i) => draw(c, 12 + i * 78, 40, 5, { tier, coat }));
+const d = document.getElementById('d').getContext('2d'); d.imageSmoothingEnabled = false;
+let t0 = performance.now();
+(function loop() { const t = (performance.now() - t0) / 1000; d.fillStyle = '#1a1220'; d.fillRect(0, 0, 480, 120);
+  draw(d, 30, 8, 4, { tier:1, coat:'#6e8f5a', t }); draw(d, 140, 8, 4, { tier:1, coat:'#6e8f5a', swing:(Math.sin(t * 6) + 1) / 2, t }); draw(d, 250, 8, 4, { tier:1, coat:'#6e8f5a', hit:Math.sin(t * 10) > 0.6, t }); draw(d, 360, 8, 4, { tier:1, coat:'#6e8f5a', tired:true, t });
+  requestAnimationFrame(loop); })();
+</script></body></html>
