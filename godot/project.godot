@@ -1,0 +1,30 @@
+; 광맥 탐사대 — Godot 이식 스캐폴드
+; 이 파일은 Godot 에디터로 한 번도 열지 않은 상태로 손으로 작성됐다.
+; 처음 열면 에디터가 .godot/ 캐시와 uid 를 생성한다 (.gitignore 처리됨).
+
+config_version=5
+
+[application]
+
+config/name="광맥 탐사대"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.4", "Mobile")
+
+[display]
+
+; 원본 HTML 기준 해상도 (index.html: let W = 390, H = 844)
+window/size/viewport_width=390
+window/size/viewport_height=844
+; 1 = Portrait — 원본은 세로 고정 모바일 게임
+window/handheld/orientation=1
+; 원본의 resize() 는 innerWidth/innerHeight 를 그대로 쓰고 레이아웃을 재계산한다.
+; expand 로 두어야 같은 방식(넓어진 만큼 더 보여주기)이 재현된다.
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+; 픽셀 페이퍼돌(16x24)·쿼터뷰 타일은 nearest 라야 원본과 같이 나온다
+textures/canvas_textures/default_texture_filter=0

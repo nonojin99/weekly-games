@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 360.0
+offset_right = 366.0
+offset_bottom = 460.0
+horizontal_alignment = 1
+text = "광맥 탐사대 — Godot 이식 스캐폴드"
