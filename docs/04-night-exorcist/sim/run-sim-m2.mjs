@@ -40,4 +40,8 @@ const V3 = run(BOTS.NOVICE, { train:25, mastery:10, deck:1.3, mul:1.8 });
 const N4 = run(BOTS.NORMAL, { train:25, mastery:8, deck:1.3, mul:2.2, evo:1.12 }), N4m = run(BOTS.NORMAL, { train:25, mastery:8, deck:1.05, mul:2.2, evo:1.12 }), S4m = run(BOTS.SKILLED, { train:25, mastery:8, deck:1.05, mul:2.2, evo:1.12 });
 ok('안개 늪(×2.2) 풀수련·숙련8·2단진화: NORMAL 맞춤덱 클리어 · NORMAL 중간덱 미클리어 · SKILLED 중간덱 클리어', N4.cleared && !N4m.cleared && S4m.cleared, `N맞춤 ${fmt(N4.t)} · N중간 ${fmt(N4m.t)} · S중간 ${fmt(S4m.t)}`);
 ok('긴장 유지: NOVICE 풀메타+맞춤덱도 폐사지 미클리어', !V3.cleared, fmt(V3.t));
+const N5 = run(BOTS.NORMAL, { train:25, mastery:10, deck:1.3, mul:2.7, evo:1.3 }), N5m = run(BOTS.NORMAL, { train:25, mastery:10, deck:1.05, mul:2.7, evo:1.3 }), S5m = run(BOTS.SKILLED, { train:25, mastery:10, deck:1.05, mul:2.7, evo:1.3 });
+ok('무너진 산성(×2.7) 풀메타·숙련10·2단 둘(×1.3): NORMAL 맞춤덱 클리어 · NORMAL 중간덱 미클리어 · SKILLED 중간덱 클리어', N5.cleared && !N5m.cleared && S5m.cleared, `N맞춤 ${fmt(N5.t)} · N중간 ${fmt(N5m.t)} · S중간 ${fmt(S5m.t)}`);
+const N6 = run(BOTS.NORMAL, { train:25, mastery:10, deck:1.38, mul:3.2, evo:1.9 }), N6m = run(BOTS.NORMAL, { train:25, mastery:10, deck:1.05, mul:3.2, evo:1.9 }), S6 = run(BOTS.SKILLED, { train:25, mastery:10, deck:1.38, mul:3.2, evo:1.9 });
+ok('뇌운 봉우리(×3.2) 풀메타·최적덱·3단 진화(×1.9): SKILLED 클리어 · NORMAL 맞춤 9분+ · NORMAL 중간덱 미클리어', S6.cleared && N6.t >= 540 && !N6m.cleared, `S최적 ${fmt(S6.t)} · N최적 ${fmt(N6.t)} · N중간 ${fmt(N6m.t)}`);
 console.log(res.every(Boolean) ? '\n6일차 게이트 통과' : '\n6일차 게이트 실패'); process.exit(res.every(Boolean) ? 0 : 1);
