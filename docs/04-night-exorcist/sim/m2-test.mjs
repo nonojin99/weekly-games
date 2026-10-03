@@ -64,8 +64,8 @@ await page.evaluate(() => GAME.openShrine('gacha')); await page.screenshot({ pat
 await page.click('#shClose'); await page.waitForTimeout(100);
 const deckRun = await page.evaluate(() => { GAME.META.deck = ['sickle', 'orb', 'mist']; return GAME.META.deck.join(); });
 await page.click('#startBtn'); await page.waitForTimeout(300);
-const run4 = await page.evaluate(() => { const start = Object.keys(GAME.P.w).join(); GAME.S.xp = 9999; GAME.levelUp(); const names = [...document.querySelectorAll('#lvCards .card b')].map(b => b.textContent.trim().split(' ')[0]); GAME.S.xp = 0; document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play'; return { start, names, deck: GAME.S.deck.join() }; });
-check('덱 [낫,물구슬,물안개]: 시작 무기 = 낫, 3택1 무기는 덱 안에서만', run4.start === 'sickle' && run4.names.filter(n => /부적|목검|방울|죽창|횃불|화로|물채찍|염주|엽전표창/.test(n)).length === 0 && run4.deck === 'sickle,orb,mist', JSON.stringify(run4));
+const run4 = await page.evaluate(() => { const start = Object.keys(GAME.P.w).join(); GAME.S.xp = 9999; GAME.levelUp(); const names = [...document.querySelectorAll('#lvCards .card b')].map(b => b.childNodes[0].textContent.trim()); GAME.S.xp = 0; document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play'; return { start, names, deck: GAME.S.deck.join() }; });
+check('덱 [낫,물구슬,물안개]: 시작 무기 = 낫, 3택1 무기는 덱 안에서만', run4.start === 'sickle' && run4.names.filter(n => /^(부적|목검|방울|죽창|횃불|화로|물채찍|염주|엽전표창)$/.test(n)).length === 0 && run4.deck === 'sickle,orb,mist', JSON.stringify(run4));
 
 // 8. 상성 실피해 + 속성 효과
 const hit = await page.evaluate(() => { const o = GAME.spawn('jiangshi'); const hp0 = o.hp; GAME.hitWith(GAME.WBY.sickle, GAME.WBY.sickle, 10, 0, 0); return 0; }).catch(() => 0);
