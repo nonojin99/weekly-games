@@ -1,0 +1,14 @@
+PASS 챌린지(스테이지1·부적만·메타0) SKILLED 클리어 — 10m00s
+PASS NOVICE 런1 3~6분 — 5m17s
+  귀신의 숲: 최적 ×1.38 [orb mist spear beads] · 중간 ×1.05 · 최악 ×0.75 [torch whip sword sickle]
+PASS 귀신의 숲: 맞춤 덱 NORMAL r8 클리어 — 10m00s
+PASS 귀신의 숲: 중간 덱 NORMAL r8 7분 이상·미클리어 (덱이 빌드다) — 9m26s
+PASS 귀신의 숲: 역상성 덱 NORMAL r8 3분 미만 — 1m02s
+PASS 귀신의 숲: 중간 덱도 SKILLED 는 클리어 (실력 보상) — 10m00s
+  업화 폐사지: 최적 ×1.30 [talisman torch orb coin] · 중간 ×1.06 · 최악 ×0.75 [brazier mist beads bell]
+PASS 업화 폐사지: 맞춤 덱 NORMAL r18 클리어 — 10m00s
+PASS 업화 폐사지: 중간 덱 NORMAL r18 7분 이상·미클리어 (덱이 빌드다) — 9m10s
+PASS 업화 폐사지: 역상성 덱 NORMAL r18 3분 미만 — 1m10s
+PASS 업화 폐사지: 중간 덱도 SKILLED 는 클리어 (실력 보상) — 10m00s
+
+덱 게이트 통과
