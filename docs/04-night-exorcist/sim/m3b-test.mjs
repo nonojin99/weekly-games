@@ -29,7 +29,7 @@ check('3단 무기 2개로 3초: 30마리 전부 처치', fire.kills >= 30, JSON
 await pg.evaluate(() => { GAME.S.t = 20; GAME.endRun(false); }); await pg.waitForTimeout(100); await pg.click('#homeBtn'); await pg.waitForTimeout(100);
 await pg.evaluate(() => { GAME.META.evo = ['e:fire:throw+melee', 'e:fire:all']; GAME.openShrine('codex'); }); await pg.waitForTimeout(200);
 const codex = await pg.evaluate(() => { const g = document.querySelector('#shBody .grid'); return { cards: g.querySelectorAll('.w').length, seen: g.querySelectorAll('.w:not(.off)').length }; });
-check('도감 무기 49칸 · 보유 6 + 진화 2 = 8 발견', codex.cards === 49 && codex.seen === 8, JSON.stringify(codex));
+check('도감 무기 51칸 · 보유 6 + 진화 2 = 8 발견', codex.cards === 51 && codex.seen === 8, JSON.stringify(codex));
 await pg.screenshot({ path: path.join(here, 'shots/m3-codex-weapons.png') });
 check('콘솔 에러 0', errs.length === 0, errs.join(';'));
 await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);
