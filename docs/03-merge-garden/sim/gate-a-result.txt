@@ -1,0 +1,13 @@
+ACTIVE 구매 105 회 | 최고 티어 9 | 환생 18m04s, 33m45s, 47m38s
+NO_TAP 구매 71 회 | 최고 티어 8 | 환생 25m30s, 46m44s
+ACTIVE 티어 첫 도달: T1@0m02s T2@0m06s T3@0m14s T4@0m41s T5@1m53s T6@4m44s T7@7m15s T8@10m09s T9@13m53s
+ACTIVE 구매 로그(처음 25): 0m26s:water(12) 0m39s:water(16) 0m50s:water(20) 1m01s:water(26) 1m13s:water(34) 1m25s:water(45) 1m39s:water(58) 1m54s:water(75) 2m10s:water(98) 2m27s:water(127) 2m47s:water(165) 3m10s:water(215) 3m34s:water(280) 4m02s:water(363) 4m33s:water(472) 5m04s:seed(600) 5m30s:water(614) 5m57s:water(798) 6m24s:water(1038) 6m53s:water(1349) 7m24s:water(1754) 7m52s:grid(60) 8m40s:seed(6000) 12m49s:seed(60000) 12m49s:grid(108)
+PASS 대기 밴드 5~300s — >300s 0회, <5s 1회, 중앙값 19s, 최대 249s
+PASS 벽 없음 (5분 구간 구매 0회 없음) — 15 8 3 9 13 2 9 16 5 12 12 1
+PASS 첫 환생 활성 15~30분 — 18m04s
+PASS 첫 환생 방치 20~40분 — 25m30s
+PASS 활성 가치: 티어4 도달 비율 ≥ 2 — 0m41s vs 2m23s = ×3.49
+PASS 활성 가치: 60분 누적 ≥ 1.3 — 1587240 vs 871099 = ×1.82
+PASS 환생 가속 (2회차 < 1회차) — 1회차 18m04s, 2회차 +15m41s
+
+게이트 A 통과
