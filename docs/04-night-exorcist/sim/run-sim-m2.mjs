@@ -7,15 +7,16 @@
 const C = { RUN:600, SPAWN0:1.2, SPAWN_K:.006, HP0:10, HP_G:1.0032, BOSS_AT:[300, 540], BOSS_HP:[40, 120], DPS0:12, LVL_XP0:12, LVL_XP_G:1.18, LVL_DPS:.2, CAP:60, BOSS_SHARE:.7, CONTACT:3, BOSS_CONTACT:8, HP_PLAYER:100, REGEN:.35, PICKUP:.9, TR_ATK:.6, TR_HP:.75, TR_RG:1.25, MAST:.05 };
 for (const k in C) if (process.env[k] != null) C[k] = +process.env[k];
 const BOTS = { SKILLED:{ dodge:.78, pick:1 }, NORMAL:{ dodge:.55, pick:.85 }, NOVICE:{ dodge:.30, pick:.7 } };
-function run(bot, { train = 0, mastery = 0, deck = 1, mul = 1 } = {}) {
+function run(bot, { train = 0, mastery = 0, deck = 1, mul = 1, evo = 1 } = {}) {   // evo: 6분 이후 DPS 배율(2단 진화 1슬롯 ≈ ×1.12)
   const f = Math.min(1, train / 25), atk = 1 + C.TR_ATK * f, hpM = 1 + C.TR_HP * f, rg = 1 + C.TR_RG * f, dmg = atk * (1 + C.MAST * mastery) * deck;
   let t, hp = C.HP_PLAYER * hpM, alive = 0, queue = 0, xp = 0, lvl = 0, need = C.LVL_XP0, dps = C.DPS0 * dmg, kills = 0, bossIdx = 0, bossHp = 0;
   for (t = 1; t <= C.RUN; t++) {
     const h = C.HP0 * Math.pow(C.HP_G, t) * mul, s = C.SPAWN0 + C.SPAWN_K * t;
     queue += s; const sp = Math.min(queue, Math.max(0, C.CAP - alive)); queue -= sp; alive += sp;
     if (bossIdx < C.BOSS_AT.length && t === C.BOSS_AT[bossIdx]) bossHp = h * C.BOSS_HP[bossIdx];
-    if (bossHp > 0) { bossHp -= dps * C.BOSS_SHARE; if (bossHp <= 0) { bossHp = 0; bossIdx++; kills++; xp += 10; } }
-    const k = Math.min(alive, dps / h); alive -= k; kills += k; xp += k * C.PICKUP;
+    const dd = dps * (t > 360 ? evo : 1);
+    if (bossHp > 0) { bossHp -= dd * C.BOSS_SHARE; if (bossHp <= 0) { bossHp = 0; bossIdx++; kills++; xp += 10; } }
+    const k = Math.min(alive, dd / h); alive -= k; kills += k; xp += k * C.PICKUP;
     while (xp >= need) { xp -= need; lvl++; need = C.LVL_XP0 * Math.pow(C.LVL_XP_G, lvl); dps *= 1 + C.LVL_DPS * bot.pick; }
     const contact = Math.min(alive, 8) * C.CONTACT * (1 - bot.dodge) + (bossHp > 0 ? C.BOSS_CONTACT * (1 - bot.dodge) : 0);
     hp += C.REGEN * rg - contact; if (hp > C.HP_PLAYER * hpM) hp = C.HP_PLAYER * hpM;
@@ -36,5 +37,7 @@ ok('귀신의 숲(×1.45) NORMAL r12·숙련4: 맞춤덱 클리어 · 중간덱 
 const N3 = run(BOTS.NORMAL, { train:18, mastery:5, deck:1.3, mul:1.8 }), N3m = run(BOTS.NORMAL, { train:18, mastery:5, deck:1.05, mul:1.8 }), S3m = run(BOTS.SKILLED, { train:18, mastery:5, deck:1.05, mul:1.8 });
 ok('업화 폐사지(×1.8) r18: NORMAL 맞춤덱 클리어 · NORMAL 중간덱 미클리어 · SKILLED 중간덱 클리어', N3.cleared && !N3m.cleared && S3m.cleared, `N맞춤 ${fmt(N3.t)} · N중간 ${fmt(N3m.t)} · S중간 ${fmt(S3m.t)}`);
 const V3 = run(BOTS.NOVICE, { train:25, mastery:10, deck:1.3, mul:1.8 });
+const N4 = run(BOTS.NORMAL, { train:25, mastery:8, deck:1.3, mul:2.2, evo:1.12 }), N4m = run(BOTS.NORMAL, { train:25, mastery:8, deck:1.05, mul:2.2, evo:1.12 }), S4m = run(BOTS.SKILLED, { train:25, mastery:8, deck:1.05, mul:2.2, evo:1.12 });
+ok('안개 늪(×2.2) 풀수련·숙련8·2단진화: NORMAL 맞춤덱 클리어 · NORMAL 중간덱 미클리어 · SKILLED 중간덱 클리어', N4.cleared && !N4m.cleared && S4m.cleared, `N맞춤 ${fmt(N4.t)} · N중간 ${fmt(N4m.t)} · S중간 ${fmt(S4m.t)}`);
 ok('긴장 유지: NOVICE 풀메타+맞춤덱도 폐사지 미클리어', !V3.cleared, fmt(V3.t));
 console.log(res.every(Boolean) ? '\n6일차 게이트 통과' : '\n6일차 게이트 실패'); process.exit(res.every(Boolean) ? 0 : 1);

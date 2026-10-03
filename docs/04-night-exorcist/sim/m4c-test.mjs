@@ -1,0 +1,23 @@
+// M4 ③: 안개 늪. NODE_PATH=/home/claude/node_modules node m4c-test.mjs
+import { chromium } from 'playwright'; import path from 'path'; import { fileURLToPath } from 'url';
+const here = path.dirname(fileURLToPath(import.meta.url)); const results = []; const check = (n, ok, info = '') => { results.push(ok); console.log((ok ? 'PASS' : 'FAIL') + ' ' + n + (info ? ' — ' + info : '')); };
+const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const errs = []; pg.on('pageerror', e => errs.push(e.message));
+await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
+const d = await pg.evaluate(() => { const live = GAME.STAGES.filter(s => !s.soon); const st = live[3]; const bad = [...st.roster, ...st.bosses].filter(id => !GAME.ENEMY[id] || !GAME.GRIDS[GAME.ENEMY[id].spr]); return { n: live.length, soon: GAME.STAGES.filter(s => s.soon).length, name: st.name, els: st.els, bad, bossEl: st.bosses.map(b => GAME.ENEMY[b].el), total: Object.keys(GAME.ENEMY).length, menu: [...document.querySelectorAll('#stages button')].map(b => b.textContent.replace(/\s+/g, ' ')) }; });
+check('스테이지 4 안개 늪 (빛·어둠·수) · 요괴 28 · 예정 2 · 보스 빛/어둠 고정 · 선택 화면 "조여옴"', d.n === 4 && d.soon === 2 && d.name === '안개 늪' && d.els.join() === 'light,dark,water' && d.bad.length === 0 && d.bossEl.join() === 'light,dark' && d.total === 28 && /안개 늪.*빛 어둠 수.*조여옴.*등불 도깨비 왕·안개 구렁이/.test(d.menu[3]), JSON.stringify(d));
+await pg.evaluate(() => { GAME.META.stage = 4; GAME.META.bestStage = 3; GAME.META.deck = ['talisman', 'sword', 'bell']; GAME.META.owned = { talisman:0, sword:0, bell:0 }; }); await pg.click('#startBtn'); await pg.waitForTimeout(200);
+const sh = await pg.evaluate(() => { const r0 = GAME.arenaR(); GAME.S.shrinkT = 270; const r1 = GAME.arenaR(); GAME.S.shrinkT = 540; const r2 = GAME.arenaR(); GAME.S.shrinkT = 900; const r3 = GAME.arenaR(); return { r0, r1, r2, r3, stage: GAME.S.stage }; });
+check('반경 600 → 410(4.5분) → 220(9분) → 220 유지', sh.r0 > 599 && sh.r1 === 410 && sh.r2 === 220 && sh.r3 === 220 && sh.stage === 3, JSON.stringify(sh));
+const fog = await pg.evaluate(() => { GAME.S.shrinkT = 540; GAME.P.x = 400; GAME.P.y = 0; GAME.S.hp = 100; GAME.E.length = 0; for (let i = 0; i < 60; i++) GAME.tick(1 / 60); const out = { hp: +GAME.S.hp.toFixed(1), fogT: GAME.S.fogT }; GAME.P.x = 0; for (let i = 0; i < 60; i++) GAME.tick(1 / 60); out.hpIn = +GAME.S.hp.toFixed(1); out.fogIn = GAME.S.fogT; return out; });
+check('안개 밖 1초: 체력 -5(회복 +.35) · 시야 디버프 1 → 안으로 들어오면 디버프 해제·피해 없음', fog.hp < 96 && fog.hp > 94.5 && fog.fogT === 1 && fog.hpIn > fog.hp && fog.fogIn === 0, JSON.stringify(fog));
+const pause = await pg.evaluate(() => { GAME.S.shrinkT = 100; GAME.E.length = 0; GAME.spawn('lanternking', true); for (let i = 0; i < 60; i++) GAME.tick(1 / 60); const a = GAME.S.shrinkT; GAME.E.length = 0; for (let i = 0; i < 60; i++) GAME.tick(1 / 60); return { a, b: GAME.S.shrinkT }; });
+check('보스 생존 중 축소 정지 · 처치 후 재개', pause.a === 100 && pause.b > 100.9, JSON.stringify(pause));
+await pg.evaluate(() => { GAME.S.shrinkT = 400; GAME.P.x = GAME.P.y = 0; GAME.S.hp = 100; for (let i = 0; i < 12; i++) GAME.spawn(['fireflies','willo','shadowwolf','swampghost','mossturtle'][i % 5]); });
+await pg.waitForTimeout(1500); await pg.screenshot({ path: path.join(here, 'shots/m4c-marsh.png') });
+await pg.evaluate(() => { GAME.P.x = 330; GAME.S.shrinkT = 540; }); await pg.waitForTimeout(800); await pg.screenshot({ path: path.join(here, 'shots/m4c-fog.png') });
+const clear = await pg.evaluate(() => { GAME.META.shards = 0; GAME.S.t = 600; GAME.S.shardsRun = 0; GAME.endRun(true); return { shards: GAME.META.shards, best: GAME.META.bestStage, pool: GAME.gachaPool().length }; });
+check('첫 클리어: 뽑기 18×2 = 360 조각 · bestStage 4 · 빛·어둠 무기 뽑기 풀 열림(20)', clear.shards === 360 && clear.best === 4 && clear.pool === 20, JSON.stringify(clear));
+check('콘솔 에러 0', errs.length === 0, errs.join(';'));
+await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);
