@@ -1,0 +1,25 @@
+// M4 ①: 슬롯 5/5 · 패시브 8 · 중립 무기 2. NODE_PATH=/home/claude/node_modules node m4a-test.mjs
+import { chromium } from 'playwright'; import path from 'path'; import { fileURLToPath } from 'url';
+const here = path.dirname(fileURLToPath(import.meta.url)); const results = []; const check = (n, ok, info = '') => { results.push(ok); console.log((ok ? 'PASS' : 'FAIL') + ' ' + n + (info ? ' — ' + info : '')); };
+const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const errs = []; pg.on('pageerror', e => errs.push(e.message));
+await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
+const d = await pg.evaluate(() => ({ passives: GAME.PASSIVES.length, weapons: GAME.WEAPONS.length, evos: GAME.EVOS.length, neutral: GAME.WEAPONS.filter(w => w.neutral).map(w => w.id), af: [GAME.affinity(GAME.WBY.tiger, { el:'fire', armor:'heavy' }), GAME.affinity(GAME.WBY.moxa, { el:'water', armor:'light' })] }));
+check('패시브 8 · 무기 14(중립 2) · 진화 37 그대로 · 중립 상성 1', d.passives === 8 && d.weapons === 14 && d.evos === 37 && d.neutral.join() === 'tiger,moxa' && d.af.join() === '1,1', JSON.stringify(d));
+await pg.evaluate(() => { GAME.META.deck = ['talisman','sword','bell','spear','orb','sickle','tiger','moxa']; GAME.META.owned = Object.fromEntries(GAME.META.deck.map(x => [x, 0])); GAME.META.runs = 3; });
+await pg.click('#startBtn'); await pg.waitForTimeout(200);
+const slots = await pg.evaluate(() => { GAME.P.w = { talisman:1, sword:1, bell:1, spear:1 }; GAME.S.xp = 9999; GAME.levelUp(); GAME.S.xp = 0; const a = [...document.querySelectorAll('#lvCards .card b')].map(b => b.textContent.trim().split(' ')[0]); document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play';
+  GAME.P.w = { talisman:1, sword:1, bell:1, spear:1, orb:1 }; GAME.S.xp = 9999; GAME.levelUp(); GAME.S.xp = 0; const b = [...document.querySelectorAll('#lvCards .card b')].map(x => x.textContent.trim().split(' ')[0]); document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play';
+  GAME.P.p = { spd:1, hp:1, cd:1, pick:1, armor:1 }; GAME.P.w = { talisman:1, sword:1, bell:1, spear:1, orb:1 }; GAME.S.xp = 9999; GAME.levelUp(); GAME.S.xp = 0; const c = [...document.querySelectorAll('#lvCards .card b')].map(x => x.textContent.trim()); document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play'; return { a, b, c }; });
+const newW = n => /낫|종이|쑥뜸/.test(n);
+check('무기 4개일 때 5번째 무기 제안 가능 · 5개면 새 무기 없음 · 패시브 5개면 새 패시브 없음', !slots.b.some(newW) && !slots.c.some(n => /소금 주머니|녹두|부적 가방/.test(n)), JSON.stringify(slots));
+const neutral = await pg.evaluate(async () => { GAME.P.w = { tiger:5, moxa:3 }; GAME.P.p = {}; GAME.S.hp = 50; GAME.S.maxhp = 100; GAME.S.xp = -1e9; for (let i = 0; i < 20; i++) { const o = GAME.spawn('egg'); const a = i * .31; o.x = GAME.P.x + Math.cos(a) * 45; o.y = GAME.P.y + Math.sin(a) * 45; o.hp = 1; } const k0 = GAME.S.kills; for (let i = 0; i < 90; i++) GAME.tick(1 / 60); return { kills: GAME.S.kills - k0, hp: GAME.S.hp }; });
+check('종이 호랑이 + 쑥뜸 연기: 1.5초 안에 처치 · 쑥뜸 처치 시 회복(hp > 50)', neutral.kills > 5 && neutral.hp > 50, JSON.stringify(neutral));
+const armor = await pg.evaluate(() => { GAME.E.length = 0; GAME.P.p = { armor:5 }; GAME.S.hp = 100; const o = GAME.spawn('egg'); o.x = GAME.P.x + 5; o.y = GAME.P.y; o.touchCd = 0; for (let i = 0; i < 3; i++) GAME.tick(1 / 60); const a = 100 - GAME.S.hp; GAME.E.length = 0; GAME.P.p = { salt:1 }; GAME.S.hp = 100; const o2 = GAME.spawn('egg'); o2.x = GAME.P.x + 5; o2.y = GAME.P.y; o2.touchCd = 0; for (let i = 0; i < 3; i++) GAME.tick(1 / 60); return { armorDmg: +a.toFixed(2), stun: o2.stun, kx: Math.abs(o2.kx) }; });
+check('도롱이 5단: 접촉 3 → 2.0 · 소금 주머니: 닿은 적 경직 0.4 + 밀침', armor.armorDmg > 1.9 && armor.armorDmg < 2.1 && armor.stun > 0 && armor.kx > 100, JSON.stringify(armor));
+const bagxp = await pg.evaluate(() => { GAME.E.length = 0; GAME.B.length = 0; GAME.P.w = { talisman:1 }; GAME.P.p = { bag:2, xp:5 }; const o = GAME.spawn('egg'); o.x = GAME.P.x + 100; o.y = GAME.P.y; o.hp = 1e9; GAME.WCD.talisman = 0; GAME.tick(1 / 60); const nB = GAME.B.length; GAME.S.xp = 0; GAME.S.need = 1000; GAME.G.length = 0; GAME.dropGem(GAME.P.x, GAME.P.y, 10); GAME.tick(1 / 60); return { nB, xp: GAME.S.xp }; });
+check('부적 가방 2단: 부적 투사체 1 → 3 · 녹두 5단: 보석 10 → 15', bagxp.nB === 3 && Math.abs(bagxp.xp - 15) < .01, JSON.stringify(bagxp));
+await pg.screenshot({ path: path.join(here, 'shots/m4a-play.png') });
+check('콘솔 에러 0', errs.length === 0, errs.join(';'));
+await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);
