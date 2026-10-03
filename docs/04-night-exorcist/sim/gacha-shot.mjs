@@ -1,0 +1,12 @@
+import { chromium } from 'playwright'; import path from 'path'; import { fileURLToPath } from 'url';
+const here = path.dirname(fileURLToPath(import.meta.url)); const file = 'file://' + path.resolve(here, '../../../games/night-exorcist/index.html');
+const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' }); const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const errs = []; pg.on('pageerror', e => errs.push(e.message));
+await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+await pg.goto(file + '?test=1'); await pg.waitForFunction(() => window.GAME);
+await pg.evaluate(() => { GAME.META.runs = 3; GAME.META.shards = 2000; GAME.META.bestStage = 6; GAME.META.owned = { talisman:3, sword:0 }; GAME.META.lastSeen = Date.now(); localStorage.setItem('wk_night-exorcist', JSON.stringify(GAME.META)); });
+await pg.goto(file); await pg.waitForTimeout(300); await pg.click('#shrineBtn'); await pg.waitForTimeout(100); await pg.click('#tabGacha'); await pg.waitForTimeout(200);
+await pg.screenshot({ path: path.join(here, 'shots/gacha-idle.png') });
+await pg.click('#gacha10'); await pg.waitForTimeout(1300); await pg.screenshot({ path: path.join(here, 'shots/gacha-anim.png') });
+await pg.waitForTimeout(2500); await pg.screenshot({ path: path.join(here, 'shots/gacha-done.png') });
+await pg.click('#gachaBtn'); await pg.waitForTimeout(1600); await pg.screenshot({ path: path.join(here, 'shots/gacha-one.png') });
+console.log('errs', errs); await br.close();
