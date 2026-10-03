@@ -1,0 +1,9 @@
+PASS 챌린지(메타0·고정덱 1.0): SKILLED 초원 클리어 — 10m00s lvl19
+PASS NORMAL 메타0 초원 7~10분 — 7m38s lvl17
+PASS 신규 NOVICE 런1 3~6분 — 4m00s lvl11
+PASS 메타 가치: NOVICE 풀수련+숙련6+중간덱 초원 클리어 — 10m00s
+PASS 귀신의 숲(×1.45) NORMAL r12·숙련4: 맞춤덱 클리어 · 중간덱 미클리어 7분+ · 역상성 5분 미만 — 맞춤 10m00s · 중간 8m53s · 역상성 0m27s
+PASS 업화 폐사지(×1.8) r18: NORMAL 맞춤덱 클리어 · NORMAL 중간덱 미클리어 · SKILLED 중간덱 클리어 — N맞춤 10m00s · N중간 8m26s · S중간 10m00s
+PASS 긴장 유지: NOVICE 풀메타+맞춤덱도 폐사지 미클리어 — 8m40s
+
+6일차 게이트 통과
