@@ -38,7 +38,7 @@ await page.evaluate(() => { const c = document.querySelector('#lvCards .card'); 
 await page.evaluate(() => { GAME.S.xp = 0; GAME.S.mode = 'play'; document.getElementById('lv').classList.remove('show'); GAME.S.t = 45; GAME.endRun(false); });
 await page.waitForTimeout(100);
 const after1 = await page.evaluate(() => ({ runs: GAME.META.runs, deck: GAME.META.deck.join(), sword: GAME.META.owned.sword, sh: document.getElementById('shrineBtn').classList.contains('hide'), ch: document.getElementById('chalBtn').classList.contains('hide') }));
-check('런1 종료: 목검 해금 · 덱 [부적,목검] · 챌린지 열림 · 사당 아직', after1.runs === 1 && after1.sword === 0 && after1.deck === 'talisman,sword' && after1.sh && !after1.ch, JSON.stringify(after1));
+check('런1 종료: 목검 해금 · 덱 [부적,목검] · 챌린지·사당 열림', after1.runs === 1 && after1.sword === 0 && after1.deck === 'talisman,sword' && !after1.sh && !after1.ch, JSON.stringify(after1));
 
 // 5. 런 2 → 방울 + 사당 열림; 런 3 → 조각 +10
 await page.evaluate(() => { GAME.S.mode = 'menu'; }); await page.click('#againBtn'); await page.waitForTimeout(200);

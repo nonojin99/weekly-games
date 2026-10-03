@@ -30,5 +30,10 @@ check('뽑기 ×10: 조각 -100 · 결과 10개 합산 · ×100 버튼 열림(�
 await pg.screenshot({ path: path.join(here, 'shots/m6-gacha.png') });
 const lock = await pg.evaluate(() => { GAME.META.bestStage = 3; GAME.renderShrine(); const b = document.getElementById('gacha100'); return b.textContent + (b.disabled ? '(x)' : ''); });
 check('보통 미해금이면 ×100 잠김', lock === '🔒 ×100(x)', lock);
+await pg.click('#shClose'); await pg.waitForTimeout(100); await pg.evaluate(() => { GAME.META.stage = 1; GAME.META.diff = 0; }); await pg.click('#startBtn'); await pg.waitForTimeout(200);
+const gem = await pg.evaluate(() => { GAME.G.length = 0; GAME.S.need = 1e9; GAME.P.p = { pick:5 }; GAME.S.xp = 0; for (let k = 0; k < 40; k++) { const a = k * .157; GAME.dropGem(GAME.P.x + Math.cos(a) * (60 + k * 4), GAME.P.y + Math.sin(a) * (60 + k * 4), 1); } GAME.KEY.KeyD = true; let t = 0; while (GAME.G.length && t < 4) { GAME.tick(1 / 60); t += 1 / 60; } GAME.KEY.KeyD = false; return { left: GAME.G.length, t: +t.toFixed(2), xp: GAME.S.xp }; });
+check('보석 40개, 달리며 줍기: 4초 안에 전부 흡수(맴돌기 없음)', gem.left === 0 && gem.xp === 40, JSON.stringify(gem));
+const sh = await pg.evaluate(() => { GAME.META.runs = 1; GAME.renderMenu ? 0 : 0; GAME.S.t = 5; GAME.endRun(false); return document.getElementById('shrineBtn').classList.contains('hide'); });
+check('사당 버튼: 런 1회부터 보임', sh === false, '' + sh);
 check('콘솔 에러 0', errs.length === 0, errs.join(';'));
 await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);
