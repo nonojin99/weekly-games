@@ -1,0 +1,27 @@
+PASS 밴드 유지 (0~200런) — 이탈 0구간, 최대 편차 1.076 @r=6
+PASS 포화 power(200)/power(∞) ≥ 0.98 — 1.0000
+PASS 챌린지 공정성: SKILLED 메타0 밤1 클리어 — 10m00s lvl19
+PASS NORMAL 메타0 밤1 7~10분 — 8m05s lvl17
+PASS 신규 진입: NOVICE 런1 3~6분 생존 — 4m18s lvl12
+PASS 메타 가치: NOVICE 풀메타 밤1 클리어 — r200 10m00s · r20 9m44s
+PASS 긴장 유지: NOVICE r20 밤20 클리어 못 함 — 4m19s
+PASS 사다리 공정: SKILLED r20 밤20 클리어 — 10m00s · NORMAL 8m22s
+
+SKILLED r0 로그:
+  1m alive=0 q=0 lvl=4 dps=25 h=12 hp=100
+  2m alive=0 q=0 lvl=7 dps=43 h=15 hp=100
+  3m alive=0 q=0 lvl=10 dps=74 h=18 hp=100
+  4m alive=0 q=0 lvl=11 dps=89 h=22 hp=100
+  5m alive=0 q=0 lvl=13 dps=128 h=26 hp=99
+  6m alive=0 q=0 lvl=15 dps=185 h=32 hp=100
+  7m alive=0 q=0 lvl=16 dps=222 h=38 hp=100
+  8m alive=0 q=0 lvl=17 dps=266 h=46 hp=100
+  9m alive=0 q=0 lvl=18 dps=319 h=56 hp=100
+  10m alive=0 q=0 lvl=19 dps=383 h=68 hp=99
+NOVICE r0 로그:
+  1m alive=0 q=0 lvl=4 dps=20 h=12 hp=100
+  2m alive=0 q=0 lvl=7 dps=30 h=15 hp=100
+  3m alive=0 q=0 lvl=9 dps=39 h=18 hp=100
+  4m alive=4 q=0 lvl=11 dps=51 h=22 hp=70
+
+게이트 A 통과
