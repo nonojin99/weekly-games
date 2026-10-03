@@ -136,7 +136,7 @@ const EL_COL = { fire:'#ff7a4a', water:'#5fc8ff', wood:'#7fe06a', metal:'#d8d8e8
 const power = r => 1 + C.META_G * (1 - Math.pow(C.META_D, r));
 
 // ───────── 메타 세이브 ─────────
-const META0 = { v:2, runs:0, coins:0, shards:0, train:{ atk:0, hp:0, regen:0, spd:0, pick:0 }, owned:{ talisman:0 }, deck:['talisman'], stage:1, bestStage:0, codex:[], best:{ time:0, kills:0 }, chalBest:0, lastSeen:0 };
+const META0 = { v:2, runs:0, coins:0, shards:0, train:{ atk:0, hp:0, regen:0, spd:0, pick:0 }, owned:{ talisman:0 }, deck:['talisman'], stage:1, bestStage:0, codex:[], evo:[], best:{ time:0, kills:0 }, chalBest:0, lastSeen:0 };
 function migrate(m) { if (!m) return JSON.parse(JSON.stringify(META0)); const base = JSON.parse(JSON.stringify(META0)); if (m.v === 1) { const w = m.weapons || []; m.owned = {}; if (w[0]) m.owned.talisman = 0; if (w[1]) m.owned.sword = 0; if (w[2]) m.owned.bell = 0; m.deck = Object.keys(m.owned); delete m.weapons; delete m.chars; m.v = 2; } const out = { ...base, ...m }; out.train = { ...base.train, ...(m.train || {}) }; if (!out.owned.talisman && out.owned.talisman !== 0) out.owned.talisman = 0; if (!out.deck.length) out.deck = ['talisman']; return out; }
 let META = migrate(JSON.parse(store.get(SAVE_KEY) || 'null'));
 function saveMeta() { META.lastSeen = Date.now(); store.set(SAVE_KEY, JSON.stringify(META)); cloudSave(); }
@@ -232,7 +232,41 @@ const WEAPONS = [
   { id:'bell',     el:'metal', type:'aura',  name:'방울',     desc:'주변 요괴를 계속 흔들어 느리게 한다',         cd:.5, dmg:4, range:70, slow:.2, max:5, up:'피해 +25% · 반경 +12%' },
 ];
 const WBY = Object.fromEntries(WEAPONS.map(w => [w.id, w]));
-const affinity = (w, o) => { const el = o.el || (o.d && o.d.el) || 'none', armor = o.armor || (o.d && o.d.armor) || 'none'; return (el === 'none' || w.el === el ? 1 : BEATS[w.el] === el ? 1.5 : BEATS[el] === w.el ? .6 : 1) * (TYPE_VS[w.type][armor] || 1); };
+const elMul = (we, el) => el === 'none' || we === el ? 1 : BEATS[we] === el ? 1.5 : BEATS[el] === we ? .6 : 1;
+const affinity = (w, o) => { const el = o.el || (o.d && o.d.el) || 'none', armor = o.armor || (o.d && o.d.armor) || 'none';
+  if (w.els) return Math.max(1, ...w.els.map(we => elMul(we, el))) * Math.max(1, ...w.types.map(t => TYPE_VS[t][armor] || 1));   // 진화: 불리 없음
+  return elMul(w.el, el) * (TYPE_VS[w.type][armor] || 1); };
+// ── 진화: 2단 = 같은 속성·다른 타입 쌍(12) + 같은 타입·다른 속성 쌍(18) · 3단 = 속성 삼위일체(4) + 타입 사원소(3). 런 안에서 부모 Lv5 → 자식 Lv1, 부모 소모
+// 효과: 부모 공격 전부 발사, 피해 2단 ×1.5 / 3단 ×2.2, 상성은 부모 속성·타입 중 유리한 쪽(불리 없음)
+const EVO_NAME = {
+  'fire:throw+melee':'화염 부채', 'fire:throw+aura':'불꽃 비', 'fire:melee+aura':'업화 고리',
+  'water:throw+melee':'해일 채찍', 'water:throw+aura':'빗물 구슬', 'water:melee+aura':'안개 소용돌이',
+  'wood:throw+melee':'대나무 숲검', 'wood:throw+aura':'염주 창', 'wood:melee+aura':'목어 검무',
+  'metal:throw+melee':'엽전 낫', 'metal:throw+aura':'방울 표창', 'metal:melee+aura':'풍경 낫',
+  'throw:fire+water':'김 서린 부적', 'throw:fire+wood':'불타는 죽창', 'throw:fire+metal':'불 엽전', 'throw:water+wood':'이슬 죽창', 'throw:water+metal':'물결 표창', 'throw:wood+metal':'엽전 죽창',
+  'melee:fire+water':'증기 채찍', 'melee:fire+wood':'화목검', 'melee:fire+metal':'달군 낫', 'melee:water+wood':'물먹은 목검', 'melee:water+metal':'물결 낫', 'melee:wood+metal':'목낫',
+  'aura:fire+water':'온천 안개', 'aura:fire+wood':'향로 염주', 'aura:fire+metal':'화로 방울', 'aura:water+wood':'안개 염주', 'aura:water+metal':'물방울 종', 'aura:wood+metal':'염주 방울',
+  'fire:all':'삼매진화', 'water:all':'용궁 해일', 'wood:all':'천년 신목', 'metal:all':'만금 종', 'throw:all':'사원소 표창', 'melee:all':'사원소 검', 'aura:all':'사원소 결계' };
+const ELS = ['fire', 'water', 'wood', 'metal'], TYPES = ['throw', 'melee', 'aura'];
+const baseOf = (el, type) => WEAPONS.find(w => w.el === el && w.type === type);
+const EVOS = []; // { id, name, tier, parents:[ids], parts:[base ids], els, types, max:5 }
+for (const el of ELS) for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) { const a = baseOf(el, TYPES[i]), b = baseOf(el, TYPES[j]); EVOS.push({ id:`e:${el}:${TYPES[i]}+${TYPES[j]}`, name:EVO_NAME[`${el}:${TYPES[i]}+${TYPES[j]}`], tier:2, parents:[a.id, b.id], parts:[a.id, b.id], els:[el], types:[TYPES[i], TYPES[j]], max:5, up:'피해 +25%' }); }
+for (const type of TYPES) for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) { const a = baseOf(ELS[i], type), b = baseOf(ELS[j], type); EVOS.push({ id:`e:${type}:${ELS[i]}+${ELS[j]}`, name:EVO_NAME[`${type}:${ELS[i]}+${ELS[j]}`], tier:2, parents:[a.id, b.id], parts:[a.id, b.id], els:[ELS[i], ELS[j]], types:[type], max:5, up:'피해 +25%' }); }
+for (const el of ELS) EVOS.push({ id:`e:${el}:all`, name:EVO_NAME[`${el}:all`], tier:3, parents:null, parts:TYPES.map(t => baseOf(el, t).id), els:[el], types:TYPES.slice(), max:5, up:'피해 +25%' });   // 2단(같은 속성) + 남은 타입 Lv5
+for (const type of TYPES) EVOS.push({ id:`e:${type}:all`, name:EVO_NAME[`${type}:all`], tier:3, parents:null, parts:ELS.map(e => baseOf(e, type).id), els:ELS.slice(), types:[type], max:5, up:'피해 +25%' });   // 같은 타입 2단 둘(속성 겹침 없음)
+const EBY = Object.fromEntries(EVOS.map(e => [e.id, e]));
+const weaponOf = id => WBY[id] || EBY[id];
+const TIER_MUL = { 1:1, 2:1.5, 3:2.2 };
+for (const e of EVOS) e.desc = (e.tier === 3 ? '3단 · ' : '2단 · ') + e.parts.map(p => WBY[p].name).join('+') + ' 을(를) 모두 쏜다';
+// 지금 보유(P.w)로 가능한 진화 목록
+function evoOptions() {
+  const out = [], have = id => (P.w[id] || 0) >= weaponOf(id).max;
+  for (const e of EVOS) { if (P.w[e.id]) continue;
+    if (e.tier === 2) { if (have(e.parents[0]) && have(e.parents[1])) out.push({ e, consume:e.parents }); }
+    else if (e.types.length === 3) { const t2 = EVOS.filter(x => x.tier === 2 && x.els.length === 1 && x.els[0] === e.els[0]).find(x => have(x.id)); if (!t2) continue; const rest = e.parts.find(p => !t2.parts.includes(p)); if (have(rest)) out.push({ e, consume:[t2.id, rest] }); }
+    else { const t2s = EVOS.filter(x => x.tier === 2 && x.types.length === 1 && x.types[0] === e.types[0] && have(x.id)); for (let i = 0; i < t2s.length; i++) for (let j = i + 1; j < t2s.length; j++) if (!t2s[i].els.some(el => t2s[j].els.includes(el))) { out.push({ e, consume:[t2s[i].id, t2s[j].id] }); i = j = 99; } } }
+  return out;
+}
 const CHAL_DECK = ['talisman', 'sword', 'bell', 'spear', 'orb', 'sickle'];   // 주간 챌린지 고정 덱
 const TRAIN = [ { id:'atk', name:'공격', desc:'피해 +12%/단' }, { id:'hp', name:'체력', desc:'최대 체력 +15%/단' }, { id:'regen', name:'회복', desc:'자연 회복 +25%/단' }, { id:'spd', name:'이속', desc:'이동 속도 +4%/단' }, { id:'pick', name:'획득', desc:'보석 범위 +10%/단' } ];
 const trainCost = lv => Math.round(40 * Math.pow(1.6, lv));   // 0→1 40, 1→2 64, … 4→5 262
@@ -246,7 +280,7 @@ const PASSIVES = [
 
 // ───────── 상태·풀 ─────────
 const S = { mode:'menu', t:0, stage:0, lvl:1, xp:0, need:C.LVL_XP0, kills:0, coins:0, hp:100, maxhp:100, pw:1, spawnAcc:0, bossDone:[false,false], cleared:false, dead:false, hitT:0, slowT:0, burnT:0, eliteIdx:0, shardsRun:0, deck:['talisman'], freeze:0, shake:0, flash:0, chal:null };
-const P = { x:0, y:0, r:12, dx:0, dy:1, moving:false, walk:0, spd:C.SPEED, pick:C.PICK_R, w:{}, p:{} };   // w: 무기 레벨, p: 패시브 레벨
+const P = { x:0, y:0, r:12, dx:0, dy:1, moving:false, walk:0, spd:C.SPEED, pick:C.PICK_R, w:{}, p:{}, used:new Set() };   // w: 무기 레벨, p: 패시브 레벨
 const E = [], E_FREE = [];      // 적 풀
 const B = [], B_FREE = [];      // 투사체(부적)
 const G = [], G_FREE = [];      // 보석
@@ -284,8 +318,8 @@ const stageMul = () => STAGES[S.stage].mul;
 const enemyHp = t => C.HP0 * Math.pow(C.HP_G, t) * stageMul();
 const spawnRate = t => C.SPAWN0 + C.SPAWN_K * t;
 const cdMul = () => Math.pow(.92, P.p.cd || 0);
-const dmgOf = w => w.dmg * Math.pow(1.25, (P.w[w.id] || 1) - 1) * mAtk() * (1 + .05 * mastery(w.id));
-const rangeOf = w => w.range * Math.pow(1.12, (P.w[w.id] || 1) - 1);
+const dmgOf = (w, owner = w) => w.dmg * Math.pow(1.25, (P.w[owner.id] || 1) - 1) * mAtk() * (1 + .05 * (owner.parts ? owner.parts.reduce((a, p) => a + mastery(p), 0) / owner.parts.length : mastery(w.id))) * (TIER_MUL[owner.tier] || 1);
+const rangeOf = (w, owner = w) => w.range * Math.pow(1.12, (P.w[owner.id] || 1) - 1);
 
 // ───────── 적 ─────────
 function spawn(type, boss, elite) {
@@ -336,13 +370,13 @@ function bossPattern(o) {
 }
 function openChest(c) {
   const g = c.grade; let got = []; S.mode = 'chest';
-  for (let k = 0; k < g.n; k++) { const cands = S.deck.map(id => WBY[id]).filter(w => w && P.w[w.id] && P.w[w.id] < w.max); if (!cands.length) { S.coins += 10; got.push({ coin:10 }); continue; } const w = cands[Math.floor(rnd() * cands.length)]; const from = P.w[w.id]; P.w[w.id]++; const hit = got.find(x => x.w === w); if (hit) hit.to = P.w[w.id]; else got.push({ w, from, to:P.w[w.id] }); }
+  for (let k = 0; k < g.n; k++) { const cands = Object.keys(P.w).map(id => weaponOf(id)).filter(w => w && P.w[w.id] && P.w[w.id] < w.max); if (!cands.length) { S.coins += 10; got.push({ coin:10 }); continue; } const w = cands[Math.floor(rnd() * cands.length)]; const from = P.w[w.id]; P.w[w.id]++; const hit = got.find(x => x.w === w); if (hit) hit.to = P.w[w.id]; else got.push({ w, from, to:P.w[w.id] }); }
   SND.levelup(); S.flash = 1;
   document.getElementById('chTitle').innerHTML = `<span style="color:${g.col}">${g.g} 상자</span><small style="display:block;font-size:12px;color:#c9c3b4;font-weight:500;margin-top:4px">정예 ${c.from || '요괴'} 퇴치 보상 · 무기 강화 ${g.n}회</small>`;
   const list = document.getElementById('chList'); list.innerHTML = '';
   for (const x of got) { const row = document.createElement('div'); row.className = 'card'; row.style.cursor = 'default';
     if (x.coin) { row.innerHTML = `<canvas class="ic" width="88" height="88"></canvas><span><b>엽전 +${x.coin}</b><small>강화할 무기가 없어 엽전으로</small></span>`; drawIcon(row.querySelector('canvas'), { d:WBY.coin }); }
-    else { const maxed = x.to >= x.w.max; row.innerHTML = `<canvas class="ic" width="88" height="88"></canvas><span><b>${x.w.name} <small class="el-${x.w.el}">${EL_NAME[x.w.el]}·${TYPE_NAME[x.w.type]}</small></b><small>${x.w.up}${maxed ? ' · <b style="color:#e8c15a">최대</b>' : ''}</small></span><span class="lvl">Lv ${x.from} → ${x.to}</span>`; drawIcon(row.querySelector('canvas'), { d:x.w }); }
+    else { const maxed = x.to >= x.w.max; row.innerHTML = `<canvas class="ic" width="88" height="88"></canvas><span><b>${x.w.name} <small class="el-${x.w.el || ''}">${x.w.el ? EL_NAME[x.w.el] + '·' + TYPE_NAME[x.w.type] : x.w.tier + '단'}</small></b><small>${x.w.up}${maxed ? ' · <b style="color:#e8c15a">최대</b>' : ''}</small></span><span class="lvl">Lv ${x.from} → ${x.to}</span>`; drawIcon(row.querySelector('canvas'), { d:x.w }); }
     list.appendChild(row); }
   show('chest', true);
 }
@@ -382,34 +416,36 @@ function dropGem(x, y, v) { acquire(G, G_FREE, g => { g.x = x + (Math.random()-.
 // ───────── 무기 ─────────
 const WCD = {};
 function nearest(maxR) { let best = null, bd = maxR * maxR; for (const o of E) { const d = (o.x - P.x) ** 2 + (o.y - P.y) ** 2; if (d < bd) { bd = d; best = o; } } return best; }
-function hitWith(o, w, dmg, kx, ky) { // 상성·속성 효과 적용 후 피해
-  const af = affinity(w, o), d = dmg * af;
+function hitWith(o, w, dmg, kx, ky, owner = w) { // 상성(owner)·속성 효과(부품 w) 적용 후 피해
+  const af = affinity(owner, o), d = dmg * af;
   if (af > 1.2 && (o.boss || o.elite || Math.random() < .25)) float(o.x, o.y - o.r - 8, '유리 ' + Math.round(d), '#ffd86a', 12); else if (af < .8 && (o.boss || o.elite || Math.random() < .25)) float(o.x, o.y - o.r - 8, '불리 ' + Math.round(d), '#9a9aa8', 11);
   if (w.el === 'fire') o.burn = Math.max(o.burn || 0, 2); else if (w.el === 'water') o.slow = Math.max(o.slow, .8); else if (w.el === 'metal') { kx *= 1.6; ky *= 1.6; }
   return hurtEnemy(o, d, kx, ky);
 }
-function updateWeapons(dt) {
-  for (const id of S.deck) { const w = WBY[id]; if (!w) continue;
-    const lv = P.w[w.id]; if (!lv) continue;
-    WCD[w.id] = (WCD[w.id] || 0) - dt; if (WCD[w.id] > 0) continue;
-    if (w.type === 'throw') {
-      const tg = nearest(260); if (!tg) { WCD[w.id] = .15; continue; } WCD[w.id] = w.cd * cdMul();
-      const a = Math.atan2(tg.y - P.y, tg.x - P.x), n = lv >= 4 ? 2 : 1, pierce = w.pierce + lv - 1;
-      for (let k = 0; k < n; k++) { const aa = a + (k - (n - 1) / 2) * .25; acquire(B, B_FREE, b => { b.w = w; b.x = P.x; b.y = P.y; b.vx = Math.cos(aa) * w.spd; b.vy = Math.sin(aa) * w.spd; b.a = aa; b.life = 1.4; b.pierce = pierce; b.dmg = dmgOf(w); b.hitSet = new Set(); b.bounce = w.id === 'coin' ? 1 : 0; }); }
-      SND.talisman();
-    } else if (w.type === 'melee') {
-      WCD[w.id] = w.cd * cdMul(); const a = Math.atan2(P.dy, P.dx), R = rangeOf(w), arc = w.arc + (lv - 1) * .12, dmg = dmgOf(w);
-      SLASH.push({ x:P.x, y:P.y, a, R, arc, t:.22, el:w.el }); SND.sword(); S.shake = Math.max(S.shake, 1.5);
-      for (let i = E.length - 1; i >= 0; i--) { const o = E[i], dx = o.x - P.x, dy = o.y - P.y, d = Math.hypot(dx, dy) || .01; if (d > R + o.r) continue; let da = Math.atan2(dy, dx) - a; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) <= arc / 2) { hitWith(o, w, dmg, dx / d * 120, dy / d * 120); burst(o.x, o.y, 3, EL_COL[w.el], 90); } }
-    } else {
-      WCD[w.id] = w.cd * cdMul(); const R = rangeOf(w), dmg = dmgOf(w); let any = false;
-      for (let i = E.length - 1; i >= 0; i--) { const o = E[i], d = Math.hypot(o.x - P.x, o.y - P.y); if (d <= R + o.r) { any = true; if (w.slow) o.slow = Math.max(o.slow, .6); hitWith(o, w, dmg, 0, 0); } }
-      if (any) SND.bell();
-    }
+function firePart(w, owner, lv, dt) { // 기본 무기 w 의 공격 1회 (owner = w 또는 진화 무기)
+  const key = owner.id === w.id ? w.id : owner.id + ':' + w.id;
+  WCD[key] = (WCD[key] || 0) - dt; if (WCD[key] > 0) return;
+  if (w.type === 'throw') {
+    const tg = nearest(260); if (!tg) { WCD[key] = .15; return; } WCD[key] = w.cd * cdMul();
+    const a = Math.atan2(tg.y - P.y, tg.x - P.x), n = lv >= 4 ? 2 : 1, pierce = w.pierce + lv - 1;
+    for (let k = 0; k < n; k++) { const aa = a + (k - (n - 1) / 2) * .25; acquire(B, B_FREE, b => { b.w = w; b.owner = owner; b.x = P.x; b.y = P.y; b.vx = Math.cos(aa) * w.spd; b.vy = Math.sin(aa) * w.spd; b.a = aa; b.life = 1.4; b.pierce = pierce; b.dmg = dmgOf(w, owner); b.hitSet = new Set(); b.bounce = w.id === 'coin' ? 1 : 0; }); }
+    SND.talisman();
+  } else if (w.type === 'melee') {
+    WCD[key] = w.cd * cdMul(); const a = Math.atan2(P.dy, P.dx), R = rangeOf(w, owner), arc = w.arc + (lv - 1) * .12, dmg = dmgOf(w, owner);
+    SLASH.push({ x:P.x, y:P.y, a, R, arc, t:.22, el:w.el }); SND.sword(); S.shake = Math.max(S.shake, 1.5);
+    for (let i = E.length - 1; i >= 0; i--) { const o = E[i], dx = o.x - P.x, dy = o.y - P.y, d = Math.hypot(dx, dy) || .01; if (d > R + o.r) continue; let da = Math.atan2(dy, dx) - a; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) <= arc / 2) { hitWith(o, w, dmg, dx / d * 120, dy / d * 120, owner); burst(o.x, o.y, 3, EL_COL[w.el], 90); } }
+  } else {
+    WCD[key] = w.cd * cdMul(); const R = rangeOf(w, owner), dmg = dmgOf(w, owner); let any = false;
+    for (let i = E.length - 1; i >= 0; i--) { const o = E[i], d = Math.hypot(o.x - P.x, o.y - P.y); if (d <= R + o.r) { any = true; if (w.slow) o.slow = Math.max(o.slow, .6); hitWith(o, w, dmg, 0, 0, owner); } }
+    if (any) SND.bell();
   }
+}
+function updateWeapons(dt) {
+  for (const id in P.w) { const lv = P.w[id]; if (!lv) continue; const w = weaponOf(id); if (!w) continue;
+    if (w.parts) for (const pid of w.parts) firePart(WBY[pid], w, lv, dt); else firePart(w, w, lv, dt); }
   // 투사체
   for (let i = B.length - 1; i >= 0; i--) { const b = B[i]; b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; if (b.life <= 0) { release(B, B_FREE, i); continue; }
-    for (let j = E.length - 1; j >= 0; j--) { const o = E[j]; if (b.hitSet.has(o)) continue; if ((o.x - b.x) ** 2 + (o.y - b.y) ** 2 < (o.r + 6) ** 2) { b.hitSet.add(o); hitWith(o, b.w, b.dmg, b.vx * .3, b.vy * .3); b.pierce--;
+    for (let j = E.length - 1; j >= 0; j--) { const o = E[j]; if (b.hitSet.has(o)) continue; if ((o.x - b.x) ** 2 + (o.y - b.y) ** 2 < (o.r + 6) ** 2) { b.hitSet.add(o); hitWith(o, b.w, b.dmg, b.vx * .3, b.vy * .3, b.owner || b.w); b.pierce--;
       if (b.pierce < 0) { if (b.bounce > 0) { b.bounce--; const t2 = nearest(220); if (t2 && t2 !== o) { const a2 = Math.atan2(t2.y - b.y, t2.x - b.x); b.vx = Math.cos(a2) * b.w.spd; b.vy = Math.sin(a2) * b.w.spd; b.a = a2; b.pierce = 0; continue; } } release(B, B_FREE, i); break; } } } }
   for (let i = SLASH.length - 1; i >= 0; i--) { SLASH[i].t -= dt; if (SLASH[i].t <= 0) SLASH.splice(i, 1); }
   // 적 화상 DoT
@@ -427,22 +463,29 @@ function updateGems(dt) {
 function choices() {
   const pool = [];
   const nW = Object.keys(P.w).length;
-  for (const id of S.deck) { const w = WBY[id]; if (!w) continue; const lv = P.w[w.id] || 0; if (lv >= w.max) continue; if (!lv && nW >= 4) continue; pool.push({ kind:'w', d:w, lv }); }
+  for (const id of S.deck) { const w = WBY[id]; if (!w) continue; const lv = P.w[w.id] || 0; if (lv >= w.max) continue; if (!lv && (nW >= 4 || P.used.has(id))) continue; pool.push({ kind:'w', d:w, lv }); }
+  for (const id in P.w) { const e = EBY[id]; if (!e) continue; const lv = P.w[id]; if (lv < e.max) pool.push({ kind:'w', d:e, lv }); }
+  const evos = evoOptions();
   const nP = Object.keys(P.p).length;
   for (const p of PASSIVES) { const lv = P.p[p.id] || 0; if (lv >= p.max) continue; if (!lv && nP >= 3) continue; pool.push({ kind:'p', d:p, lv }); }
   for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-  return pool.slice(0, 3);
+  const out = pool.slice(0, evos.length ? 2 : 3);
+  if (evos.length) { const ev = evos[Math.floor(rnd() * evos.length)]; out.unshift({ kind:'e', d:ev.e, consume:ev.consume, lv:0 }); }
+  return out;
 }
 let rndState = 1; function rnd() { if (!S.chal) return Math.random(); rndState = ((rndState * 16838 % 2147483648) * 65536 + rndState * 20077 + 12345) % 2147483648; return rndState / 2147483648; }
 function levelUp() {
   S.mode = 'lv'; S.flash = 1; SND.levelup(); const ch = choices(); const box = document.getElementById('lvCards'); box.innerHTML = '';
   if (!ch.length) { S.mode = 'play'; S.coins += 5; float(P.x, P.y - 30, '엽전 +5', '#e8c15a'); return; }
   for (const c of ch) { const b = document.createElement('button'); b.className = 'card'; b.innerHTML = `<canvas class="ic" width="88" height="88"></canvas><span><b>${c.d.name}</b><small>${c.lv ? c.d.up || c.d.desc : c.d.desc}</small></span><span class="lvl">${c.lv ? `Lv ${c.lv}→${c.lv + 1}` : '새로 익힘'}</span>`;
-    if (c.kind === 'w') b.querySelector('b').innerHTML += ` <small class="el-${c.d.el}">${EL_NAME[c.d.el]}·${TYPE_NAME[c.d.type]}</small>`;
+    if (c.kind === 'w' && c.d.el) b.querySelector('b').innerHTML += ` <small class="el-${c.d.el}">${EL_NAME[c.d.el]}·${TYPE_NAME[c.d.type]}</small>`;
+    if (c.kind === 'w' && c.d.els) b.querySelector('b').innerHTML += ` <small>${c.d.els.map(e => `<span class="el-${e}">${EL_NAME[e]}</span>`).join('')}·${c.d.types.map(t => TYPE_NAME[t]).join('')}</small>`;
+    if (c.kind === 'e') { b.style.borderColor = '#e8c15a'; b.style.background = 'rgba(232,193,90,.14)'; b.querySelector('b').innerHTML = `✦ 진화: ${c.d.name}`; b.querySelector('.lvl').textContent = `${c.d.tier}단`; b.querySelector('small').textContent = `${c.consume.map(id => weaponOf(id).name).join(' + ')} → ${c.d.name} · ${c.d.desc}`; }
     b.addEventListener('click', () => pick(c)); box.appendChild(b); drawIcon(b.querySelector('canvas'), c); }
   show('lv', true);
 }
-function pick(c) { if (c.kind === 'w') P.w[c.d.id] = (P.w[c.d.id] || 0) + 1; else { P.p[c.d.id] = (P.p[c.d.id] || 0) + 1; applyPassives(); if (c.d.id === 'hp') S.hp = Math.min(S.maxhp, S.hp + S.maxhp * .3); }
+function pick(c) { if (c.kind === 'e') { for (const id of c.consume) { delete P.w[id]; P.used.add(id); } P.w[c.d.id] = 1; if (!META.evo.includes(c.d.id)) { META.evo.push(c.d.id); toast(`도감에 ${c.d.name} 기록`); } S.flash = 1; S.shake = 6; SND.dawn(); burst(P.x, P.y, 40, '#ffd86a', 160); saveMeta(); }
+  else if (c.kind === 'w') P.w[c.d.id] = (P.w[c.d.id] || 0) + 1; else { P.p[c.d.id] = (P.p[c.d.id] || 0) + 1; applyPassives(); if (c.d.id === 'hp') S.hp = Math.min(S.maxhp, S.hp + S.maxhp * .3); }
   show('lv', false); S.mode = 'play'; }
 function applyPassives() { P.spd = C.SPEED * mSpd() * Math.pow(1.1, P.p.spd || 0); const mh = C.HP_PLAYER * mHp() * Math.pow(1.15, P.p.hp || 0); S.hp = Math.min(mh, S.hp * mh / S.maxhp); S.maxhp = mh; }
 
@@ -592,7 +635,10 @@ function drawEnemy(o, x, y, t) {
 }
 function drawTree(x, y, sc) { ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(0, 4, 14, 5, 0, 0, 6.283); ctx.fill(); ctx.fillStyle = '#3a2a1c'; ctx.fillRect(-3, -16, 6, 20); ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.strokeRect(-3, -16, 6, 20);
   for (const [dx, dy, r, c] of [[-8,-20,11,'#1c3a22'],[8,-22,11,'#1c3a22'],[0,-30,12,'#254a2a'],[0,-20,10,'#2f5a33']]) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(dx, dy, r, 0, 6.283); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.stroke(); } ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.beginPath(); ctx.arc(-3, -32, 5, 0, 6.283); ctx.fill(); ctx.restore(); }
-function drawIcon(c, ch, sc = 2) { const x = c.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.scale(sc, sc); x.translate(c.width / sc / 2, c.height / sc / 2); const d = ch.d; const ec = EL_COL[d.el] || '#e8c15a';
+function drawIcon(c, ch, sc = 2) { const d = ch.d;
+  if (d.parts) { const x = c.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); x.translate(c.width / 2, c.height / 2); x.strokeStyle = d.tier === 3 ? '#ffd86a' : '#c9a66b'; x.lineWidth = c.width * .05; x.beginPath(); x.arc(0, 0, c.width * .44, 0, 6.283); x.stroke(); x.restore();
+    const n = d.parts.length, k = n <= 2 ? .85 : .65; d.parts.forEach((pid, i) => { const a = (n <= 2 ? 2.356 : -1.571) + i * 6.283 / n, cx = c.width / 2 + Math.cos(a) * c.width * (n <= 2 ? .17 : .24), cy = c.height / 2 + Math.sin(a) * c.height * (n <= 2 ? .17 : .24); const tmp = document.createElement('canvas'); tmp.width = c.width; tmp.height = c.height; drawIcon(tmp, { d:WBY[pid] }, sc); x.drawImage(tmp, cx - c.width * k / 2, cy - c.height * k / 2, c.width * k, c.height * k); }); return; }
+  const x = c.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.scale(sc, sc); x.translate(c.width / sc / 2, c.height / sc / 2); const ec = EL_COL[d.el] || '#e8c15a';
   if (d.type === 'throw' && d.id !== 'talisman') { x.fillStyle = ec; if (d.id === 'orb') { x.beginPath(); x.arc(0, 0, 12, 0, 6.283); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.arc(-4, -4, 4, 0, 6.283); x.fill(); } else if (d.id === 'spear') { x.rotate(-.8); x.fillRect(-2, -18, 4, 34); x.beginPath(); x.moveTo(-5, -16); x.lineTo(0, -26); x.lineTo(5, -16); x.fill(); } else { x.beginPath(); x.arc(0, 0, 12, 0, 6.283); x.fill(); x.fillStyle = '#1a1408'; x.fillRect(-4, -4, 8, 8); x.strokeStyle = '#9a7a22'; x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 12, 0, 6.283); x.stroke(); } return; }
   if (d.type === 'melee' && d.id !== 'sword') { x.rotate(-.7); if (d.id === 'torch') { x.fillStyle = '#6a4a2a'; x.fillRect(-3, -4, 6, 22); x.fillStyle = '#ff7a4a'; x.beginPath(); x.moveTo(-8, -4); x.quadraticCurveTo(0, -26, 8, -4); x.fill(); x.fillStyle = '#ffd86a'; x.beginPath(); x.moveTo(-4, -4); x.quadraticCurveTo(0, -16, 4, -4); x.fill(); } else if (d.id === 'whip') { x.strokeStyle = ec; x.lineWidth = 4; x.beginPath(); x.moveTo(-12, 14); x.quadraticCurveTo(-6, -10, 6, -2); x.quadraticCurveTo(14, 4, 12, -14); x.stroke(); } else { x.strokeStyle = ec; x.lineWidth = 5; x.beginPath(); x.arc(2, -2, 12, 3.6, 6.4); x.stroke(); x.fillStyle = '#6a4a2a'; x.fillRect(-2, 6, 4, 14); } return; }
   if (d.type === 'aura' && d.id !== 'bell') { if (d.id === 'brazier') { x.fillStyle = '#5a4a3a'; x.beginPath(); x.moveTo(-12, 2); x.lineTo(12, 2); x.lineTo(8, 14); x.lineTo(-8, 14); x.fill(); x.fillStyle = '#ff7a4a'; x.beginPath(); x.moveTo(-9, 2); x.quadraticCurveTo(-6, -14, 0, -18); x.quadraticCurveTo(6, -14, 9, 2); x.fill(); x.fillStyle = '#ffd86a'; x.beginPath(); x.moveTo(-4, 2); x.quadraticCurveTo(0, -8, 4, 2); x.fill(); } else if (d.id === 'mist') { x.fillStyle = 'rgba(95,200,255,.5)'; for (const [cx, cy, r] of [[-8, 2, 8], [4, -4, 10], [8, 6, 7]]) { x.beginPath(); x.arc(cx, cy, r, 0, 6.283); x.fill(); } } else { x.strokeStyle = '#8a6a3a'; x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 13, 0, 6.283); x.stroke(); for (let k = 0; k < 8; k++) { x.fillStyle = '#c9a66b'; x.beginPath(); x.arc(Math.cos(k * .785) * 13, Math.sin(k * .785) * 13, 3.5, 0, 6.283); x.fill(); } } return; }
@@ -622,8 +668,8 @@ function draw() {
   // 보석
   for (const g of G) { const x = sx(g.x), y = sy(g.y); if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue; ctx.fillStyle = g.v >= 4 ? '#ff8aa0' : g.v >= 2 ? '#8fd1ff' : '#8fe88f'; ctx.beginPath(); ctx.moveTo(x, y - 5); ctx.lineTo(x + 4, y); ctx.lineTo(x, y + 5); ctx.lineTo(x - 4, y); ctx.closePath(); ctx.fill(); }
   // 방울 오라
-  for (const id of S.deck) { const w = WBY[id]; if (!w || w.type !== 'aura' || !P.w[id]) continue; const R = rangeOf(w), p = (WCD[id] || 0) / (w.cd * cdMul()), ec = EL_COL[w.el]; ctx.strokeStyle = ec; ctx.globalAlpha = .25 + (1 - p) * .35; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx(P.x), sy(P.y), R * (1 - p * .08), 0, 6.283); ctx.stroke(); ctx.globalAlpha = .06; ctx.fillStyle = ec; ctx.fill(); ctx.globalAlpha = 1;
-    if (id === 'beads') for (let k = 0; k < 6; k++) { const a = t * 3 + k * 1.047; ctx.fillStyle = '#c9a66b'; ctx.beginPath(); ctx.arc(sx(P.x) + Math.cos(a) * R, sy(P.y) + Math.sin(a) * R * .6, 4, 0, 6.283); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.stroke(); } }
+  for (const id in P.w) { const ow = weaponOf(id); if (!ow || !P.w[id]) continue; for (const pid of (ow.parts || [id])) { const w = WBY[pid]; if (w.type !== 'aura') continue; const key = ow.id === w.id ? w.id : ow.id + ':' + w.id; const R = rangeOf(w, ow), p = (WCD[key] || 0) / (w.cd * cdMul()), ec = EL_COL[w.el]; ctx.strokeStyle = ec; ctx.globalAlpha = .25 + (1 - p) * .35; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx(P.x), sy(P.y), R * (1 - p * .08), 0, 6.283); ctx.stroke(); ctx.globalAlpha = .06; ctx.fillStyle = ec; ctx.fill(); ctx.globalAlpha = 1;
+    if (pid === 'beads') for (let k = 0; k < 6; k++) { const a = t * 3 + k * 1.047; ctx.fillStyle = '#c9a66b'; ctx.beginPath(); ctx.arc(sx(P.x) + Math.cos(a) * R, sy(P.y) + Math.sin(a) * R * .6, 4, 0, 6.283); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.stroke(); } } }
   // 적 (y 정렬)
   const es = E.slice().sort((a, b) => a.y - b.y);
   for (const o of es) { const x = sx(o.x), y = sy(o.y); if (x < -60 || x > W + 60 || y < -60 || y > H + 60) continue;
@@ -686,7 +732,7 @@ function startGame() {
   S.mode = 'play'; S.t = 0; S.lvl = 1; S.xp = 0; S.need = C.LVL_XP0; S.kills = 0; S.coins = 0; S.spawnAcc = 0; S.bossDone = [false, false]; S.cleared = S.dead = false; S.hitT = S.freeze = S.shake = S.flash = S.burnT = S.slowT = 0; S.eliteIdx = 0; S.shardsRun = 0; EB.length = 0; ZONE.length = 0; CHESTS.length = 0; OB.clear();
   S.stage = S.chal ? 0 : Math.min(nStages() - 1, Math.max(0, (META.stage || 1) - 1), META.bestStage); S.pw = S.chal ? 1 : metaPower(); S.deck = S.chal ? CHAL_DECK.slice() : META.deck.filter(id => WBY[id]); if (!S.deck.length) S.deck = ['talisman']; S.shardsRun = 0;
   E.length = 0; B.length = 0; G.length = 0; FX.length = 0; FL.length = 0; SLASH.length = 0; for (const k in WCD) WCD[k] = 0;
-  P.x = P.y = 0; P.dx = 0; P.dy = 1; P.w = { [S.deck[0]]:1 }; P.p = {}; cam.x = cam.y = 0; S.maxhp = C.HP_PLAYER * mHp(); S.hp = S.maxhp; applyPassives(); rndState = S.chal ? S.chal.seed : 1;
+  P.x = P.y = 0; P.dx = 0; P.dy = 1; P.w = { [S.deck[0]]:1 }; P.p = {}; P.used = new Set(); cam.x = cam.y = 0; S.maxhp = C.HP_PLAYER * mHp(); S.hp = S.maxhp; applyPassives(); rndState = S.chal ? S.chal.seed : 1;
   JOY.on = false;
 }
 function endRun(cleared) {
@@ -740,7 +786,12 @@ function renderShrine() {
     const g = document.createElement('div'); g.className = 'grid'; for (const w of WEAPONS) { if (META.owned[w.id] == null) continue; const inDeck = META.deck.includes(w.id), el = document.createElement('button'); el.className = 'w' + (inDeck ? ' in' : ''); el.innerHTML = `<canvas width="56" height="56"></canvas>${w.name}<small class="el-${w.el}">${EL_NAME[w.el]}·${TYPE_NAME[w.type]}${inDeck ? ' · ' + (META.deck.indexOf(w.id) + 1) + '번' : ''}</small>`; drawIcon(el.querySelector('canvas'), { d:w }, 1.3);
       el.addEventListener('click', () => { if (inDeck) { if (META.deck.length > 1) META.deck = META.deck.filter(x => x !== w.id); else toast('무기는 하나 이상 넣어야 해요'); } else if (META.deck.length < 10) META.deck.push(w.id); else toast('덱은 10개까지'); saveMeta(); renderShrine(); }); g.appendChild(el); } b.appendChild(g);
     const h = document.createElement('p'); h.className = 'msg'; h.innerHTML = '상성: <span class="el-water">수</span>→<span class="el-fire">화</span>→<span class="el-metal">금</span>→<span class="el-wood">목</span>→<span class="el-water">수</span> (유리 ×1.5 / 불리 ×0.6) · 투척은 가벼운 요괴, 근접은 무거운 요괴, 오라는 보통 요괴에 강함'; b.appendChild(h); }
-  else { for (const st of STAGES_LIVE) { const h = document.createElement('p'); h.className = 'msg'; h.innerHTML = `<b style="color:#e8c15a">${st.name}</b> · ${st.els.map(e => `<span class="el-${e}">${EL_NAME[e]}</span>`).join(' ')}`; b.appendChild(h);
+  else { const wh = document.createElement('p'); wh.className = 'msg'; wh.innerHTML = `<b style="color:#e8c15a">무기</b> · 기본 12 · 진화 ${META.evo.length}/${EVOS.length} 발견 — Lv5 둘을 합치면 진화`; b.appendChild(wh);
+    const wg = document.createElement('div'); wg.className = 'grid'; wg.style.marginBottom = '8px';
+    for (const w of [...WEAPONS, ...EVOS]) { const seen = w.parts ? META.evo.includes(w.id) : META.owned[w.id] != null, el = document.createElement('div'); el.className = 'w' + (seen ? '' : ' off'); el.title = w.parts ? w.parts.map(p => WBY[p].name).join('+') : '';
+      el.innerHTML = `<canvas width="56" height="56"></canvas>${seen ? w.name : '???'}<small>${w.parts ? (seen ? w.parts.map(p => WBY[p].name).join('+') : w.tier + '단 · ' + (w.els.length === 1 ? `<span class="el-${w.els[0]}">${EL_NAME[w.els[0]]}</span>` : TYPE_NAME[w.types[0]]) + ' 계열') : `<span class="el-${w.el}">${EL_NAME[w.el]}·${TYPE_NAME[w.type]}</span>`}</small>`;
+      drawIcon(el.querySelector('canvas'), { d:w }, 1.3); if (!seen) el.querySelector('canvas').style.opacity = .3; wg.appendChild(el); } b.appendChild(wg);
+    for (const st of STAGES_LIVE) { const h = document.createElement('p'); h.className = 'msg'; h.innerHTML = `<b style="color:#e8c15a">${st.name}</b> · ${st.els.map(e => `<span class="el-${e}">${EL_NAME[e]}</span>`).join(' ')}`; b.appendChild(h);
       const g = document.createElement('div'); g.className = 'grid'; g.style.gridTemplateColumns = 'repeat(4,1fr)'; g.style.marginBottom = '8px';
       for (const id of [...st.roster, ...st.bosses]) { const e = ENEMY[id], seen = META.codex.includes(id), el = document.createElement('div'); el.className = 'w' + (seen ? '' : ' off'); el.innerHTML = `<canvas width="56" height="56"></canvas>` + (seen ? `${e.name}<small>${e.boss ? `<span class="el-${e.el}">${EL_NAME[e.el]}</span> 보스` : e.armor === 'heavy' ? '무거움' : e.armor === 'light' ? '가벼움' : '보통'}</small>` : '???<small>미발견</small>'); g.appendChild(el);
         const cx = el.querySelector('canvas').getContext('2d'); const sp = sprite(e.spr, 0, false); cx.imageSmoothingEnabled = false; const k = Math.min(48 / sp.width, 48 / sp.height); if (!seen) cx.globalAlpha = .25; cx.drawImage(sp, 28 - sp.width * k / 2, 28 - sp.height * k / 2, sp.width * k, sp.height * k); }
@@ -772,7 +823,7 @@ let last = 0, frameMs = [];
 function frame(ts) { let dt = (ts - last) / 1000 || 0; last = ts; if (dt > .1) dt = .1; const t0 = performance.now();
   if (S.mode === 'play') tick(dt); fx(dt); draw(); if (TEST) { frameMs.push(performance.now() - t0); if (frameMs.length > 600) frameMs.shift(); } requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-if (TEST) window.GAME = { S, P, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate, isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
+if (TEST) window.GAME = { S, P, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate, isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
 </script>
 </body>
 </html>

@@ -22,7 +22,7 @@ const aff = await pg.evaluate(() => { const o = { el: 'water', armor: 'heavy' };
 check('상성 o.el 기준: 낫(금·근접) vs 수·heavy 1.5 · 목검(목·근접) 2.25 · 죽창 vs 수·light 2.25', aff.join() === '1.5,2.25,2.25', aff.join());
 await pg.evaluate(() => { GAME.META.codex = ['egg','whitetiger','stonestatue']; GAME.META.runs = 3; GAME.openShrine('codex'); }); await pg.waitForTimeout(200);
 const codex = await pg.evaluate(() => ({ groups: [...document.querySelectorAll('#shBody p.msg')].length, cards: document.querySelectorAll('#shBody .grid .w').length, seen: document.querySelectorAll('#shBody .grid .w:not(.off)').length }));
-check('도감: 스테이지 3그룹 · 21칸 · 발견 3', codex.groups === 3 && codex.cards === 21 && codex.seen === 3, JSON.stringify(codex));
+check('도감: 무기 1 + 스테이지 3그룹 · 49+21칸 · 발견 요괴 3 + 무기 3', codex.groups === 4 && codex.cards === 70 && codex.seen === 6, JSON.stringify(codex));
 await pg.screenshot({ path: path.join(here, 'shots/m3-codex.png') });
 check('콘솔 에러 0', errs.length === 0, errs.join(';'));
 await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);
