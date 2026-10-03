@@ -39,7 +39,7 @@
   .tabs { display:flex; gap:6px; margin-bottom:12px; } .tabs button { flex:1; min-height:40px; font-size:13px; padding:0 4px; } .tabs button.on { background:rgba(232,193,90,.22); }
   .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; } .grid .w { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 4px; text-align:center; font-size:12px; color:#f1ead8; min-height:72px; box-shadow:none; font-weight:500; }
   .grid .w.in { border-color:#e8c15a; background:rgba(232,193,90,.18); } .grid .w.off { opacity:.35; } .grid .w small { display:block; font-size:10px; color:#c9c3b4; margin-top:2px; } .grid .w canvas { width:28px; height:28px; display:block; margin:0 auto 2px; }
-  .el-fire { color:#ff7a4a } .el-water { color:#5fc8ff } .el-wood { color:#7fe06a } .el-metal { color:#d8d8e8 } .el-none { color:#c9c3b4 }
+  .el-fire { color:#ff7a4a } .el-water { color:#5fc8ff } .el-wood { color:#7fe06a } .el-metal { color:#d8d8e8 } .el-light { color:#fff2b8 } .el-dark { color:#a070f0 } .el-earth { color:#d9a066 } .el-thunder { color:#ffd23a } .el-none { color:#c9c3b4 }
   #shrine { max-height:88vh; overflow-y:auto; } .big.sm { min-height:44px; font-size:15px; margin-top:8px; }
   .rank { font-size:13px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.08); display:flex; justify-content:space-between; }
   @media (prefers-reduced-motion: reduce) { .panel { transition:none; } }
@@ -132,7 +132,7 @@ const nStages = () => STAGES_LIVE.length;
 const ELITE_AT = [90, 180, 270, 390, 480];   // 정예 등장 시각
 const CHEST = [{ g:'일반', n:1, p:.6, col:'#c9c3b4' }, { g:'레어', n:3, p:.3, col:'#7fd1ff' }, { g:'에픽', n:5, p:.1, col:'#d08cff' }];
 const ARMOR_SPD = { none:1, light:1.12, heavy:.88 };   // 방어구 타입별 이속 편차
-const EL_COL = { fire:'#ff7a4a', water:'#5fc8ff', wood:'#7fe06a', metal:'#d8d8e8', none:'#f1ead8' };
+const EL_COL = { fire:'#ff7a4a', water:'#5fc8ff', wood:'#7fe06a', metal:'#d8d8e8', light:'#fff2b8', dark:'#a070f0', earth:'#d9a066', thunder:'#ffd23a', none:'#f1ead8' };
 const power = r => 1 + C.META_G * (1 - Math.pow(C.META_D, r));
 
 // ───────── 메타 세이브 ─────────
@@ -214,8 +214,11 @@ const ENEMY = {
   yaksha:     { name:'야차왕',   hp:C.BOSS2_HP * 1.2, spd:76, r:38, xp:140, boss:true, el:'metal', armor:'heavy', patterns:['dash','pool'],  spr:'yaksha',  sc:2.0 },
 };
 // 무기 12종 = 속성 4(화·수·목·금) × 타입 3(throw 투척·melee 근접·aura 오라). 상성: 수→화→금→목→수 유리 ×1.5 / 불리 ×0.6, 투척↔light·근접↔heavy·오라↔none
-const EL_NAME = { fire:'화', water:'수', wood:'목', metal:'금' }, TYPE_NAME = { throw:'투척', melee:'근접', aura:'오라' };
-const BEATS = { water:'fire', fire:'metal', metal:'wood', wood:'water' };
+const EL_NAME = { fire:'화', water:'수', wood:'목', metal:'금', light:'빛', dark:'어둠', earth:'땅', thunder:'번개' }, TYPE_NAME = { throw:'투척', melee:'근접', aura:'오라' };
+// 두 고리: A 수→화→금→목→수 · B 빛→어둠→땅→번개→빛. 고리 사이는 중립
+const BEATS = { water:'fire', fire:'metal', metal:'wood', wood:'water', light:'dark', dark:'earth', earth:'thunder', thunder:'light' };
+const LOOPS = [['fire', 'water', 'wood', 'metal'], ['light', 'dark', 'earth', 'thunder']];
+const loopOf = el => LOOPS.findIndex(l => l.includes(el));
 const TYPE_VS = { throw:{ light:1.5, heavy:.6, none:1 }, melee:{ heavy:1.5, none:.6, light:1 }, aura:{ none:1.5, light:.6, heavy:1 } };
 const WEAPONS = [
   { id:'talisman', el:'fire',  type:'throw', name:'부적',     desc:'가장 가까운 요괴에게 날아가 꿰뚫고 불을 붙인다', cd:.75, dmg:11, spd:340, pierce:1, max:5, up:'피해 +25% · 관통 +1' },
@@ -230,6 +233,13 @@ const WEAPONS = [
   { id:'coin',     el:'metal', type:'throw', name:'엽전표창', desc:'빠르게 날아가 튕겨 나간다',                   cd:.6, dmg:8, spd:460, pierce:1, max:5, up:'피해 +25% · 관통 +1' },
   { id:'sickle',   el:'metal', type:'melee', name:'낫',       desc:'앞을 깊게 베고 밀쳐낸다',                    cd:1.3, dmg:18, arc:1.3, range:70, max:5, up:'피해 +25% · 범위 +12%' },
   { id:'bell',     el:'metal', type:'aura',  name:'방울',     desc:'주변 요괴를 계속 흔들어 느리게 한다',         cd:.5, dmg:4, range:70, slow:.2, max:5, up:'피해 +25% · 반경 +12%' },
+  // 고리 B — 빛(처치 시 체력 +1) · 어둠(준 피해 3% 흡혈). unlock:4 = 안개 늪 클리어 후 뽑기 풀
+  { id:'moonarrow', el:'light', type:'throw', name:'달빛 화살', desc:'곧은 빛살이 꿰뚫는다. 처치하면 체력 +1', cd:.8, dmg:12, spd:480, pierce:2, max:5, up:'피해 +25% · 관통 +1', unlock:4 },
+  { id:'sunblade',  el:'light', type:'melee', name:'햇살 검',   desc:'앞을 환하게 가른다. 처치하면 체력 +1',   cd:1.1, dmg:13, arc:1.5, range:66, max:5, up:'피해 +25% · 범위 +12%', unlock:4 },
+  { id:'lantern',   el:'light', type:'aura',  name:'등불',      desc:'주변을 밝혀 요괴를 태운다. 처치하면 체력 +1', cd:.5, dmg:4, range:72, max:5, up:'피해 +25% · 반경 +12%', unlock:4 },
+  { id:'shadowknife', el:'dark', type:'throw', name:'그림자 비수', desc:'그림자가 날아가 꿰뚫는다. 피해의 3% 흡혈', cd:.6, dmg:9, spd:420, pierce:1, max:5, up:'피해 +25% · 관통 +1', unlock:4 },
+  { id:'inkbrush',  el:'dark', type:'melee', name:'먹물 붓',    desc:'먹물을 넓게 뿌린다. 피해의 3% 흡혈',      cd:1.2, dmg:14, arc:1.9, range:60, max:5, up:'피해 +25% · 범위 +12%', unlock:4 },
+  { id:'veil',      el:'dark', type:'aura',  name:'칠흑 장막',  desc:'장막 안 요괴를 갉아먹는다. 피해의 3% 흡혈', cd:.5, dmg:4, range:68, slow:.15, max:5, up:'피해 +25% · 반경 +12%', unlock:4 },
   // 중립(무속성·무타입): 상성 ×1 고정, 불리 없음, 진화 문법 제외
   { id:'tiger',    neutral:true, kind:'pet',  name:'종이 호랑이', desc:'종이 호랑이가 곁을 돌며 요괴를 문다 (상성 없음)', cd:.55, dmg:9, orbit:54, max:5, up:'피해 +25% · 호랑이 +1 (3·5단)' },
   { id:'moxa',     neutral:true, kind:'aura', name:'쑥뜸 연기',   desc:'연기 안의 요괴에게 피해, 안에서 처치하면 체력 +2 (상성 없음)', cd:.6, dmg:3, range:62, max:5, up:'피해 +25% · 반경 +12%' },
@@ -253,14 +263,19 @@ const EVO_NAME = {
   'throw:fire+water':'김 서린 부적', 'throw:fire+wood':'불타는 죽창', 'throw:fire+metal':'불 엽전', 'throw:water+wood':'이슬 죽창', 'throw:water+metal':'물결 표창', 'throw:wood+metal':'엽전 죽창',
   'melee:fire+water':'증기 채찍', 'melee:fire+wood':'화목검', 'melee:fire+metal':'달군 낫', 'melee:water+wood':'물먹은 목검', 'melee:water+metal':'물결 낫', 'melee:wood+metal':'목낫',
   'aura:fire+water':'온천 안개', 'aura:fire+wood':'향로 염주', 'aura:fire+metal':'화로 방울', 'aura:water+wood':'안개 염주', 'aura:water+metal':'물방울 종', 'aura:wood+metal':'염주 방울',
-  'fire:all':'삼매진화', 'water:all':'용궁 해일', 'wood:all':'천년 신목', 'metal:all':'만금 종', 'throw:all':'사원소 표창', 'melee:all':'사원소 검', 'aura:all':'사원소 결계' };
-const ELS = ['fire', 'water', 'wood', 'metal'], TYPES = ['throw', 'melee', 'aura'];
+  'fire:all':'삼매진화', 'water:all':'용궁 해일', 'wood:all':'천년 신목', 'metal:all':'만금 종', 'throw:all':'사원소 표창', 'melee:all':'사원소 검', 'aura:all':'사원소 결계',
+  // 고리 B
+  'light:throw+melee':'여명 검', 'light:throw+aura':'달무리', 'light:melee+aura':'햇무리 검', 'dark:throw+melee':'그믐 비수', 'dark:throw+aura':'먹구름', 'dark:melee+aura':'칠흑 붓',
+  'throw:light+dark':'명암 비수', 'melee:light+dark':'음양검', 'aura:light+dark':'일식 장막', 'light:all':'백야', 'dark:all':'칠흑야',
+  'throw:all2':'천지 표창', 'melee:all2':'천지 검', 'aura:all2':'천지 결계' };
+const ELS = ['fire', 'water', 'wood', 'metal', 'light', 'dark', 'earth', 'thunder'], TYPES = ['throw', 'melee', 'aura'];
 const baseOf = (el, type) => WEAPONS.find(w => !w.neutral && w.el === el && w.type === type);
 const EVOS = []; // { id, name, tier, parents:[ids], parts:[base ids], els, types, max:5 }
-for (const el of ELS) for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) { const a = baseOf(el, TYPES[i]), b = baseOf(el, TYPES[j]); EVOS.push({ id:`e:${el}:${TYPES[i]}+${TYPES[j]}`, name:EVO_NAME[`${el}:${TYPES[i]}+${TYPES[j]}`], tier:2, parents:[a.id, b.id], parts:[a.id, b.id], els:[el], types:[TYPES[i], TYPES[j]], max:5, up:'피해 +25%' }); }
-for (const type of TYPES) for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) { const a = baseOf(ELS[i], type), b = baseOf(ELS[j], type); EVOS.push({ id:`e:${type}:${ELS[i]}+${ELS[j]}`, name:EVO_NAME[`${type}:${ELS[i]}+${ELS[j]}`], tier:2, parents:[a.id, b.id], parts:[a.id, b.id], els:[ELS[i], ELS[j]], types:[type], max:5, up:'피해 +25%' }); }
-for (const el of ELS) EVOS.push({ id:`e:${el}:all`, name:EVO_NAME[`${el}:all`], tier:3, parents:null, parts:TYPES.map(t => baseOf(el, t).id), els:[el], types:TYPES.slice(), max:5, up:'피해 +25%' });   // 2단(같은 속성) + 남은 타입 Lv5
-for (const type of TYPES) EVOS.push({ id:`e:${type}:all`, name:EVO_NAME[`${type}:all`], tier:3, parents:null, parts:ELS.map(e => baseOf(e, type).id), els:ELS.slice(), types:[type], max:5, up:'피해 +25%' });   // 같은 타입 2단 둘(속성 겹침 없음)
+const evoName = (k, parts) => EVO_NAME[k] || parts.map(p => p.name).join('·');
+for (const el of ELS) for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) { const a = baseOf(el, TYPES[i]), b = baseOf(el, TYPES[j]); if (!a || !b) continue; EVOS.push({ id:`e:${el}:${TYPES[i]}+${TYPES[j]}`, name:evoName(`${el}:${TYPES[i]}+${TYPES[j]}`, [a, b]), tier:2, parents:[a.id, b.id], parts:[a.id, b.id], els:[el], types:[TYPES[i], TYPES[j]], max:5, up:'피해 +25%', unlock:Math.max(a.unlock || 0, b.unlock || 0) }); }
+for (const type of TYPES) for (const loop of LOOPS) for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) { const a = baseOf(loop[i], type), b = baseOf(loop[j], type); if (!a || !b) continue; EVOS.push({ id:`e:${type}:${loop[i]}+${loop[j]}`, name:evoName(`${type}:${loop[i]}+${loop[j]}`, [a, b]), tier:2, parents:[a.id, b.id], parts:[a.id, b.id], els:[loop[i], loop[j]], types:[type], max:5, up:'피해 +25%', unlock:Math.max(a.unlock || 0, b.unlock || 0) }); }
+for (const el of ELS) { const ps = TYPES.map(t => baseOf(el, t)); if (ps.some(p => !p)) continue; EVOS.push({ id:`e:${el}:all`, name:evoName(`${el}:all`, ps), tier:3, parents:null, parts:ps.map(p => p.id), els:[el], types:TYPES.slice(), max:5, up:'피해 +25%', unlock:Math.max(...ps.map(p => p.unlock || 0)) }); }   // 2단(같은 속성) + 남은 타입 Lv5
+for (const type of TYPES) for (const [li, loop] of LOOPS.entries()) { const ps = loop.map(e => baseOf(e, type)); if (ps.some(p => !p)) continue; EVOS.push({ id:`e:${type}:all${li ? li + 1 : ''}`, name:evoName(`${type}:all${li ? li + 1 : ''}`, ps), tier:3, parents:null, parts:ps.map(p => p.id), els:loop.slice(), types:[type], max:5, up:'피해 +25%', unlock:Math.max(...ps.map(p => p.unlock || 0)) }); }   // 같은 타입 2단 둘(같은 고리, 속성 겹침 없음)
 const EBY = Object.fromEntries(EVOS.map(e => [e.id, e]));
 const weaponOf = id => WBY[id] || EBY[id];
 const TIER_MUL = { 1:1, 2:1.5, 3:2.2 };
@@ -271,7 +286,7 @@ function evoOptions() {
   for (const e of EVOS) { if (P.w[e.id]) continue;
     if (e.tier === 2) { if (have(e.parents[0]) && have(e.parents[1])) out.push({ e, consume:e.parents }); }
     else if (e.types.length === 3) { const t2 = EVOS.filter(x => x.tier === 2 && x.els.length === 1 && x.els[0] === e.els[0]).find(x => have(x.id)); if (!t2) continue; const rest = e.parts.find(p => !t2.parts.includes(p)); if (have(rest)) out.push({ e, consume:[t2.id, rest] }); }
-    else { const t2s = EVOS.filter(x => x.tier === 2 && x.types.length === 1 && x.types[0] === e.types[0] && have(x.id)); for (let i = 0; i < t2s.length; i++) for (let j = i + 1; j < t2s.length; j++) if (!t2s[i].els.some(el => t2s[j].els.includes(el))) { out.push({ e, consume:[t2s[i].id, t2s[j].id] }); i = j = 99; } } }
+    else { const t2s = EVOS.filter(x => x.tier === 2 && x.types.length === 1 && x.types[0] === e.types[0] && have(x.id) && x.els.every(el => e.els.includes(el))); for (let i = 0; i < t2s.length; i++) for (let j = i + 1; j < t2s.length; j++) if (!t2s[i].els.some(el => t2s[j].els.includes(el))) { out.push({ e, consume:[t2s[i].id, t2s[j].id] }); i = j = 99; } } }
   return out;
 }
 const CHAL_DECK = ['talisman', 'sword', 'bell', 'spear', 'orb', 'sickle'];   // 주간 챌린지 고정 덱
@@ -436,7 +451,11 @@ function hitWith(o, w, dmg, kx, ky, owner = w) { // 상성(owner)·속성 효과
   const af = affinity(owner, o), d = dmg * af;
   if (af > 1.2 && (o.boss || o.elite || Math.random() < .25)) float(o.x, o.y - o.r - 8, '유리 ' + Math.round(d), '#ffd86a', 12); else if (af < .8 && (o.boss || o.elite || Math.random() < .25)) float(o.x, o.y - o.r - 8, '불리 ' + Math.round(d), '#9a9aa8', 11);
   if (w.el === 'fire') o.burn = Math.max(o.burn || 0, 2); else if (w.el === 'water') o.slow = Math.max(o.slow, .8); else if (w.el === 'metal') { kx *= 1.6; ky *= 1.6; }
-  return hurtEnemy(o, d, kx, ky);
+  else if (w.el === 'dark') { const h = Math.min(o.hp, d) * .03; if (h > 0 && S.hp < S.maxhp) S.hp = Math.min(S.maxhp, S.hp + h); }
+  else if (w.el === 'earth') { kx = ky = 0; o.stun = Math.max(o.stun || 0, .4); }
+  const killed = hurtEnemy(o, d, kx, ky);
+  if (killed && w.el === 'light' && S.hp < S.maxhp) { S.hp = Math.min(S.maxhp, S.hp + 1); if (Math.random() < .3) float(P.x, P.y - 30, '+1', '#fff2b8', 11); }
+  return killed;
 }
 function firePart(w, owner, lv, dt) { // 기본 무기 w 의 공격 1회 (owner = w 또는 진화 무기)
   const key = owner.id === w.id ? w.id : owner.id + ':' + w.id;
@@ -672,6 +691,12 @@ function drawIcon(c, ch, sc = 2) { const d = ch.d;
   if (d.id === 'salt') { x.fillStyle = '#c9b48a'; x.beginPath(); x.moveTo(-10, -4); x.quadraticCurveTo(-12, 14, 0, 14); x.quadraticCurveTo(12, 14, 10, -4); x.fill(); x.fillStyle = '#8a7050'; x.fillRect(-7, -8, 14, 5); x.fillStyle = '#fff'; for (const [px, py] of [[-4, 2], [3, 5], [0, 8]]) x.fillRect(px, py, 2, 2); return; }
   if (d.id === 'xp') { x.fillStyle = '#7fe06a'; for (const [px, py] of [[-7, -4], [3, -8], [-2, 4], [8, 2], [-9, 8]]) { x.beginPath(); x.ellipse(px, py, 5, 4, .4, 0, 6.283); x.fill(); } return; }
   if (d.id === 'bag') { x.fillStyle = '#8a5a2a'; x.fillRect(-12, -6, 24, 20); x.fillStyle = '#5a3a1a'; x.fillRect(-12, -6, 24, 5); x.fillStyle = '#f2d26a'; x.fillRect(-6, -14, 5, 10); x.fillRect(2, -16, 5, 12); x.strokeStyle = '#c0362a'; x.lineWidth = 1; x.strokeRect(3, -14, 3, 7); return; }
+  if (d.id === 'moonarrow') { x.rotate(-.8); x.shadowColor = '#fff2b8'; x.shadowBlur = 6; x.fillStyle = '#fff8d8'; x.fillRect(-2, -18, 4, 34); x.beginPath(); x.moveTo(-6, -16); x.lineTo(0, -27); x.lineTo(6, -16); x.fill(); return; }
+  if (d.id === 'sunblade') { x.rotate(-.7); x.shadowColor = '#fff2b8'; x.shadowBlur = 8; x.fillStyle = '#fff8d8'; x.beginPath(); x.moveTo(-3, -22); x.lineTo(3, -22); x.lineTo(4, 8); x.lineTo(-4, 8); x.fill(); x.fillStyle = '#9a7a22'; x.fillRect(-7, 8, 14, 3); x.fillRect(-2, 11, 4, 10); return; }
+  if (d.id === 'lantern') { x.fillStyle = '#5a4a3a'; x.fillRect(-7, -16, 14, 3); x.fillRect(-7, 12, 14, 3); x.fillStyle = '#fff2b8'; x.shadowColor = '#fff2b8'; x.shadowBlur = 10; x.beginPath(); x.moveTo(-7, -13); x.lineTo(7, -13); x.lineTo(9, 12); x.lineTo(-9, 12); x.fill(); x.fillStyle = '#ff9a4a'; x.beginPath(); x.ellipse(0, 2, 3, 6, 0, 0, 6.283); x.fill(); return; }
+  if (d.id === 'shadowknife') { x.rotate(-.6); x.fillStyle = '#2a1a4a'; x.beginPath(); x.moveTo(0, -20); x.lineTo(7, 0); x.lineTo(0, 14); x.lineTo(-7, 0); x.closePath(); x.fill(); x.strokeStyle = '#a070f0'; x.lineWidth = 2; x.stroke(); return; }
+  if (d.id === 'inkbrush') { x.rotate(-.6); x.fillStyle = '#c9a66b'; x.fillRect(-2, -20, 4, 24); x.fillStyle = '#1a1020'; x.beginPath(); x.moveTo(-5, 4); x.lineTo(5, 4); x.lineTo(0, 18); x.fill(); x.fillStyle = '#a070f0'; for (const [px, py] of [[8, 10], [-9, 14], [10, 18]]) { x.beginPath(); x.arc(px, py, 2.5, 0, 6.283); x.fill(); } return; }
+  if (d.id === 'veil') { x.fillStyle = 'rgba(40,20,80,.85)'; x.beginPath(); x.arc(0, 0, 14, 0, 6.283); x.fill(); x.strokeStyle = '#a070f0'; x.lineWidth = 2; x.setLineDash([3, 3]); x.stroke(); x.setLineDash([]); x.fillStyle = '#a070f0'; x.beginPath(); x.arc(-4, -3, 2, 0, 6.283); x.arc(4, -3, 2, 0, 6.283); x.fill(); return; }
   if (d.type === 'throw' && d.id !== 'talisman') { x.fillStyle = ec; if (d.id === 'orb') { x.beginPath(); x.arc(0, 0, 12, 0, 6.283); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.arc(-4, -4, 4, 0, 6.283); x.fill(); } else if (d.id === 'spear') { x.rotate(-.8); x.fillRect(-2, -18, 4, 34); x.beginPath(); x.moveTo(-5, -16); x.lineTo(0, -26); x.lineTo(5, -16); x.fill(); } else { x.beginPath(); x.arc(0, 0, 12, 0, 6.283); x.fill(); x.fillStyle = '#1a1408'; x.fillRect(-4, -4, 8, 8); x.strokeStyle = '#9a7a22'; x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 12, 0, 6.283); x.stroke(); } return; }
   if (d.type === 'melee' && d.id !== 'sword') { x.rotate(-.7); if (d.id === 'torch') { x.fillStyle = '#6a4a2a'; x.fillRect(-3, -4, 6, 22); x.fillStyle = '#ff7a4a'; x.beginPath(); x.moveTo(-8, -4); x.quadraticCurveTo(0, -26, 8, -4); x.fill(); x.fillStyle = '#ffd86a'; x.beginPath(); x.moveTo(-4, -4); x.quadraticCurveTo(0, -16, 4, -4); x.fill(); } else if (d.id === 'whip') { x.strokeStyle = ec; x.lineWidth = 4; x.beginPath(); x.moveTo(-12, 14); x.quadraticCurveTo(-6, -10, 6, -2); x.quadraticCurveTo(14, 4, 12, -14); x.stroke(); } else { x.strokeStyle = ec; x.lineWidth = 5; x.beginPath(); x.arc(2, -2, 12, 3.6, 6.4); x.stroke(); x.fillStyle = '#6a4a2a'; x.fillRect(-2, 6, 4, 14); } return; }
   if (d.type === 'aura' && d.id !== 'bell') { if (d.id === 'brazier') { x.fillStyle = '#5a4a3a'; x.beginPath(); x.moveTo(-12, 2); x.lineTo(12, 2); x.lineTo(8, 14); x.lineTo(-8, 14); x.fill(); x.fillStyle = '#ff7a4a'; x.beginPath(); x.moveTo(-9, 2); x.quadraticCurveTo(-6, -14, 0, -18); x.quadraticCurveTo(6, -14, 9, 2); x.fill(); x.fillStyle = '#ffd86a'; x.beginPath(); x.moveTo(-4, 2); x.quadraticCurveTo(0, -8, 4, 2); x.fill(); } else if (d.id === 'mist') { x.fillStyle = 'rgba(95,200,255,.5)'; for (const [cx, cy, r] of [[-8, 2, 8], [4, -4, 10], [8, 6, 7]]) { x.beginPath(); x.arc(cx, cy, r, 0, 6.283); x.fill(); } } else { x.strokeStyle = '#8a6a3a'; x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 13, 0, 6.283); x.stroke(); for (let k = 0; k < 8; k++) { x.fillStyle = '#c9a66b'; x.beginPath(); x.arc(Math.cos(k * .785) * 13, Math.sin(k * .785) * 13, 3.5, 0, 6.283); x.fill(); } } return; }
@@ -724,6 +749,8 @@ function draw() {
     if (id === 'talisman') { ctx.fillStyle = '#f2d26a'; ctx.fillRect(-5, -10, 10, 20); ctx.strokeStyle = '#c0362a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(0, 6); ctx.moveTo(-3, -2); ctx.lineTo(3, -2); ctx.stroke(); }
     else if (id === 'orb') { const g = ctx.createRadialGradient(-2, -2, 1, 0, 0, 8); g.addColorStop(0, '#fff'); g.addColorStop(1, '#3a9ad8'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 8, 0, 6.283); ctx.fill(); }
     else if (id === 'spear') { ctx.fillStyle = '#9ad06a'; ctx.fillRect(-2, -16, 4, 30); ctx.fillStyle = '#e8f0c0'; ctx.beginPath(); ctx.moveTo(-4, -14); ctx.lineTo(0, -24); ctx.lineTo(4, -14); ctx.fill(); }
+    else if (id === 'moonarrow') { ctx.shadowColor = '#fff2b8'; ctx.shadowBlur = 8; ctx.fillStyle = '#fff8d8'; ctx.fillRect(-1.5, -18, 3, 30); ctx.beginPath(); ctx.moveTo(-4, -16); ctx.lineTo(0, -24); ctx.lineTo(4, -16); ctx.fill(); }
+    else if (id === 'shadowknife') { ctx.fillStyle = 'rgba(60,30,110,.9)'; ctx.beginPath(); ctx.moveTo(0, -14); ctx.lineTo(5, 2); ctx.lineTo(0, 10); ctx.lineTo(-5, 2); ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#a070f0'; ctx.lineWidth = 1; ctx.stroke(); }
     else { ctx.fillStyle = '#e8c15a'; ctx.beginPath(); ctx.arc(0, 0, 6, 0, 6.283); ctx.fill(); ctx.fillStyle = '#1a1408'; ctx.fillRect(-2, -2, 4, 4); ctx.strokeStyle = '#9a7a22'; ctx.lineWidth = 1; ctx.stroke(); }
     ctx.restore(); }
   drawPlayer(sx(P.x), sy(P.y), t);
@@ -820,10 +847,10 @@ function renderShrine() {
   else if (shTab === 'deck') { const p = document.createElement('p'); p.className = 'sub'; p.textContent = `출전 덱 ${META.deck.length}/10 — 런 중 3택1은 덱 안에서만 나옵니다. 첫 칸이 시작 무기. 요괴 속성·방어구를 보고 골고루 짜세요.`; b.appendChild(p);
     const g = document.createElement('div'); g.className = 'grid'; for (const w of WEAPONS) { if (META.owned[w.id] == null) continue; const inDeck = META.deck.includes(w.id), el = document.createElement('button'); el.className = 'w' + (inDeck ? ' in' : ''); el.innerHTML = `<canvas width="56" height="56"></canvas>${w.name}<small class="el-${w.el || 'none'}">${wTag(w)}${inDeck ? ' · ' + (META.deck.indexOf(w.id) + 1) + '번' : ''}</small>`; drawIcon(el.querySelector('canvas'), { d:w }, 1.3);
       el.addEventListener('click', () => { if (inDeck) { if (META.deck.length > 1) META.deck = META.deck.filter(x => x !== w.id); else toast('무기는 하나 이상 넣어야 해요'); } else if (META.deck.length < 10) META.deck.push(w.id); else toast('덱은 10개까지'); saveMeta(); renderShrine(); }); g.appendChild(el); } b.appendChild(g);
-    const h = document.createElement('p'); h.className = 'msg'; h.innerHTML = '상성: <span class="el-water">수</span>→<span class="el-fire">화</span>→<span class="el-metal">금</span>→<span class="el-wood">목</span>→<span class="el-water">수</span> (유리 ×1.5 / 불리 ×0.6) · 투척은 가벼운 요괴, 근접은 무거운 요괴, 오라는 보통 요괴에 강함'; b.appendChild(h); }
+    const h = document.createElement('p'); h.className = 'msg'; h.innerHTML = '상성: <span class="el-water">수</span>→<span class="el-fire">화</span>→<span class="el-metal">금</span>→<span class="el-wood">목</span>→<span class="el-water">수</span> · <span class="el-light">빛</span>→<span class="el-dark">어둠</span>→<span class="el-earth">땅</span>→<span class="el-thunder">번개</span>→<span class="el-light">빛</span> (유리 ×1.5 / 불리 ×0.6, 두 고리 사이는 중립) · 투척은 가벼운 요괴, 근접은 무거운 요괴, 오라는 보통 요괴에 강함'; b.appendChild(h); }
   else { const wh = document.createElement('p'); wh.className = 'msg'; wh.innerHTML = `<b style="color:#e8c15a">무기</b> · 기본 12 · 진화 ${META.evo.length}/${EVOS.length} 발견 — Lv5 둘을 합치면 진화`; b.appendChild(wh);
     const wg = document.createElement('div'); wg.className = 'grid'; wg.style.marginBottom = '8px';
-    for (const w of [...WEAPONS, ...EVOS]) { const seen = w.parts ? META.evo.includes(w.id) : META.owned[w.id] != null, el = document.createElement('div'); el.className = 'w' + (seen ? '' : ' off'); el.title = w.parts ? w.parts.map(p => WBY[p].name).join('+') : '';
+    for (const w of [...WEAPONS, ...EVOS]) { const seen = w.parts ? META.evo.includes(w.id) : META.owned[w.id] != null, el = document.createElement('div'); if (w.unlock && META.bestStage < w.unlock && !seen) el.title = `${STAGES[w.unlock - 1].name} 클리어 후`; el.className = 'w' + (seen ? '' : ' off'); el.title = w.parts ? w.parts.map(p => WBY[p].name).join('+') : '';
       el.innerHTML = `<canvas width="56" height="56"></canvas>${seen ? w.name : '???'}<small>${w.parts ? (seen ? w.parts.map(p => WBY[p].name).join('+') : w.tier + '단 · ' + (w.els.length === 1 ? `<span class="el-${w.els[0]}">${EL_NAME[w.els[0]]}</span>` : TYPE_NAME[w.types[0]]) + ' 계열') : `<span class="el-${w.el || 'none'}">${wTag(w)}</span>`}</small>`;
       drawIcon(el.querySelector('canvas'), { d:w }, 1.3); if (!seen) el.querySelector('canvas').style.opacity = .3; wg.appendChild(el); } b.appendChild(wg);
     for (const st of STAGES_LIVE) { const h = document.createElement('p'); h.className = 'msg'; h.innerHTML = `<b style="color:#e8c15a">${st.name}</b> · ${st.els.map(e => `<span class="el-${e}">${EL_NAME[e]}</span>`).join(' ')}`; b.appendChild(h);
@@ -858,7 +885,7 @@ let last = 0, frameMs = [];
 function frame(ts) { let dt = (ts - last) / 1000 || 0; last = ts; if (dt > .1) dt = .1; const t0 = performance.now();
   if (S.mode === 'play') tick(dt); fx(dt); draw(); if (TEST) { frameMs.push(performance.now() - t0); if (frameMs.length > 600) frameMs.shift(); } requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-if (TEST) window.GAME = { S, P, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, WCD, dropGem, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate, isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
+if (TEST) window.GAME = { S, P, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, WCD, dropGem, gachaPool, BEATS, LOOPS, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate, isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
 </script>
 </body>
 </html>

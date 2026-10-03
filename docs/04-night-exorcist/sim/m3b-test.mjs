@@ -6,7 +6,7 @@ const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScale
 await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
 await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
 const d = await pg.evaluate(() => ({ n: GAME.EVOS.length, t2: GAME.EVOS.filter(e => e.tier === 2).length, t3: GAME.EVOS.filter(e => e.tier === 3).length, noname: GAME.EVOS.filter(e => !e.name).length, dup: GAME.EVOS.length - new Set(GAME.EVOS.map(e => e.name)).size }));
-check('진화 37종 (2단 30 · 3단 7) · 이름 전부 · 중복 없음', d.n === 37 && d.t2 === 30 && d.t3 === 7 && d.noname === 0 && d.dup === 0, JSON.stringify(d));
+check('진화 48종 (2단 39 · 3단 9) · 이름 전부 · 중복 없음', d.n === 48 && d.t2 === 39 && d.t3 === 9 && d.noname === 0 && d.dup === 0, JSON.stringify(d));
 await pg.evaluate(() => { GAME.META.deck = ['talisman','torch','brazier','orb','spear','coin']; GAME.META.owned = Object.fromEntries(GAME.META.deck.map(x => [x, 2])); GAME.META.runs = 3; });
 await pg.click('#startBtn'); await pg.waitForTimeout(200);
 const o1 = await pg.evaluate(() => { GAME.P.w = { talisman:5, torch:5 }; return GAME.evoOptions().map(x => x.e.id + '<' + x.consume.join('+')); });
@@ -29,7 +29,7 @@ check('3단 무기 2개로 3초: 30마리 전부 처치', fire.kills >= 30, JSON
 await pg.evaluate(() => { GAME.S.t = 20; GAME.endRun(false); }); await pg.waitForTimeout(100); await pg.click('#homeBtn'); await pg.waitForTimeout(100);
 await pg.evaluate(() => { GAME.META.evo = ['e:fire:throw+melee', 'e:fire:all']; GAME.openShrine('codex'); }); await pg.waitForTimeout(200);
 const codex = await pg.evaluate(() => { const g = document.querySelector('#shBody .grid'); return { cards: g.querySelectorAll('.w').length, seen: g.querySelectorAll('.w:not(.off)').length }; });
-check('도감 무기 51칸 · 보유 6 + 진화 2 = 8 발견', codex.cards === 51 && codex.seen === 8, JSON.stringify(codex));
+check('도감 무기 68칸 · 보유 6 + 진화 2 = 8 발견', codex.cards === 68 && codex.seen === 8, JSON.stringify(codex));
 await pg.screenshot({ path: path.join(here, 'shots/m3-codex-weapons.png') });
 check('콘솔 에러 0', errs.length === 0, errs.join(';'));
 await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);

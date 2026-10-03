@@ -6,7 +6,7 @@ const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScale
 await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
 await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
 const d = await pg.evaluate(() => ({ passives: GAME.PASSIVES.length, weapons: GAME.WEAPONS.length, evos: GAME.EVOS.length, neutral: GAME.WEAPONS.filter(w => w.neutral).map(w => w.id), af: [GAME.affinity(GAME.WBY.tiger, { el:'fire', armor:'heavy' }), GAME.affinity(GAME.WBY.moxa, { el:'water', armor:'light' })] }));
-check('패시브 8 · 무기 14(중립 2) · 진화 37 그대로 · 중립 상성 1', d.passives === 8 && d.weapons === 14 && d.evos === 37 && d.neutral.join() === 'tiger,moxa' && d.af.join() === '1,1', JSON.stringify(d));
+check('패시브 8 · 무기 20(중립 2) · 진화 48 · 중립 상성 1', d.passives === 8 && d.weapons === 20 && d.evos === 48 && d.neutral.join() === 'tiger,moxa' && d.af.join() === '1,1', JSON.stringify(d));
 await pg.evaluate(() => { GAME.META.deck = ['talisman','sword','bell','spear','orb','sickle','tiger','moxa']; GAME.META.owned = Object.fromEntries(GAME.META.deck.map(x => [x, 0])); GAME.META.runs = 3; });
 await pg.click('#startBtn'); await pg.waitForTimeout(200);
 const slots = await pg.evaluate(() => { GAME.P.w = { talisman:1, sword:1, bell:1, spear:1 }; GAME.S.xp = 9999; GAME.levelUp(); GAME.S.xp = 0; const a = [...document.querySelectorAll('#lvCards .card b')].map(b => b.textContent.trim().split(' ')[0]); document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play';

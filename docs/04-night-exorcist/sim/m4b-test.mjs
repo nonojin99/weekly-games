@@ -1,0 +1,27 @@
+// M4 ②: 두 고리 상성 · 빛/어둠 무기 6 · 진화 재생성 · 뽑기 풀 해금. NODE_PATH=/home/claude/node_modules node m4b-test.mjs
+import { chromium } from 'playwright'; import path from 'path'; import { fileURLToPath } from 'url';
+const here = path.dirname(fileURLToPath(import.meta.url)); const results = []; const check = (n, ok, info = '') => { results.push(ok); console.log((ok ? 'PASS' : 'FAIL') + ' ' + n + (info ? ' — ' + info : '')); };
+const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const errs = []; pg.on('pageerror', e => errs.push(e.message));
+await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
+const d = await pg.evaluate(() => { const E = GAME.EVOS; return { w: GAME.WEAPONS.length, evos: E.length, t2: E.filter(e => e.tier === 2).length, t3: E.filter(e => e.tier === 3).length, noname: E.filter(e => !e.name || e.name.includes('·')).map(e => e.id), cross: E.filter(e => e.els.length === 2 && GAME.LOOPS.findIndex(l => l.includes(e.els[0])) !== GAME.LOOPS.findIndex(l => l.includes(e.els[1]))).length, lockedEvo: E.filter(e => e.unlock === 4).length }; });
+check('무기 20 · 진화 48 (2단 39 · 3단 9) · 이름 전부 · 고리 교차 쌍 0 · 빛/어둠 진화 11 잠금', d.w === 20 && d.evos === 48 && d.t2 === 39 && d.t3 === 9 && d.noname.length === 0 && d.cross === 0 && d.lockedEvo === 11, JSON.stringify(d));
+const af = await pg.evaluate(() => { const a = (w, el, armor = 'none') => +GAME.affinity(GAME.WBY[w], { el, armor }).toFixed(2); return { lightVsDark: a('moonarrow', 'dark'), darkVsLight: a('shadowknife', 'light'), lightVsFire: a('moonarrow', 'fire'), fireVsDark: a('talisman', 'dark'), thunderChain: GAME.BEATS.thunder, earthBeats: GAME.BEATS.earth }; });
+check('상성: 빛→어둠 1.5 · 어둠 vs 빛 0.6 · 빛 vs 화 1(중립) · 화 vs 어둠 1 · 땅→번개→빛', af.lightVsDark === 1.5 && af.darkVsLight === .6 && af.lightVsFire === 1 && af.fireVsDark === 1 && af.thunderChain === 'light' && af.earthBeats === 'thunder', JSON.stringify(af));
+const pool = await pg.evaluate(() => { GAME.META.bestStage = 3; const a = GAME.gachaPool().length; GAME.META.bestStage = 4; const b = GAME.gachaPool().length; GAME.META.bestStage = 0; return { a, b }; });
+check('뽑기 풀: 안개 늪 클리어 전 14 · 후 20', pool.a === 14 && pool.b === 20, JSON.stringify(pool));
+await pg.evaluate(() => { GAME.META.deck = ['moonarrow','sunblade','lantern','shadowknife','inkbrush','veil']; GAME.META.owned = Object.fromEntries(GAME.META.deck.map(x => [x, 0])); GAME.META.runs = 3; });
+await pg.click('#startBtn'); await pg.waitForTimeout(200);
+const fx = await pg.evaluate(() => { GAME.E.length = 0; GAME.S.hp = 50; GAME.S.maxhp = 100; const o = GAME.spawn('egg'); o.el = 'dark'; o.hp = 1; GAME.hitWith(o, GAME.WBY.sunblade, 10, 0, 0); const h1 = GAME.S.hp; const o2 = GAME.spawn('egg'); o2.el = 'light'; o2.hp = 1000; GAME.hitWith(o2, GAME.WBY.inkbrush, 100, 0, 0); return { h1, h2: GAME.S.hp, o2hp: o2.hp }; });
+check('빛 처치 시 체력 +1 · 어둠 흡혈 3% (100×0.6×0.6=36 피해 → +1.08)', fx.h1 === 51 && Math.abs(fx.h2 - 52.08) < .01 && Math.abs(fx.o2hp - 964) < .01, JSON.stringify(fx));
+const evo = await pg.evaluate(() => { GAME.P.w = { moonarrow:5, shadowknife:5 }; const a = GAME.evoOptions().map(x => x.e.name); GAME.P.w = { moonarrow:5, talisman:5 }; const b = GAME.evoOptions().map(x => x.e.name); GAME.P.w = { 'e:light:throw+melee':5, lantern:5 }; const c = GAME.evoOptions().map(x => x.e.name); GAME.P.w = { 'e:throw:light+dark':5, 'e:throw:fire+water':5 }; const d = GAME.evoOptions().map(x => x.e.name); return { a, b, c, d }; });
+check('진화: 달빛 화살+그림자 비수 → 명암 비수 · 달빛 화살+부적(고리 교차) 불가 · 여명 검+등불 → 백야 · 고리 교차 사원소 불가', evo.a.join() === '명암 비수' && evo.b.length === 0 && evo.c.join() === '백야' && evo.d.length === 0, JSON.stringify(evo));
+await pg.evaluate(() => { GAME.P.w = { moonarrow:3, inkbrush:3, veil:2 }; GAME.S.hp = 1e9; GAME.S.maxhp = 1e9; GAME.S.xp = -1e9; for (let i = 0; i < 24; i++) { const o = GAME.spawn('egg'); const a = i * .26; o.x = GAME.P.x + Math.cos(a) * 110; o.y = GAME.P.y + Math.sin(a) * 110; } });
+await pg.waitForTimeout(2500); await pg.screenshot({ path: path.join(here, 'shots/m4b-play.png') });
+const live = await pg.evaluate(() => GAME.S.kills);
+check('빛·어둠 무기 3개 실사격 2.5초 처치>0', live > 0, 'kills ' + live);
+await pg.evaluate(() => { GAME.S.t = 10; GAME.endRun(false); }); await pg.waitForTimeout(100); await pg.click('#homeBtn'); await pg.waitForTimeout(100);
+await pg.evaluate(() => { GAME.META.owned = Object.fromEntries(GAME.WEAPONS.map(w => [w.id, 0])); GAME.META.bestStage = 4; GAME.openShrine('codex'); }); await pg.waitForTimeout(200); await pg.screenshot({ path: path.join(here, 'shots/m4b-codex.png') });
+check('콘솔 에러 0', errs.length === 0, errs.join(';'));
+await br.close(); const f = results.filter(x => !x).length; console.log(`\n${results.length - f}/${results.length} PASS`); process.exit(f ? 1 : 0);

@@ -56,7 +56,7 @@ check('수련: 공격 1단 구매 → coins -40', train.atk === 1 && train.coins
 const g = await page.evaluate(() => { GAME.META.shards = 200; const before = Object.keys(GAME.META.owned).length; const outs = []; for (let i = 0; i < 20; i++) outs.push(GAME.gacha().id); const own = GAME.META.owned; const mast = Object.values(own).reduce((a, b) => a + b, 0); return { before, after: Object.keys(own).length, shards: GAME.META.shards, mast, deck: GAME.META.deck.length, uniq: new Set(outs).size }; });
 check('뽑기 20회: 조각 -200 · 보유 증가 · 중복=숙련 합 = 20 - 신규수 · 덱 ≤10', g.shards === 0 && g.after > g.before && g.mast === 20 - (g.after - g.before) && g.deck <= 10, JSON.stringify(g));
 const deckEdit = await page.evaluate(() => { GAME.META.deck = ['talisman']; GAME.META.owned = Object.fromEntries(GAME.WBY && Object.keys(GAME.WBY).map(k => [k, 0])); GAME.openShrine('deck'); const btns = [...document.querySelectorAll('#shBody .grid button')]; btns.forEach(b => { if (!b.classList.contains('in')) b.click(); }); const n1 = GAME.META.deck.length; const b2 = [...document.querySelectorAll('#shBody .grid button')]; b2.filter(b => !b.classList.contains('in')).forEach(b => b.click()); return { n1, n2: GAME.META.deck.length, total: b2.length }; });
-check('덱 편집: 14종 보유 시 10개 상한', deckEdit.total === 14 && deckEdit.n2 === 10, JSON.stringify(deckEdit));
+check('덱 편집: 20종 보유 시 10개 상한', deckEdit.total === 20 && deckEdit.n2 === 10, JSON.stringify(deckEdit));
 await page.screenshot({ path: path.join(here, 'shots/m2-shrine-deck.png') });
 await page.evaluate(() => GAME.openShrine('gacha')); await page.screenshot({ path: path.join(here, 'shots/m2-shrine-gacha.png') });
 
