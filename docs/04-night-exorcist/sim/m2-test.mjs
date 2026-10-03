@@ -69,7 +69,7 @@ check('덱 [낫,물구슬,물안개]: 시작 무기 = 낫, 3택1 무기는 덱 �
 
 // 8. 상성 실피해 + 속성 효과
 const hit = await page.evaluate(() => { const o = GAME.spawn('jiangshi'); const hp0 = o.hp; GAME.hitWith(GAME.WBY.sickle, GAME.WBY.sickle, 10, 0, 0); return 0; }).catch(() => 0);
-const dmgT = await page.evaluate(() => { const o = GAME.spawn('jiangshi'); const h0 = o.hp; const o2 = GAME.spawn('jiangshi'); const h2 = o2.hp; GAME.hitWith(o, GAME.WBY.sickle, 10, 0, 0); GAME.hitWith(o2, GAME.WBY.spear, 10, 0, 0); const o3 = GAME.spawn('egg'); const h3 = o3.hp; GAME.hitWith(o3, GAME.WBY.talisman, 10, 0, 0); return { armor: o.d.armor, el: o.d.el, dS: +(h0 - o.hp).toFixed(2), dSp: +(h2 - o2.hp).toFixed(2), burn: o3.burn, dT: +(h3 - o3.hp).toFixed(2), eggEl: o3.d.el, eggArmor: o3.d.armor }; });
+const dmgT = await page.evaluate(() => { const o = GAME.spawn('jiangshi'); o.el = 'metal'; const h0 = o.hp; const o2 = GAME.spawn('jiangshi'); o2.el = 'metal'; const h2 = o2.hp; GAME.hitWith(o, GAME.WBY.sickle, 10, 0, 0); GAME.hitWith(o2, GAME.WBY.spear, 10, 0, 0); const o3 = GAME.spawn('egg'); const h3 = o3.hp; GAME.hitWith(o3, GAME.WBY.talisman, 10, 0, 0); return { armor: o.d.armor, el: o.el, dS: +(h0 - o.hp).toFixed(2), dSp: +(h2 - o2.hp).toFixed(2), burn: o3.burn, dT: +(h3 - o3.hp).toFixed(2), eggEl: o3.el, eggArmor: o3.d.armor }; });
 check('실피해: 강시(heavy) 낫 10→' + dmgT.dS + ' / 죽창 10→' + dmgT.dSp + ' · 부적 화상 부여', dmgT.dS > dmgT.dSp && dmgT.burn > 0, JSON.stringify(dmgT));
 
 // 9. 주간 챌린지: 고정 덱 · 수련 미적용 · 시드 결정성 · 랭킹 표시 · 제출
