@@ -6,7 +6,7 @@ const html = 'file://' + path.resolve(here, '../../../games/night-exorcist/index
 const out = path.resolve(here, 'shots'); fs.mkdirSync(out, { recursive: true });
 const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
 const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, hasTouch: true });
-const errs = []; pg.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); pg.on('pageerror', e => errs.push(String(e)));
+const errs = []; pg.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errs.push(m.text()); }); pg.on('pageerror', e => errs.push(String(e)));
 await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: '"saved"' }));
 await pg.goto(html); await pg.waitForTimeout(400); await pg.screenshot({ path: out + '/mobile-menu.png' });
 const ok = (n, c) => console.log((c ? 'PASS' : 'FAIL') + ' ' + n);

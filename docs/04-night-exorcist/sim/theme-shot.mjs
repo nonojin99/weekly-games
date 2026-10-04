@@ -1,0 +1,17 @@
+import { chromium } from 'playwright'; import path from 'path'; import { fileURLToPath } from 'url';
+const here = path.dirname(fileURLToPath(import.meta.url)); const file = 'file://' + path.resolve(here, '../../../games/night-exorcist/index.html');
+const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' }); const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const errs = []; pg.on('pageerror', e => errs.push(e.message));
+const fontStatus = []; pg.on('response', r => { if (/fonts\.|jsdelivr/.test(r.url())) fontStatus.push(r.url().slice(0, 60) + ' ' + r.status()); }); pg.on('requestfailed', r => { if (/fonts\.|jsdelivr/.test(r.url())) fontStatus.push(r.url().slice(0, 60) + ' FAIL'); });
+await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+await pg.goto(file + '?test=1'); await pg.waitForFunction(() => window.GAME);
+await pg.evaluate(() => { GAME.META.runs = 4; GAME.META.shards = 300; GAME.META.coins = 480; GAME.META.bestStage = 6; GAME.META.bestN = 2; GAME.META.diff = 1; GAME.META.stage = 2; GAME.META.owned = { talisman:3, sword:1, bell:0, spear:0, orb:2 }; GAME.META.deck = ['talisman','sword','bell','spear','orb']; GAME.META.codex = ['egg','fire','jiangshi']; GAME.META.evo = ['e:fire:throw+melee']; GAME.META.lastSeen = Date.now(); localStorage.setItem('wk_night-exorcist', JSON.stringify(GAME.META)); });
+await pg.goto(file); await pg.waitForTimeout(1500); await pg.screenshot({ path: path.join(here, 'shots/theme-menu.png') });
+await pg.click('#shrineBtn'); await pg.waitForTimeout(200); await pg.click('#tabGacha'); await pg.waitForTimeout(200); await pg.screenshot({ path: path.join(here, 'shots/theme-gacha.png') });
+await pg.click('#tabDeck'); await pg.waitForTimeout(200); await pg.screenshot({ path: path.join(here, 'shots/theme-deck.png') });
+await pg.click('#shClose'); await pg.waitForTimeout(200);
+await pg.goto(file + '?test=1'); await pg.waitForFunction(() => window.GAME); await pg.waitForTimeout(800);
+await pg.click('#startBtn'); await pg.waitForTimeout(400);
+await pg.evaluate(() => { GAME.P.w = { talisman:5, sword:5 }; GAME.S.xp = 9999; GAME.levelUp(); }); await pg.waitForTimeout(300); await pg.screenshot({ path: path.join(here, 'shots/theme-levelup.png') });
+await pg.evaluate(() => { document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play'; GAME.S.xp = 0; GAME.S.t = 372; GAME.S.kills = 812; GAME.S.hp = 61; }); await pg.waitForTimeout(200); await pg.screenshot({ path: path.join(here, 'shots/theme-hud.png') });
+await pg.evaluate(() => { GAME.S.t = 600; GAME.endRun(true); }); await pg.waitForTimeout(1500); await pg.screenshot({ path: path.join(here, 'shots/theme-result.png') });
+console.log('fonts', fontStatus, 'errs', errs); await br.close();

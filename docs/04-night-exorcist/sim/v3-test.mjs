@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
 const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
-const errs = []; pg.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); pg.on('pageerror', e => errs.push(String(e)));
+const errs = []; pg.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errs.push(m.text()); }); pg.on('pageerror', e => errs.push(String(e)));
 await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: '"saved"' }));
 const ok = (n, c) => console.log((c ? 'PASS' : 'FAIL') + ' ' + n);
 await pg.goto('file:///home/claude/weekly-games/games/night-exorcist/index.html?test=1'); await pg.click('#startBtn'); await pg.waitForTimeout(150);

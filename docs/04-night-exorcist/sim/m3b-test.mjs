@@ -12,7 +12,7 @@ await pg.click('#startBtn'); await pg.waitForTimeout(200);
 const o1 = await pg.evaluate(() => { GAME.P.w = { talisman:5, torch:5 }; return GAME.evoOptions().map(x => x.e.id + '<' + x.consume.join('+')); });
 check('부적5+횃불5 → 화염 부채 가능', o1.join() === 'e:fire:throw+melee<talisman+torch', o1.join());
 const lv = await pg.evaluate(() => { GAME.S.xp = 9999; GAME.levelUp(); GAME.S.xp = 0; const cards = [...document.querySelectorAll('#lvCards .card')]; return { n: cards.length, first: cards[0].textContent.replace(/\s+/g, ' ').slice(0, 60) }; });
-check('레벨업 3택1: 첫 카드 = 진화', /진화: 화염 부채/.test(lv.first) && lv.n === 3, JSON.stringify(lv));
+check('레벨업 3택1: 첫 카드 = 진화', /진화 — 화염 부채/.test(lv.first) && lv.n === 3, JSON.stringify(lv));
 const after = await pg.evaluate(() => { document.querySelector('#lvCards .card').click(); return { w: GAME.P.w, used: [...GAME.P.used], evo: GAME.META.evo, mode: GAME.S.mode }; });
 check('진화 선택: 부모 소모 · 화염 부채 Lv1 · 도감 기록', after.w['e:fire:throw+melee'] === 1 && !after.w.talisman && !after.w.torch && after.used.join() === 'talisman,torch' && after.evo.join() === 'e:fire:throw+melee' && after.mode === 'play', JSON.stringify(after));
 const again = await pg.evaluate(() => { GAME.S.xp = 9999; GAME.levelUp(); GAME.S.xp = 0; const names = [...document.querySelectorAll('#lvCards .card b')].map(b => b.textContent.trim().split(' ')[0]); document.getElementById('lv').classList.remove('show'); GAME.S.mode = 'play'; return names; });

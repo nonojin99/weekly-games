@@ -12,7 +12,7 @@ const c6 = await pg.evaluate(() => { GAME.S.t = 600; GAME.S.coins = 0; GAME.endR
 check('6스테이지 쉬움 첫 클리어: 30×2 = 600 조각 · 보통 해금 · 어려움 아직 · 토스트', c6.best === 6 && c6.shards === 600 && c6.coins === 160 && c6.un1 && !c6.un2 && /보통.*해금.*×100/.test(c6.toast), JSON.stringify(c6));
 await pg.click('#homeBtn'); await pg.waitForTimeout(150);
 const menu = await pg.evaluate(() => ({ hidden: document.getElementById('diffs').classList.contains('hide'), btns: [...document.querySelectorAll('#diffs button')].map(b => b.textContent + (b.disabled ? '(x)' : '')), stages: [...document.querySelectorAll('#stages button')].filter(b => !b.disabled).length }));
-check('메뉴: 난이도 줄 표시 · 보통 열림 · 어려움 잠김 · 쉬움 6스테이지 전부 열림', !menu.hidden && menu.btns[1] === '보통 · 보상 ×3' && /🔒 어려움/.test(menu.btns[2]) && menu.btns[2].endsWith('(x)') && menu.stages === 6, JSON.stringify(menu));
+check('메뉴: 난이도 줄 표시 · 보통 열림 · 어려움 잠김 · 쉬움 6스테이지 전부 열림', !menu.hidden && menu.btns[1] === '보통 · 보상 ×3' && /봉인어려움/.test(menu.btns[2]) && menu.btns[2].endsWith('(x)') && menu.stages === 6, JSON.stringify(menu));
 await pg.evaluate(() => { document.querySelectorAll('#diffs button')[1].click(); });
 const sel = await pg.evaluate(() => ({ diff: GAME.META.diff, stage: GAME.META.stage, open: [...document.querySelectorAll('#stages button')].filter(b => !b.disabled).length }));
 check('보통 선택: 스테이지 1만 열림, 선택 스테이지 1로 내려감', sel.diff === 1 && sel.stage === 1 && sel.open === 1, JSON.stringify(sel));
@@ -29,7 +29,7 @@ const g = await pg.evaluate(() => { GAME.META.shards = 1200; GAME.META.owned = {
 check('뽑기 ×10: 조각 -100 · 결과 10개 합산 · ×100 버튼 열림(보통 해금)', g.after === 1100 && g.got === 10 && g.btns[2] === '×100 (1000)' && /×10 결과/.test(g.out), JSON.stringify(g));
 await pg.screenshot({ path: path.join(here, 'shots/m6-gacha.png') });
 const lock = await pg.evaluate(() => { GAME.META.bestStage = 3; GAME.renderShrine(); const b = document.getElementById('gacha100'); return b.textContent + (b.disabled ? '(x)' : ''); });
-check('보통 미해금이면 ×100 잠김', lock === '🔒 ×100(x)', lock);
+check('보통 미해금이면 ×100 잠김', lock === '봉인×100(x)', lock);
 await pg.click('#shClose'); await pg.waitForTimeout(100); await pg.evaluate(() => { GAME.META.stage = 1; GAME.META.diff = 0; }); await pg.click('#startBtn'); await pg.waitForTimeout(200);
 const gem = await pg.evaluate(() => { GAME.G.length = 0; GAME.S.need = 1e9; GAME.P.p = { pick:5 }; GAME.S.xp = 0; for (let k = 0; k < 40; k++) { const a = k * .157; GAME.dropGem(GAME.P.x + Math.cos(a) * (60 + k * 4), GAME.P.y + Math.sin(a) * (60 + k * 4), 1); } GAME.KEY.KeyD = true; let t = 0; while (GAME.G.length && t < 4) { GAME.tick(1 / 60); t += 1 / 60; } GAME.KEY.KeyD = false; return { left: GAME.G.length, t: +t.toFixed(2), xp: GAME.S.xp }; });
 check('보석 40개, 달리며 줍기: 4초 안에 전부 흡수(맴돌기 없음)', gem.left === 0 && gem.xp === 40, JSON.stringify(gem));
