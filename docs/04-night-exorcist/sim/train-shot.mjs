@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ executablePath:'/opt/pw-browsers/chromium' });
+const pg = await b.newPage({ viewport:{ width:390, height:844 }, deviceScaleFactor:2 });
+await pg.route('**supabase.co/**', r => r.fulfill({ status:200, body:'[]', contentType:'application/json' }));
+await pg.goto('file:///home/claude/weekly-games/games/night-exorcist/index.html?test=1');
+await pg.waitForFunction(() => window.GAME);
+await pg.evaluate(() => { GAME.META.runs = 5; GAME.META.coins = 2500; GAME.META.train = { atk:12, hp:7, regen:0, spd:30, pick:3 }; GAME.openShrine(); GAME.renderShrine(); });
+await pg.waitForTimeout(400);
+await pg.screenshot({ path:'shots/train-v18.png' });
+await b.close();

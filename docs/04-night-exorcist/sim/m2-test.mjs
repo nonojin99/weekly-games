@@ -23,7 +23,7 @@ check('상성: 수→화 1.5 / 화→수 0.6 / 투척↔light 1.5 heavy 0.6 / �
 
 // 2. v1 → v2 마이그레이션
 const mig = await page.evaluate(() => GAME.migrate({ v: 1, runs: 5, coins: 300, train: { atk: 2 }, chars: [1, 0, 0, 0], weapons: [1, 1, 0, 0, 0, 0], stage: 2, bestStage: 1, codex: ['egg'], best: { time: 200, kills: 50 }, lastSeen: 0 }));
-check('v1→v2: owned{talisman,sword} deck 2 · shards 0 · train 보존', mig.v === 2 && mig.owned.talisman === 0 && mig.owned.sword === 0 && mig.owned.bell == null && mig.deck.join() === 'talisman,sword' && mig.shards === 0 && mig.train.atk === 2 && mig.train.hp === 0 && mig.bestStage === 1, JSON.stringify(mig.deck));
+check('v1→v2: owned{talisman,sword} deck 2 · shards 0 · train ×5 (v18 잘게 쪼갠 수련)', mig.v === 2 && mig.owned.talisman === 0 && mig.owned.sword === 0 && mig.owned.bell == null && mig.deck.join() === 'talisman,sword' && mig.shards === 0 && mig.train.atk === 10 && mig.train.hp === 0 && mig.trainV2 === 1 && mig.bestStage === 1, JSON.stringify(mig.deck));
 
 // 3. 새 플레이어: 덱 = 부적만, 메뉴에 사당/챌린지 숨김
 const fresh = await page.evaluate(() => ({ deck: GAME.META.deck.join(), sh: document.getElementById('shrineBtn').classList.contains('hide'), ch: document.getElementById('chalBtn').classList.contains('hide') }));
@@ -52,7 +52,7 @@ check('런2·3: 방울 해금 · 사당 열림 · 런3 조각 +10(+런 내 2)', 
 // 6. 사당: 수련 구매 · 뽑기(신규/중복 숙련) · 덱 편집 10 상한
 await page.click('#homeBtn'); await page.waitForTimeout(100); await page.click('#shrineBtn'); await page.waitForTimeout(100);
 const train = await page.evaluate(() => { GAME.META.coins = 1000; GAME.renderShrine(); const btn = document.querySelector('#shBody .trow button'); btn.click(); return { atk: GAME.META.train.atk, coins: GAME.META.coins, cost: GAME.trainCost(0) }; });
-check('수련: 공격 1단 구매 → coins -60', train.atk === 1 && train.coins === 1000 - train.cost && train.cost === 60, JSON.stringify(train));
+check('수련: 공격 1단 구매 → coins -30', train.atk === 1 && train.coins === 1000 - train.cost && train.cost === 30, JSON.stringify(train));
 const g = await page.evaluate(() => { GAME.META.shards = 200; const before = Object.keys(GAME.META.owned).length; const outs = []; for (let i = 0; i < 20; i++) outs.push(GAME.gacha().id); const own = GAME.META.owned; const mast = Object.values(own).reduce((a, b) => a + b, 0); return { before, after: Object.keys(own).length, shards: GAME.META.shards, mast, deck: GAME.META.deck.length, uniq: new Set(outs).size }; });
 check('뽑기 20회: 조각 -200 · 보유 증가 · 중복=숙련 합 = 20 - 신규수 · 덱 ≤10', g.shards === 0 && g.after > g.before && g.mast === 20 - (g.after - g.before) && g.deck <= 10, JSON.stringify(g));
 const deckEdit = await page.evaluate(() => { GAME.META.deck = ['talisman']; GAME.META.owned = Object.fromEntries(GAME.WBY && Object.keys(GAME.WBY).map(k => [k, 0])); GAME.openShrine('deck'); const btns = [...document.querySelectorAll('#shBody .grid button')]; btns.forEach(b => { if (!b.classList.contains('in')) b.click(); }); const n1 = GAME.META.deck.length; const b2 = [...document.querySelectorAll('#shBody .grid button')]; b2.filter(b => !b.classList.contains('in')).forEach(b => b.click()); return { n1, n2: GAME.META.deck.length, total: b2.length }; });
