@@ -9,7 +9,7 @@ const a = await pg.evaluate(() => ({ hidden: document.getElementById('diffs').cl
 check('새 플레이어: 난이도 줄 숨김 · 쉬움만', a.hidden && a.un.join() === 'true,false,false', JSON.stringify(a));
 await pg.evaluate(() => { GAME.META.runs = 3; GAME.META.stage = 6; GAME.META.bestStage = 5; GAME.META.shards = 0; GAME.META.coins = 0; }); await pg.click('#startBtn'); await pg.waitForTimeout(200);
 const c6 = await pg.evaluate(() => { GAME.S.t = 600; GAME.S.coins = 0; GAME.endRun(true); return { best: GAME.META.bestStage, shards: GAME.META.shards, coins: GAME.META.coins, un1: GAME.diffUnlocked(1), un2: GAME.diffUnlocked(2), toast: document.getElementById('toast').textContent }; });
-check('6스테이지 쉬움 첫 클리어: 30×2 = 600 조각 · 보통 해금 · 어려움 아직 · 토스트', c6.best === 6 && c6.shards === 600 && c6.coins === 160 && c6.un1 && !c6.un2 && /보통.*해금.*×100/.test(c6.toast), JSON.stringify(c6));
+check('6스테이지 쉬움 첫 클리어: 30×2 = 600 조각 · 보통 해금 · 어려움 아직 · 토스트', c6.best === 6 && c6.shards === 600 && c6.coins === 120 && c6.un1 && !c6.un2 && /보통.*해금.*×100/.test(c6.toast), JSON.stringify(c6));
 await pg.click('#homeBtn'); await pg.waitForTimeout(150);
 const menu = await pg.evaluate(() => ({ hidden: document.getElementById('diffs').classList.contains('hide'), btns: [...document.querySelectorAll('#diffs button')].map(b => b.textContent + (b.disabled ? '(x)' : '')), stages: document.querySelectorAll('#stages .stcard:not(.locked)').length }));
 check('메뉴: 난이도 줄 표시 · 보통 열림 · 어려움 잠김 · 쉬움 6스테이지 전부 열림', !menu.hidden && menu.btns[1] === '보통 · 보상 ×3' && /봉인어려움/.test(menu.btns[2]) && menu.btns[2].endsWith('(x)') && menu.stages === 6, JSON.stringify(menu));
@@ -23,7 +23,7 @@ check('보통 런: 적 체력 ×1.35', run.diff === 1 && run.name === '보통' &
 const contact = await pg.evaluate(() => { GAME.E.length = 0; GAME.S.hp = 100; GAME.P.p = {}; const o = GAME.spawn('egg'); o.x = GAME.P.x + 5; o.y = GAME.P.y; o.touchCd = 0; for (let i = 0; i < 3; i++) GAME.tick(1 / 60); return +(100 - GAME.S.hp).toFixed(2); });
 check('보통 접촉 3 × 1.25 = 3.75', contact > 3.7 && contact < 3.8, '' + contact);
 const cN = await pg.evaluate(() => { GAME.META.shards = 0; GAME.META.coins = 0; GAME.S.t = 600; GAME.S.coins = 0; GAME.endRun(true); return { shards: GAME.META.shards, coins: GAME.META.coins, bestN: GAME.META.bestN, bestE: GAME.META.bestStage }; });
-check('보통 1스테이지 첫 클리어: 3×3×2 = 18회분(180) · 엽전 ×2 = 320 · bestN 1 · 쉬움 기록 유지', cN.shards === 180 && cN.coins === 320 && cN.bestN === 1 && cN.bestE === 6, JSON.stringify(cN));
+check('보통 1스테이지 첫 클리어: 3×3×2 = 18회분(180) · 엽전 ×2 = 240 · bestN 1 · 쉬움 기록 유지', cN.shards === 180 && cN.coins === 240 && cN.bestN === 1 && cN.bestE === 6, JSON.stringify(cN));
 await pg.click('#homeBtn'); await pg.waitForTimeout(100);
 const g = await pg.evaluate(() => { GAME.META.shards = 1200; GAME.META.owned = { talisman:10 }; GAME.openShrine('gacha'); const btns = ['gachaBtn','gacha10','gacha100'].map(id => { const b = document.getElementById(id); return b.textContent + (b.disabled ? '(x)' : ''); }); const r = GAME.gachaN(10); const after = GAME.META.shards; const out = document.getElementById('gachaOut').textContent; return { btns, got: r.fresh.length + Object.values(r.mast).reduce((a, b) => a + b, 0) + r.refund / 5, after, out: out.slice(0, 40) }; });
 check('뽑기 ×10: 조각 -100 · 결과 10개 합산 · ×100 버튼 열림(보통 해금)', g.after === 1100 && g.got === 10 && g.btns[2] === '×100 (1000)' && /×10 결과/.test(g.out), JSON.stringify(g));
