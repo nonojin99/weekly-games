@@ -1,0 +1,2819 @@
+{
+ "findings": [
+  {
+   "sev": "BUG",
+   "id": "MIG-THROW",
+   "msg": "migrate() throws on 4/200 saves (load would white-screen)",
+   "extra": [
+    "Cannot read properties of undefined (reading 'length') <= {\"v\":2,\"runs\":3333,\"owned\":{\"sickle\":\"3\",\"orb\":-1,\"moxa\":\"3\",\"boltspear\":-1},\"stage\":3,\"diff\":1,\"bestStage\":0,\"codex\":[\"",
+    "Cannot read properties of null (reading 'talisman') <= {\"v\":2,\"coins\":1000000000000000,\"train\":{\"hp\":\"4\",\"regen\":null,\"spd\":null,\"pick\":null,\"bogus\":null},\"owned\":null,\"stage\"",
+    "Cannot read properties of null (reading 'talisman') <= {\"v\":2,\"coins\":null,\"owned\":null,\"deck\":[\"thunderdrum\",\"lantern\",\"torch\",\"boltcharm\",7],\"stage\":0,\"evo\":5,\"best\":3.5,\"tr",
+    "Cannot read properties of null (reading 'length') <= {\"v\":2,\"runs\":\"55\",\"train\":{\"atk\":null,\"hp\":\"4\",\"spd\":0,\"pick\":null,\"bogus\":null},\"owned\":{\"thunderdrum\":\"3\",\"brazier\":-"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "MIG-NOSANITIZE",
+   "msg": "migrate() returns invalid META for 155/200 saves (no sanitising)",
+   "extra": {
+    "bestStage": 86,
+    "codex": 71,
+    "best": 59,
+    "train.regen": 41,
+    "train.pick": 39,
+    "deck.bad": 227,
+    "coins": 72,
+    "shards": 47,
+    "train.atk": 33,
+    "diff": 56,
+    "bestH": 56,
+    "stage": 66,
+    "owned.inkbrush": 11,
+    "owned.talisman": 7,
+    "owned.thunderdrum": 10,
+    "owned.torch": 8,
+    "owned.moonarrow": 13,
+    "owned.lantern": 10,
+    "bestN": 58,
+    "runs": 55,
+    "owned.orb": 12,
+    "owned.beads": 12,
+    "deck.dup": 14,
+    "train.hp": 39,
+    "evo": 47,
+    "owned.moxa": 12,
+    "owned.boltcharm": 14,
+    "owned.mist": 8,
+    "owned.whip": 10,
+    "owned.boltspear": 9,
+    "owned.spear": 5,
+    "owned.sword": 8,
+    "owned.coin": 8,
+    "owned.sling": 9,
+    "owned.unknown": 22,
+    "owned.e": 13,
+    "train.spd": 38,
+    "owned": 7,
+    "owned.shadowknife": 4,
+    "owned.sandstorm": 6,
+    "owned.sickle": 8,
+    "owned.brazier": 12,
+    "owned.sunblade": 9,
+    "owned.rockhammer": 7,
+    "deck.len": 1,
+    "owned.zzz": 6,
+    "owned.veil": 6,
+    "owned.tiger": 9,
+    "owned.bell": 6,
+    "deck": 1
+   }
+  },
+  {
+   "sev": "BUG",
+   "id": "MIG-RUNTIME",
+   "msg": "94/200 migrated saves cause runtime exceptions or undefined/NaN in UI",
+   "extra": ""
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"garbage\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Unexpected token 'o', \"not json{\" is not valid JSON"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"owned-null\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"deck-null\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"best-null\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"deck-unknown\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"evo-null\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"diff5\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"stage99\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD:train99",
+   "msg": "tampered save survives load but misbehaves",
+   "extra": {
+    "sus": [
+     "train bar >100%: 330% 피해 +1%/단 · 99/30"
+    ],
+    "detail": {
+     "diffBtns": [
+      "쉬움*",
+      "봉인보통 · 보상 ×3(x)",
+      "봉인어려움 · 보상 ×8(x)"
+     ],
+     "start": "밤으로 나서기",
+     "trainRows": [
+      {
+       "txt": "피해 +1%/단 · 99/30",
+       "bar": "330%",
+       "btn": "최대"
+      },
+      {
+       "txt": "최대 체력 +1.2%/단 · 0/30",
+       "bar": "0%",
+       "btn": "30"
+      }
+     ],
+     "total": "수련 총합 99/150 · 챌린지에서는 적용되지 않습니다",
+     "gacha": null,
+     "deckSub": "출전 덱 1/10 — 런 중 3택1은",
+     "run": {
+      "diff": 0,
+      "stage": 0,
+      "deck": [
+       "talisman"
+      ],
+      "w": [
+       "talisman"
+      ],
+      "name": "쉬움",
+      "maxhp": 100
+     },
+     "cards": [
+      "산삼",
+      "자석 호리병",
+      "부적"
+     ],
+     "metaAfter": {
+      "coins": 1000120,
+      "shards": 60,
+      "stage": 1,
+      "diff": 0,
+      "best": 1,
+      "bestN": 0,
+      "bestH": 0
+     }
+    }
+   }
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"owned15\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"deck12\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "BUG",
+   "id": "LOAD-CRASH",
+   "msg": "save \"deck-dup\" → page fails to boot (white screen, GAME undefined)",
+   "extra": [
+    "Cannot access 'TRAIN_MAX' before initialization"
+   ]
+  },
+  {
+   "sev": "SUS",
+   "id": "TRAIN-OVERBAR",
+   "msg": "train level above current trainMax renders bar >100% (overflow hidden, but text says 50/30)",
+   "extra": "166.667% 피해 +1%/단 · 50/30 최대 total=수련 총합 141/150 · 챌린지에서는 적용되지 않습니다"
+  },
+  {
+   "sev": "BUG",
+   "id": "GACHA",
+   "msg": "gacha invariant failures",
+   "extra": [
+    "gachaN(100) ran despite lock (direct call)",
+    "full deck: new weapon NOT added but text says 덱에 추가됨"
+   ]
+  },
+  {
+   "sev": "SUS",
+   "id": "GACHA-OVER10",
+   "msg": "mastery >10 from tampered save displays raw value",
+   "extra": "new owned=15 shards=0 gridText=투척 · 숙련 15"
+  },
+  {
+   "sev": "SUS",
+   "id": "DECK-UNKNOWN",
+   "msg": "deck tab counts unknown ids toward N/10 (unknown ids never cleaned from META.deck)",
+   "extra": "출전 덱 2/10 — 런 "
+  },
+  {
+   "sev": "BUG",
+   "id": "CODEX",
+   "msg": "codex issues",
+   "extra": {
+    "issues": [
+     "codex header count stale: \"무기 · 기본 12 · 진화 0/74 발견 — Lv5 둘을 합치면 진화\" (WEAPONS=26)",
+     "evo count includes unknown id: 무기 · 기본 12 · 진화 2/74 발견 — Lv5 둘을 합치면 진화"
+    ],
+    "counts": {
+     "nW": 26,
+     "nE": 74,
+     "nEn": 42
+    },
+    "header": "무기 · 기본 12 · 진화 0/74 발견 — Lv5 둘을 합치면 진화"
+   }
+  },
+  {
+   "sev": "SUS",
+   "id": "CODEX-TOOLTIP",
+   "msg": "locked-weapon \"<stage> 클리어 후\" tooltip never shows: el.title is overwritten on the same line (index.html:1235)",
+   "extra": "tooltips=0"
+  },
+  {
+   "sev": "INFO",
+   "id": "PAGEERR-MIG",
+   "msg": "page errors during migration fuzz (expected from malformed saves)",
+   "extra": {
+    "Cannot read properties of null (reading 'time')": 22,
+    "Cannot read properties of undefined (reading 'name')": 17,
+    "Cannot read properties of undefined (reading 'obst')": 20,
+    "Cannot read properties of undefined (reading 'time')": 4,
+    "META.deck.push is not a function": 1
+   }
+  }
+ ],
+ "migFail": {
+  "throw": [
+   {
+    "i": 74,
+    "err": "Cannot read properties of undefined (reading 'length')",
+    "save": {
+     "v": 2,
+     "runs": 3333,
+     "owned": {
+      "sickle": "3",
+      "orb": -1,
+      "moxa": "3",
+      "boltspear": -1
+     },
+     "stage": 3,
+     "diff": 1,
+     "bestStage": 0,
+     "codex": [
+      "egg",
+      "zzz"
+     ],
+     "evo": [
+      "e:fire:all"
+     ],
+     "best": 7,
+     "trainV2": 0,
+     "lastSeen": -14
+    }
+   },
+   {
+    "i": 79,
+    "err": "Cannot read properties of null (reading 'talisman')",
+    "save": {
+     "v": 2,
+     "coins": 1000000000000000,
+     "train": {
+      "hp": "4",
+      "regen": null,
+      "spd": null,
+      "pick": null,
+      "bogus": null
+     },
+     "owned": null,
+     "stage": 3,
+     "diff": 3,
+     "bestStage": 7,
+     "bestN": "6",
+     "bestH": 7,
+     "codex": "x",
+     "evo": "x",
+     "best": 7,
+     "trainV2": "1",
+     "lastSeen": "55"
+    }
+   },
+   {
+    "i": 109,
+    "err": "Cannot read properties of null (reading 'talisman')",
+    "save": {
+     "v": 2,
+     "coins": null,
+     "owned": null,
+     "deck": [
+      "thunderdrum",
+      "lantern",
+      "torch",
+      "boltcharm",
+      7
+     ],
+     "stage": 0,
+     "evo": 5,
+     "best": 3.5,
+     "trainV2": 0,
+     "lastSeen": 0
+    }
+   },
+   {
+    "i": 192,
+    "err": "Cannot read properties of null (reading 'length')",
+    "save": {
+     "v": 2,
+     "runs": "55",
+     "train": {
+      "atk": null,
+      "hp": "4",
+      "spd": 0,
+      "pick": null,
+      "bogus": null
+     },
+     "owned": {
+      "thunderdrum": "3",
+      "brazier": -1,
+      "e:fire:all": "3",
+      "sword": null,
+      "beads": null,
+      "sandstorm": "3"
+     },
+     "deck": null,
+     "stage": 99,
+     "bestStage": 6,
+     "bestN": 2,
+     "evo": [
+      "e:fire:all"
+     ],
+     "best": 7,
+     "chalBest": -4,
+     "trainV2": "1"
+    }
+   }
+  ],
+  "invalid": [
+   {
+    "i": 1,
+    "p": [
+     "bestStage=null",
+     "codex",
+     "best"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 3,
+     "coins": 0,
+     "train": {
+      "atk": "3"
+     },
+     "weapons": [
+      1,
+      1,
+      0
+     ],
+     "chars": [
+      1
+     ],
+     "stage": 1,
+     "bestStage": null,
+     "codex": null,
+     "best": 5
+    }
+   },
+   {
+    "i": 2,
+    "p": [
+     "train.regen=-15",
+     "train.pick=null",
+     "deck.bad:\"sickle\"",
+     "deck.bad:\"thunderdrum\"",
+     "deck.bad:\"lantern\"",
+     "deck.bad:\"coin\"",
+     "deck.bad:7",
+     "bestStage=\"7\"",
+     "coins=\"55\"",
+     "shards=-87"
+    ],
+    "save": {
+     "v": 2,
+     "coins": "55",
+     "shards": -87,
+     "train": {
+      "atk": 0,
+      "hp": 85,
+      "regen": -3,
+      "spd": null,
+      "pick": null,
+      "bogus": 80
+     },
+     "deck": [
+      "sickle",
+      "thunderdrum",
+      "lantern",
+      "coin",
+      7
+     ],
+     "stage": 1,
+     "diff": 2,
+     "bestStage": "7",
+     "bestN": 2,
+     "codex": [],
+     "chalBest": 0
+    }
+   },
+   {
+    "i": 3,
+    "p": [
+     "train.atk=-10",
+     "train.pick=null",
+     "diff=3",
+     "bestH=99",
+     "shards=\"55\"",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "runs": 0,
+     "coins": 0,
+     "shards": "55",
+     "train": {
+      "atk": -2,
+      "hp": 97,
+      "regen": 1,
+      "spd": 89,
+      "pick": null
+     },
+     "stage": 1,
+     "diff": 3,
+     "bestStage": 6,
+     "bestN": 6,
+     "bestH": 99,
+     "codex": [
+      "egg",
+      "zzz"
+     ],
+     "evo": [
+      "e:fire:all"
+     ],
+     "best": 99,
+     "chalBest": 0,
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 4,
+    "p": [
+     "train.atk=null",
+     "stage=\"3\"",
+     "bestH=\"6\"",
+     "codex"
+    ],
+    "save": {
+     "v": 2,
+     "shards": 0,
+     "train": {
+      "atk": null,
+      "hp": 42,
+      "regen": null,
+      "spd": 32,
+      "pick": null,
+      "bogus": null
+     },
+     "stage": "3",
+     "bestStage": 2,
+     "bestH": "6",
+     "codex": "7",
+     "evo": [],
+     "best": {
+      "time": 0,
+      "kills": 0
+     },
+     "lastSeen": -41
+    }
+   },
+   {
+    "i": 6,
+    "p": [
+     "stage=0",
+     "coins=\"12\"",
+     "codex",
+     "best"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 9,
+     "coins": "12",
+     "train": null,
+     "weapons": "x",
+     "chars": [
+      1
+     ],
+     "stage": 0,
+     "bestStage": 1,
+     "codex": null,
+     "best": null
+    }
+   },
+   {
+    "i": 7,
+    "p": [
+     "owned.inkbrush=\"3\"",
+     "owned.talisman=-1",
+     "owned.thunderdrum=\"3\"",
+     "owned.torch=\"3\"",
+     "owned.moonarrow=\"3\"",
+     "owned.lantern=15",
+     "diff=\"1\"",
+     "stage=-2",
+     "bestN=-3",
+     "coins=\"55\"",
+     "runs=null"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "coins": "55",
+     "shards": 1000000000000000,
+     "train": [],
+     "owned": {
+      "inkbrush": "3",
+      "talisman": -1,
+      "sword": 6,
+      "thunderdrum": "3",
+      "torch": "3",
+      "moonarrow": "3",
+      "lantern": 15
+     },
+     "deck": null,
+     "stage": -2,
+     "diff": "1",
+     "bestN": -3,
+     "codex": [
+      "e:fire:all"
+     ],
+     "best": {},
+     "chalBest": 0,
+     "trainV2": 0,
+     "lastSeen": 3.5
+    }
+   },
+   {
+    "i": 8,
+    "p": [
+     "train.regen=-10",
+     "owned.orb=-1",
+     "owned.thunderdrum=null",
+     "deck.bad:\"mist\"",
+     "stage=\"abc\"",
+     "bestStage=-1",
+     "bestN=7",
+     "bestH=99",
+     "coins=null",
+     "shards=null"
+    ],
+    "save": {
+     "v": 2,
+     "coins": null,
+     "shards": null,
+     "train": {
+      "atk": 31,
+      "hp": null,
+      "regen": -2,
+      "spd": 91,
+      "pick": 34,
+      "bogus": "4"
+     },
+     "owned": {
+      "orb": -1,
+      "thunderdrum": null,
+      "whip": 4
+     },
+     "deck": [
+      "talisman",
+      "mist"
+     ],
+     "stage": "abc",
+     "diff": 1,
+     "bestStage": -1,
+     "bestN": 7,
+     "bestH": 99,
+     "codex": [],
+     "evo": [],
+     "chalBest": "55",
+     "lastSeen": 1000000000
+    }
+   },
+   {
+    "i": 9,
+    "p": [
+     "stage=7",
+     "bestStage=\"6\"",
+     "bestN=-1",
+     "bestH=99",
+     "shards=-90",
+     "runs=-68",
+     "codex"
+    ],
+    "save": {
+     "v": 2,
+     "runs": -68,
+     "coins": 1000000000000000,
+     "shards": -90,
+     "stage": 7,
+     "diff": 2,
+     "bestStage": "6",
+     "bestN": -1,
+     "bestH": 99,
+     "codex": "x",
+     "evo": [],
+     "best": {},
+     "chalBest": null,
+     "lastSeen": "7"
+    }
+   },
+   {
+    "i": 11,
+    "p": [
+     "stage=-1",
+     "bestStage=null"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 3,
+     "coins": 0,
+     "train": {
+      "atk": 2,
+      "hp": 4
+     },
+     "weapons": null,
+     "chars": [
+      1
+     ],
+     "stage": -1,
+     "bestStage": null,
+     "codex": [
+      "egg"
+     ],
+     "best": {
+      "time": 10,
+      "kills": 2
+     }
+    }
+   },
+   {
+    "i": 12,
+    "p": [
+     "train.atk=-10",
+     "owned.beads=-1",
+     "deck.bad:\"thunderdrum\"",
+     "deck.bad:\"sunblade\"",
+     "deck.bad:\"torch\"",
+     "deck.bad:\"torch\"",
+     "deck.bad:\"moxa\"",
+     "deck.bad:\"rockhammer\"",
+     "deck.bad:\"tiger\"",
+     "deck.bad:\"tiger\"",
+     "deck.dup",
+     "diff=-1",
+     "bestStage=99"
+    ],
+    "save": {
+     "v": 2,
+     "runs": 1097,
+     "train": {
+      "atk": -2,
+      "hp": null,
+      "regen": "4",
+      "spd": "4",
+      "bogus": null
+     },
+     "owned": {
+      "sickle": 3,
+      "beads": -1
+     },
+     "deck": [
+      "thunderdrum",
+      "sunblade",
+      "torch",
+      "torch",
+      "moxa",
+      "rockhammer",
+      "tiger",
+      "tiger"
+     ],
+     "diff": -1,
+     "bestStage": 99,
+     "evo": [
+      "e:fire:all"
+     ],
+     "chalBest": 0,
+     "trainV2": null,
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 13,
+    "p": [
+     "train.hp=52",
+     "train.pick=-1",
+     "deck.bad:\"orb\"",
+     "diff=\"1\"",
+     "bestStage=\"6\"",
+     "runs=-2",
+     "evo",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "runs": -2,
+     "coins": 1000000000000000,
+     "shards": 473,
+     "train": {
+      "hp": 52,
+      "spd": 0,
+      "pick": -1,
+      "bogus": 21
+     },
+     "deck": [
+      "orb"
+     ],
+     "diff": "1",
+     "bestStage": "6",
+     "bestN": 0,
+     "bestH": 0,
+     "codex": [
+      "egg",
+      "zzz"
+     ],
+     "evo": null,
+     "best": 7,
+     "chalBest": "55",
+     "trainV2": "1",
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 14,
+    "p": [
+     "owned.moxa=-1",
+     "owned.inkbrush=15",
+     "owned.boltcharm=\"3\"",
+     "owned.moonarrow=\"3\"",
+     "diff=-1",
+     "stage=\"abc\"",
+     "bestN=\"6\"",
+     "runs=-4",
+     "codex",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "runs": -4,
+     "owned": {
+      "sickle": 10,
+      "moxa": -1,
+      "inkbrush": 15,
+      "boltcharm": "3",
+      "moonarrow": "3"
+     },
+     "stage": "abc",
+     "diff": -1,
+     "bestStage": 0,
+     "bestN": "6",
+     "codex": "x",
+     "evo": null,
+     "best": {
+      "time": "a"
+     },
+     "chalBest": 1000000000000000,
+     "lastSeen": -13
+    }
+   },
+   {
+    "i": 16,
+    "p": [
+     "coins=\"12\"",
+     "codex",
+     "best"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 3,
+     "coins": "12",
+     "train": {},
+     "weapons": "x",
+     "chars": [
+      1
+     ],
+     "stage": 2,
+     "bestStage": 0,
+     "codex": null,
+     "best": 5
+    }
+   },
+   {
+    "i": 17,
+    "p": [
+     "deck.bad:\"boltspear\"",
+     "deck.bad:\"lantern\"",
+     "deck.bad:\"boltcharm\"",
+     "diff=-1",
+     "stage=99",
+     "bestN=-1",
+     "bestH=99",
+     "shards=null",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "shards": null,
+     "deck": [
+      "boltspear",
+      "lantern",
+      "boltcharm"
+     ],
+     "stage": 99,
+     "diff": -1,
+     "bestN": -1,
+     "bestH": 99,
+     "evo": "x",
+     "chalBest": "55",
+     "trainV2": 0,
+     "lastSeen": 0
+    }
+   },
+   {
+    "i": 18,
+    "p": [
+     "train.hp=null",
+     "train.regen=null",
+     "train.pick=null",
+     "owned.mist=-1",
+     "owned.inkbrush=15",
+     "owned.whip=\"3\"",
+     "owned.moonarrow=\"3\"",
+     "owned.boltspear=-1",
+     "owned.lantern=null",
+     "owned.spear=null",
+     "deck.bad:7",
+     "diff=-1",
+     "stage=99",
+     "bestN={}",
+     "shards=null",
+     "runs=null",
+     "codex",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "shards": null,
+     "train": {
+      "hp": null,
+      "regen": null,
+      "pick": null,
+      "bogus": -1
+     },
+     "owned": {
+      "mist": -1,
+      "inkbrush": 15,
+      "bell": 10,
+      "whip": "3",
+      "moonarrow": "3",
+      "boltspear": -1,
+      "lantern": null,
+      "spear": null
+     },
+     "deck": [
+      7
+     ],
+     "stage": 99,
+     "diff": -1,
+     "bestStage": 0,
+     "bestN": {},
+     "bestH": 2,
+     "codex": "7",
+     "evo": 5,
+     "trainV2": 1,
+     "lastSeen": 1000000000000000
+    }
+   },
+   {
+    "i": 19,
+    "p": [
+     "train.atk=null",
+     "train.regen=null",
+     "train.pick=null",
+     "owned.lantern=15",
+     "owned.sword=-1",
+     "owned.whip=-1",
+     "diff=5",
+     "bestN=-1"
+    ],
+    "save": {
+     "v": 2,
+     "runs": 1000000000,
+     "train": {
+      "atk": null,
+      "regen": null,
+      "pick": null,
+      "bogus": null
+     },
+     "owned": {
+      "lantern": 15,
+      "sword": -1,
+      "whip": -1
+     },
+     "diff": 5,
+     "bestN": -1,
+     "bestH": 2,
+     "codex": [],
+     "evo": [
+      "e:fire:all"
+     ],
+     "best": {
+      "time": "a"
+     },
+     "chalBest": "55",
+     "trainV2": 1,
+     "lastSeen": 0
+    }
+   },
+   {
+    "i": 21,
+    "p": [
+     "bestStage=\"2\"",
+     "coins=-5",
+     "codex"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 9,
+     "coins": -5,
+     "train": {
+      "atk": "3"
+     },
+     "weapons": [
+      1,
+      1,
+      0
+     ],
+     "chars": [
+      1
+     ],
+     "stage": 2,
+     "bestStage": "2",
+     "codex": "egg",
+     "best": {
+      "time": 10,
+      "kills": 2
+     }
+    }
+   },
+   {
+    "i": 22,
+    "p": [
+     "train.atk=-15",
+     "train.regen=null",
+     "train.pick=null",
+     "diff=3",
+     "stage=0",
+     "bestStage=\"6\"",
+     "bestN=7",
+     "coins=-33",
+     "runs=null",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "coins": -33,
+     "train": {
+      "atk": -3,
+      "hp": 39,
+      "regen": null,
+      "spd": "4",
+      "pick": null,
+      "bogus": "4"
+     },
+     "stage": 0,
+     "diff": 3,
+     "bestStage": "6",
+     "bestN": 7,
+     "bestH": 0,
+     "evo": "x",
+     "best": {
+      "time": 0,
+      "kills": 0
+     },
+     "chalBest": null
+    }
+   },
+   {
+    "i": 23,
+    "p": [
+     "owned.coin=-1",
+     "owned.beads=\"3\"",
+     "bestStage=-1",
+     "bestH=1000000000",
+     "coins=null",
+     "shards=null",
+     "runs=\"55\"",
+     "codex",
+     "evo",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "runs": "55",
+     "coins": null,
+     "shards": null,
+     "owned": {
+      "coin": -1,
+      "beads": "3"
+     },
+     "stage": 6,
+     "diff": 2,
+     "bestStage": -1,
+     "bestN": 6,
+     "bestH": 1000000000,
+     "codex": 5,
+     "evo": 5,
+     "best": 7,
+     "chalBest": "55",
+     "trainV2": "1",
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 24,
+    "p": [
+     "owned.sling=15",
+     "owned.thunderdrum=-1",
+     "deck.bad:\"coin\"",
+     "diff=5",
+     "stage=\"3\"",
+     "bestN=7",
+     "coins=-38",
+     "runs=null",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "coins": -38,
+     "train": {
+      "atk": "4",
+      "hp": "4",
+      "pick": "4",
+      "bogus": null
+     },
+     "owned": {
+      "sling": 15,
+      "thunderdrum": -1,
+      "boltcharm": 9
+     },
+     "deck": [
+      "coin"
+     ],
+     "stage": "3",
+     "diff": 5,
+     "bestN": 7,
+     "codex": [
+      "e:fire:all"
+     ],
+     "evo": [
+      "e:fire:all"
+     ],
+     "best": 7,
+     "lastSeen": 2928
+    }
+   },
+   {
+    "i": 26,
+    "p": [
+     "stage=-1",
+     "codex",
+     "best"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 6,
+     "coins": 0,
+     "train": {},
+     "weapons": "x",
+     "chars": [
+      1
+     ],
+     "stage": -1,
+     "bestStage": 1,
+     "codex": "egg",
+     "best": 5
+    }
+   },
+   {
+    "i": 27,
+    "p": [
+     "train.atk=-20",
+     "train.regen=-5",
+     "deck.bad:\"bell\"",
+     "deck.bad:7",
+     "stage=\"3\"",
+     "bestStage=-1",
+     "runs=null",
+     "evo",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "coins": 1000000000000000,
+     "shards": 1000000000000000,
+     "train": {
+      "atk": -4,
+      "regen": -1,
+      "pick": 22,
+      "bogus": null
+     },
+     "deck": [
+      "bell",
+      7
+     ],
+     "stage": "3",
+     "diff": 0,
+     "bestStage": -1,
+     "bestH": 6,
+     "codex": [
+      "e:fire:all"
+     ],
+     "evo": -3,
+     "best": 7,
+     "chalBest": 1548,
+     "trainV2": 0
+    }
+   },
+   {
+    "i": 28,
+    "p": [
+     "deck.bad:\"whip\"",
+     "deck.bad:\"shadowknife\"",
+     "deck.dup",
+     "diff=-1",
+     "coins=-1",
+     "shards=\"55\"",
+     "runs=-52"
+    ],
+    "save": {
+     "v": 2,
+     "runs": -52,
+     "coins": -1,
+     "shards": "55",
+     "deck": [
+      "talisman",
+      "talisman",
+      "whip",
+      "shadowknife"
+     ],
+     "stage": 3,
+     "diff": -1,
+     "bestN": 2,
+     "codex": [
+      "e:fire:all"
+     ],
+     "best": {
+      "time": 0,
+      "kills": 0
+     },
+     "chalBest": null,
+     "trainV2": "1",
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 29,
+    "p": [
+     "owned.thunderdrum=null",
+     "owned.unknown:e:fire:all",
+     "owned.e:fire:all=null",
+     "deck.bad:\"beads\"",
+     "diff=5",
+     "bestN=7",
+     "runs=\"55\"",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "runs": "55",
+     "owned": {
+      "thunderdrum": null,
+      "e:fire:all": null
+     },
+     "deck": [
+      "beads"
+     ],
+     "stage": 6,
+     "diff": 5,
+     "bestN": 7,
+     "codex": [
+      "e:fire:all"
+     ],
+     "evo": "x",
+     "chalBest": "abc",
+     "trainV2": 1,
+     "lastSeen": "55"
+    }
+   },
+   {
+    "i": 31,
+    "p": [
+     "stage=0",
+     "coins=\"12\"",
+     "codex"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 9,
+     "coins": "12",
+     "train": {},
+     "weapons": [
+      1,
+      1,
+      0
+     ],
+     "chars": [
+      1
+     ],
+     "stage": 0,
+     "bestStage": 0,
+     "codex": null,
+     "best": {
+      "time": 10,
+      "kills": 2
+     }
+    }
+   },
+   {
+    "i": 32,
+    "p": [
+     "deck.bad:\"thunderdrum\"",
+     "deck.bad:\"brazier\"",
+     "stage=0",
+     "bestStage=-1",
+     "bestN=-1",
+     "bestH=7",
+     "coins=-50",
+     "runs=-7"
+    ],
+    "save": {
+     "v": 2,
+     "runs": -7,
+     "coins": -50,
+     "train": "abc",
+     "deck": [
+      "thunderdrum",
+      "brazier",
+      "talisman"
+     ],
+     "stage": 0,
+     "diff": 1,
+     "bestStage": -1,
+     "bestN": -1,
+     "bestH": 7,
+     "codex": [
+      "e:fire:all"
+     ],
+     "evo": [
+      "e:fire:all"
+     ],
+     "best": {
+      "time": "a"
+     },
+     "chalBest": -91,
+     "trainV2": "1",
+     "lastSeen": {}
+    }
+   },
+   {
+    "i": 33,
+    "p": [
+     "deck.bad:\"moxa\"",
+     "diff=5",
+     "stage={}",
+     "bestH=99",
+     "shards=-34",
+     "runs=\"55\"",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "runs": "55",
+     "coins": 0,
+     "shards": -34,
+     "train": 3.5,
+     "deck": [
+      "moxa"
+     ],
+     "stage": {},
+     "diff": 5,
+     "bestH": 99,
+     "codex": [
+      "egg",
+      "zzz"
+     ],
+     "best": null,
+     "chalBest": 1000000000,
+     "lastSeen": -22
+    }
+   },
+   {
+    "i": 34,
+    "p": [
+     "train.atk=\"4\"",
+     "train.hp=54",
+     "train.spd=\"4\"",
+     "owned:1000000000",
+     "deck.bad:\"torch\"",
+     "deck.bad:\"moonarrow\"",
+     "deck.bad:\"spear\"",
+     "deck.bad:\"beads\"",
+     "bestStage=-1",
+     "bestN=\"6\"",
+     "bestH=7",
+     "runs=\"55\""
+    ],
+    "save": {
+     "v": 2,
+     "runs": "55",
+     "coins": 1000000000,
+     "train": {
+      "atk": "4",
+      "hp": 54,
+      "regen": 48,
+      "spd": "4",
+      "bogus": null
+     },
+     "owned": 1000000000,
+     "deck": [
+      "torch",
+      "moonarrow",
+      "spear",
+      "beads"
+     ],
+     "stage": 6,
+     "bestStage": -1,
+     "bestN": "6",
+     "bestH": 7,
+     "codex": [
+      "e:fire:all"
+     ],
+     "evo": [
+      "egg",
+      "zzz"
+     ],
+     "best": {
+      "time": "a"
+     },
+     "chalBest": 0,
+     "trainV2": "1",
+     "lastSeen": -23
+    }
+   },
+   {
+    "i": 36,
+    "p": [
+     "stage=9",
+     "bestStage=\"2\"",
+     "coins=\"12\"",
+     "codex"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 8,
+     "coins": "12",
+     "train": null,
+     "weapons": null,
+     "chars": [
+      1
+     ],
+     "stage": 9,
+     "bestStage": "2",
+     "codex": "egg",
+     "best": {
+      "time": 10,
+      "kills": 2
+     }
+    }
+   },
+   {
+    "i": 37,
+    "p": [
+     "train.atk=-15",
+     "owned.coin=-1",
+     "owned.boltspear=-1",
+     "owned.unknown:e:fire:all",
+     "owned.e:fire:all=\"3\"",
+     "owned.mist=15",
+     "deck.bad:\"spear\"",
+     "deck.bad:\"lantern\"",
+     "deck.bad:7",
+     "deck.bad:7",
+     "deck.bad:\"sword\"",
+     "deck.bad:\"sunblade\"",
+     "deck.dup",
+     "diff=5",
+     "stage=7",
+     "bestStage=99",
+     "bestN=\"6\"",
+     "runs=null"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "coins": 1000000000000000,
+     "train": {
+      "atk": -3,
+      "regen": null,
+      "spd": null,
+      "pick": null,
+      "bogus": 51
+     },
+     "owned": {
+      "coin": -1,
+      "boltspear": -1,
+      "e:fire:all": "3",
+      "mist": 15
+     },
+     "deck": [
+      "spear",
+      "mist",
+      "lantern",
+      7,
+      7,
+      "sword",
+      "sunblade"
+     ],
+     "stage": 7,
+     "diff": 5,
+     "bestStage": 99,
+     "bestN": "6",
+     "codex": [],
+     "chalBest": 1000000000000000
+    }
+   },
+   {
+    "i": 38,
+    "p": [
+     "train.regen=-15",
+     "train.pick=-20",
+     "owned.whip=15",
+     "owned.shadowknife=15",
+     "owned.sandstorm=null",
+     "owned.orb=null",
+     "deck.bad:\"zzz\"",
+     "deck.bad:\"veil\"",
+     "deck.bad:\"sling\"",
+     "diff=5",
+     "bestStage=7",
+     "bestN=-1",
+     "coins=\"55\"",
+     "codex"
+    ],
+    "save": {
+     "v": 2,
+     "coins": "55",
+     "shards": 1597,
+     "train": {
+      "hp": null,
+      "regen": -3,
+      "spd": "4",
+      "pick": -4
+     },
+     "owned": {
+      "whip": 15,
+      "shadowknife": 15,
+      "sandstorm": null,
+      "orb": null
+     },
+     "deck": [
+      "zzz",
+      "veil",
+      "talisman",
+      "sling"
+     ],
+     "diff": 5,
+     "bestStage": 7,
+     "bestN": -1,
+     "bestH": 6,
+     "codex": "x",
+     "evo": [],
+     "chalBest": null,
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 39,
+    "p": [
+     "owned.lantern=null",
+     "diff=3",
+     "bestStage=\"6\""
+    ],
+    "save": {
+     "v": 2,
+     "runs": 2731,
+     "coins": 2935,
+     "owned": {
+      "lantern": null
+     },
+     "deck": [
+      "talisman"
+     ],
+     "diff": 3,
+     "bestStage": "6",
+     "bestH": 0,
+     "codex": [
+      "egg",
+      "zzz"
+     ],
+     "evo": [],
+     "best": {},
+     "chalBest": null
+    }
+   },
+   {
+    "i": 41,
+    "p": [
+     "bestStage=\"2\"",
+     "codex"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 9,
+     "coins": 0,
+     "train": {
+      "atk": 2,
+      "hp": 0
+     },
+     "weapons": [
+      1,
+      1,
+      0
+     ],
+     "chars": [
+      1
+     ],
+     "stage": 2,
+     "bestStage": "2",
+     "codex": null,
+     "best": {
+      "time": 10,
+      "kills": 2
+     }
+    }
+   },
+   {
+    "i": 42,
+    "p": [
+     "train.hp=null",
+     "train.spd=-5",
+     "owned.sword=15",
+     "owned.moonarrow=null",
+     "owned.sickle=15",
+     "owned.moxa=null",
+     "bestH=-1",
+     "coins=-44",
+     "shards=null",
+     "codex",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "runs": 0,
+     "coins": -44,
+     "shards": null,
+     "train": {
+      "atk": "4",
+      "hp": null,
+      "regen": "4",
+      "spd": -1,
+      "pick": 61,
+      "bogus": "4"
+     },
+     "owned": {
+      "torch": 8,
+      "sword": 15,
+      "moonarrow": null,
+      "sickle": 15,
+      "moxa": null,
+      "boltcharm": 4,
+      "mist": 1
+     },
+     "diff": 1,
+     "bestH": -1,
+     "codex": "7",
+     "evo": "7",
+     "best": {},
+     "chalBest": 15,
+     "lastSeen": true
+    }
+   },
+   {
+    "i": 43,
+    "p": [
+     "train.atk=null",
+     "train.hp=null",
+     "train.regen=-1",
+     "train.spd=-1",
+     "train.pick=null",
+     "bestN=-1",
+     "bestH=99",
+     "codex",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "coins": 1000000000000000,
+     "train": {
+      "atk": null,
+      "hp": null,
+      "regen": -1,
+      "spd": -1,
+      "pick": null
+     },
+     "deck": [],
+     "diff": 1,
+     "bestStage": 6,
+     "bestN": -1,
+     "bestH": 99,
+     "codex": 5,
+     "evo": "x",
+     "best": {
+      "time": "a"
+     },
+     "chalBest": 1000000000000000,
+     "trainV2": "1",
+     "lastSeen": null
+    }
+   },
+   {
+    "i": 44,
+    "p": [
+     "train.hp=52",
+     "train.spd=null",
+     "owned.sandstorm=-1",
+     "owned.brazier=null",
+     "owned.shadowknife=\"3\"",
+     "owned.sunblade=\"3\"",
+     "owned.rockhammer=15",
+     "owned.whip=15",
+     "owned.coin=null",
+     "deck.bad:\"moxa\"",
+     "deck.bad:\"lantern\"",
+     "deck.dup",
+     "stage=99",
+     "bestN=7",
+     "runs=[]"
+    ],
+    "save": {
+     "v": 2,
+     "runs": [],
+     "shards": 1726,
+     "train": {
+      "hp": 52,
+      "spd": null,
+      "bogus": 96
+     },
+     "owned": {
+      "sandstorm": -1,
+      "brazier": null,
+      "tiger": 1,
+      "shadowknife": "3",
+      "sunblade": "3",
+      "rockhammer": 15,
+      "whip": 15,
+      "coin": null
+     },
+     "deck": [
+      "moxa",
+      "talisman",
+      "coin",
+      "coin",
+      "lantern"
+     ],
+     "stage": 99,
+     "diff": 2,
+     "bestN": 7,
+     "bestH": 6,
+     "codex": [],
+     "evo": [],
+     "best": {
+      "time": 0,
+      "kills": 0
+     },
+     "chalBest": "55",
+     "trainV2": 1,
+     "lastSeen": -90
+    }
+   },
+   {
+    "i": 46,
+    "p": [
+     "coins=-5",
+     "codex",
+     "best"
+    ],
+    "save": {
+     "v": 1,
+     "runs": 7,
+     "coins": -5,
+     "train": {
+      "atk": "3"
+     },
+     "weapons": [
+      0,
+      0,
+      0
+     ],
+     "chars": [
+      1
+     ],
+     "stage": 2,
+     "bestStage": 0,
+     "codex": null,
+     "best": 5
+    }
+   },
+   {
+    "i": 47,
+    "p": [
+     "train.spd=-10",
+     "owned.sling=null",
+     "owned.torch=null",
+     "owned.brazier=\"3\"",
+     "owned.sword=\"3\"",
+     "deck.len=11",
+     "deck.bad:\"moonarrow\"",
+     "deck.bad:\"bell\"",
+     "deck.bad:\"sunblade\"",
+     "deck.bad:\"veil\"",
+     "deck.bad:\"boltcharm\"",
+     "deck.bad:\"tiger\"",
+     "deck.bad:null",
+     "deck.bad:\"whip\"",
+     "deck.bad:\"boltcharm\"",
+     "deck.dup",
+     "bestStage=-1",
+     "bestH=7",
+     "coins=\"55\"",
+     "codex"
+    ],
+    "save": {
+     "v": 2,
+     "runs": 1000000000000000,
+     "coins": "55",
+     "shards": 0,
+     "train": {
+      "atk": "4",
+      "hp": 54,
+      "spd": -2,
+      "pick": 10,
+      "bogus": null
+     },
+     "owned": {
+      "sling": null,
+      "torch": null,
+      "brazier": "3",
+      "sword": "3",
+      "beads": 5,
+      "mist": 4
+     },
+     "deck": [
+      "moonarrow",
+      "bell",
+      "torch",
+      "sunblade",
+      "veil",
+      "boltcharm",
+      "talisman",
+      "tiger",
+      null,
+      "whip",
+      "boltcharm"
+     ],
+     "bestStage": -1,
+     "bestN": 2,
+     "bestH": 7,
+     "codex": null,
+     "evo": [
+      "egg",
+      "zzz"
+     ],
+     "best": {},
+     "chalBest": 1000000000000000,
+     "lastSeen": 4340
+    }
+   },
+   {
+    "i": 48,
+    "p": [
+     "train.atk=null",
+     "train.regen=\"4\"",
+     "train.spd=\"4\"",
+     "deck.bad:\"sling\"",
+     "deck.bad:\"shadowknife\"",
+     "diff=5",
+     "bestStage=true",
+     "coins=-26",
+     "runs=null",
+     "evo"
+    ],
+    "save": {
+     "v": 2,
+     "runs": null,
+     "coins": -26,
+     "shards": 99,
+     "train": {
+      "atk": null,
+      "regen": "4",
+      "spd": "4",
+      "bogus": 84
+     },
+     "deck": [
+      "sling",
+      "shadowknife"
+     ],
+     "stage": 3,
+     "diff": 5,
+     "bestStage": true,
+     "bestN": 0,
+     "bestH": 2,
+     "codex": [],
+     "evo": 1000000000,
+     "best": {
+      "time": "a"
+     },
+     "chalBest": null,
+     "trainV2": 1,
+     "lastSeen": "55"
+    }
+   },
+   {
+    "i": 49,
+    "p": [
+     "owned.beads=15",
+     "owned.sickle=null",
+     "owned.unknown:zzz",
+     "owned.zzz=\"3\"",
+     "deck.bad:\"boltcharm\"",
+     "deck.bad:\"sunblade\"",
+     "deck.bad:\"sling\"",
+     "deck.bad:\"spear\"",
+     "diff=-1",
+     "bestN=7",
+     "coins=\"55\"",
+     "shards=true",
+     "evo",
+     "best"
+    ],
+    "save": {
+     "v": 2,
+     "coins": "55",
+     "shards": true,
+     "owned": {
+      "beads": 15,
+      "sickle": null,
+      "coin": 3,
+      "sandstorm": 4,
+      "zzz": "3"
+     },
+     "deck": [
+      "boltcharm",
+      "sunblade",
+      "sling",
+      "spear"
+     ],
+     "stage": 1,
+     "diff": -1,
+     "bestStage": 6,
+     "bestN": 7,
+     "evo": "x",
+     "best": true,
+     "chalBest": "55",
+     "lastSeen": "55"
+    }
+   }
+  ]
+ },
+ "rtBad": [
+  {
+   "i": 1,
+   "save": "{\"v\":1,\"runs\":3,\"coins\":0,\"train\":{\"atk\":\"3\"},\"weapons\":[1,1,0],\"chars\":[1],\"stage\":1,\"bestStage\":null,\"codex\":null,\"best\":5}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 3,
+   "save": "{\"v\":2,\"runs\":0,\"coins\":0,\"shards\":\"55\",\"train\":{\"atk\":-2,\"hp\":97,\"regen\":1,\"spd\":89,\"pick\":null},\"stage\":1,\"diff\":3,\"bestStage\":6,\"bestN\":6,\"bestH\":99,\"codex\":",
+   "errs": [
+    "tick: Cannot read properties of undefined (reading 'spawn')",
+    "endRun: Cannot read properties of undefined (reading 'id')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 6,
+   "save": "{\"v\":1,\"runs\":9,\"coins\":\"12\",\"train\":null,\"weapons\":\"x\",\"chars\":[1],\"stage\":0,\"bestStage\":1,\"codex\":null,\"best\":null}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')",
+    "endRun: Cannot read properties of null (reading 'time')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 7,
+   "save": "{\"v\":2,\"runs\":null,\"coins\":\"55\",\"shards\":1000000000000000,\"train\":[],\"owned\":{\"inkbrush\":\"3\",\"talisman\":-1,\"sword\":6,\"thunderdrum\":\"3\",\"torch\":\"3\",\"moonarrow\":\"",
+   "errs": [],
+   "scan": [
+    "menu: style=\"text-align:center\">최고 10:01 · 런 NaN회 · 엽전 1000090</p>"
+   ]
+  },
+  {
+   "i": 8,
+   "save": "{\"v\":2,\"coins\":null,\"shards\":null,\"train\":{\"atk\":31,\"hp\":null,\"regen\":-2,\"spd\":91,\"pick\":34,\"bogus\":\"4\"},\"owned\":{\"orb\":-1,\"thunderdrum\":null,\"whip\":4},\"deck\":[",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 13,
+   "save": "{\"v\":2,\"runs\":-2,\"coins\":1000000000000000,\"shards\":473,\"train\":{\"hp\":52,\"spd\":0,\"pick\":-1,\"bogus\":21},\"deck\":[\"orb\"],\"diff\":\"1\",\"bestStage\":\"6\",\"bestN\":0,\"bestH",
+   "errs": [
+    "shrine.codex: META.evo.includes is not a function",
+    "gacha: META.evo.includes is not a function"
+   ],
+   "scan": []
+  },
+  {
+   "i": 14,
+   "save": "{\"v\":2,\"runs\":-4,\"owned\":{\"sickle\":10,\"moxa\":-1,\"inkbrush\":15,\"boltcharm\":\"3\",\"moonarrow\":\"3\"},\"stage\":\"abc\",\"diff\":-1,\"bestStage\":0,\"bestN\":\"6\",\"codex\":\"x\",\"ev",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'length')",
+    "gacha: Cannot read properties of null (reading 'length')",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 16,
+   "save": "{\"v\":1,\"runs\":3,\"coins\":\"12\",\"train\":{},\"weapons\":\"x\",\"chars\":[1],\"stage\":2,\"bestStage\":0,\"codex\":null,\"best\":5}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 17,
+   "save": "{\"v\":2,\"shards\":null,\"deck\":[\"boltspear\",\"lantern\",\"boltcharm\"],\"stage\":99,\"diff\":-1,\"bestN\":-1,\"bestH\":99,\"evo\":\"x\",\"chalBest\":\"55\",\"trainV2\":0,\"lastSeen\":0}",
+   "errs": [
+    "tick: Cannot read properties of undefined (reading 'spawn')",
+    "endRun: Cannot read properties of undefined (reading 'id')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 18,
+   "save": "{\"v\":2,\"runs\":null,\"shards\":null,\"train\":{\"hp\":null,\"regen\":null,\"pick\":null,\"bogus\":-1},\"owned\":{\"mist\":-1,\"inkbrush\":15,\"bell\":10,\"whip\":\"3\",\"moonarrow\":\"3\",\"",
+   "errs": [
+    "shrine.codex: META.evo.includes is not a function",
+    "gacha: META.evo.includes is not a function"
+   ],
+   "scan": [
+    "menu: style=\"text-align:center\">최고 10:01 · 런 NaN회 · 엽전 1000090</p>"
+   ]
+  },
+  {
+   "i": 19,
+   "save": "{\"v\":2,\"runs\":1000000000,\"train\":{\"atk\":null,\"regen\":null,\"pick\":null,\"bogus\":null},\"owned\":{\"lantern\":15,\"sword\":-1,\"whip\":-1},\"diff\":5,\"bestN\":-1,\"bestH\":2,\"c",
+   "errs": [],
+   "scan": [
+    "menu:lass=\"msg\" style=\"text-align:center\">최고 NaN:NaN · 런 1000000001회",
+    "over:  <p id=\"ovBest\" class=\"msg\">최고 NaN:NaN · 처치 undefined</p>"
+   ]
+  },
+  {
+   "i": 23,
+   "save": "{\"v\":2,\"runs\":\"55\",\"coins\":null,\"shards\":null,\"owned\":{\"coin\":-1,\"beads\":\"3\"},\"stage\":6,\"diff\":2,\"bestStage\":-1,\"bestN\":6,\"bestH\":1000000000,\"codex\":5,\"evo\":5,\"",
+   "errs": [
+    "shrine.codex: META.evo.includes is not a function",
+    "gacha: META.evo.includes is not a function"
+   ],
+   "scan": []
+  },
+  {
+   "i": 27,
+   "save": "{\"v\":2,\"runs\":null,\"coins\":1000000000000000,\"shards\":1000000000000000,\"train\":{\"atk\":-4,\"regen\":-1,\"pick\":22,\"bogus\":null},\"deck\":[\"bell\",7],\"stage\":\"3\",\"diff\":",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "shrine.codex: META.evo.includes is not a function",
+    "gacha: META.evo.includes is not a function",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 31,
+   "save": "{\"v\":1,\"runs\":9,\"coins\":\"12\",\"train\":{},\"weapons\":[1,1,0],\"chars\":[1],\"stage\":0,\"bestStage\":0,\"codex\":null,\"best\":{\"time\":10,\"kills\":2}}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 32,
+   "save": "{\"v\":2,\"runs\":-7,\"coins\":-50,\"train\":\"abc\",\"deck\":[\"thunderdrum\",\"brazier\",\"talisman\"],\"stage\":0,\"diff\":1,\"bestStage\":-1,\"bestN\":-1,\"bestH\":7,\"codex\":[\"e:fire:a",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 33,
+   "save": "{\"v\":2,\"runs\":\"55\",\"coins\":0,\"shards\":-34,\"train\":3.5,\"deck\":[\"moxa\"],\"stage\":{},\"diff\":5,\"bestH\":99,\"codex\":[\"egg\",\"zzz\"],\"best\":null,\"chalBest\":1000000000,\"la",
+   "errs": [
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'id')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 34,
+   "save": "{\"v\":2,\"runs\":\"55\",\"coins\":1000000000,\"train\":{\"atk\":\"4\",\"hp\":54,\"regen\":48,\"spd\":\"4\",\"bogus\":null},\"owned\":1000000000,\"deck\":[\"torch\",\"moonarrow\",\"spear\",\"bead",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 37,
+   "save": "{\"v\":2,\"runs\":null,\"coins\":1000000000000000,\"train\":{\"atk\":-3,\"regen\":null,\"spd\":null,\"pick\":null,\"bogus\":51},\"owned\":{\"coin\":-1,\"boltspear\":-1,\"e:fire:all\":\"3\"",
+   "errs": [],
+   "scan": [
+    "menu: style=\"text-align:center\">최고 10:01 · 런 NaN회 · 엽전 1000112</p>"
+   ]
+  },
+  {
+   "i": 38,
+   "save": "{\"v\":2,\"coins\":\"55\",\"shards\":1597,\"train\":{\"hp\":null,\"regen\":-3,\"spd\":\"4\",\"pick\":-4},\"owned\":{\"whip\":15,\"shadowknife\":15,\"sandstorm\":null,\"orb\":null},\"deck\":[\"z",
+   "errs": [
+    "tick: Cannot read properties of undefined (reading 'spawn')",
+    "endRun: Cannot read properties of undefined (reading 'id')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 41,
+   "save": "{\"v\":1,\"runs\":9,\"coins\":0,\"train\":{\"atk\":2,\"hp\":0},\"weapons\":[1,1,0],\"chars\":[1],\"stage\":2,\"bestStage\":\"2\",\"codex\":null,\"best\":{\"time\":10,\"kills\":2}}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 43,
+   "save": "{\"v\":2,\"coins\":1000000000000000,\"train\":{\"atk\":null,\"hp\":null,\"regen\":-1,\"spd\":-1,\"pick\":null},\"deck\":[],\"diff\":1,\"bestStage\":6,\"bestN\":-1,\"bestH\":99,\"codex\":5,",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "shrine.codex: META.codex.includes is not a function",
+    "gacha: META.codex.includes is not a function",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 46,
+   "save": "{\"v\":1,\"runs\":7,\"coins\":-5,\"train\":{\"atk\":\"3\"},\"weapons\":[0,0,0],\"chars\":[1],\"stage\":2,\"bestStage\":0,\"codex\":null,\"best\":5}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 47,
+   "save": "{\"v\":2,\"runs\":1000000000000000,\"coins\":\"55\",\"shards\":0,\"train\":{\"atk\":\"4\",\"hp\":54,\"spd\":-2,\"pick\":10,\"bogus\":null},\"owned\":{\"sling\":null,\"torch\":null,\"brazier\":",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "shrine.codex: META.codex.includes is not a function",
+    "gacha: META.codex.includes is not a function",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 48,
+   "save": "{\"v\":2,\"runs\":null,\"coins\":-26,\"shards\":99,\"train\":{\"atk\":null,\"regen\":\"4\",\"spd\":\"4\",\"bogus\":84},\"deck\":[\"sling\",\"shadowknife\"],\"stage\":3,\"diff\":5,\"bestStage\":t",
+   "errs": [
+    "shrine.codex: META.evo.includes is not a function",
+    "gacha: META.evo.includes is not a function"
+   ],
+   "scan": [
+    "menu:lass=\"msg\" style=\"text-align:center\">최고 NaN:NaN · 런 NaN회 · 엽전 1",
+    "over:  <p id=\"ovBest\" class=\"msg\">최고 NaN:NaN · 처치 undefined</p>"
+   ]
+  },
+  {
+   "i": 51,
+   "save": "{\"v\":1,\"runs\":1,\"coins\":-5,\"train\":{\"atk\":\"3\"},\"weapons\":\"x\",\"chars\":[1],\"stage\":2,\"bestStage\":null,\"codex\":null,\"best\":5}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 52,
+   "save": "{\"v\":2,\"runs\":-21,\"coins\":0,\"shards\":null,\"train\":{\"atk\":\"4\",\"regen\":-3,\"pick\":-4,\"bogus\":\"4\"},\"owned\":{\"e:fire:all\":-1,\"talisman\":null},\"deck\":[],\"diff\":1,\"bes",
+   "errs": [
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 53,
+   "save": "{\"v\":2,\"runs\":\"55\",\"coins\":null,\"shards\":true,\"train\":{\"atk\":-2,\"hp\":25,\"regen\":79,\"spd\":null,\"pick\":68},\"owned\":[],\"deck\":[\"sword\",\"sandstorm\",\"moxa\"],\"diff\":t",
+   "errs": [
+    "tick: Cannot read properties of undefined (reading 'spawn')",
+    "endRun: Cannot read properties of undefined (reading 'id')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 56,
+   "save": "{\"v\":1,\"runs\":5,\"coins\":\"12\",\"train\":{\"atk\":5,\"hp\":3},\"weapons\":[1,0,1,1,1,1],\"chars\":[1],\"stage\":0,\"bestStage\":0,\"codex\":[\"egg\"],\"best\":null}",
+   "errs": [
+    "endRun: Cannot read properties of null (reading 'time')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 57,
+   "save": "{\"v\":2,\"runs\":-15,\"coins\":null,\"shards\":618,\"owned\":{\"boltspear\":-1,\"e:fire:all\":15,\"veil\":null,\"moxa\":-1,\"sword\":\"3\",\"orb\":15},\"deck\":[\"torch\",\"mist\"],\"stage\":",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 62,
+   "save": "{\"v\":2,\"runs\":1000000000000000,\"shards\":0,\"train\":{\"atk\":null,\"hp\":-2,\"regen\":-1,\"spd\":\"4\",\"pick\":null},\"owned\":{\"mist\":\"3\",\"sling\":-1,\"tiger\":\"3\",\"beads\":7,\"mo",
+   "errs": [],
+   "scan": [
+    "menu:lass=\"msg\" style=\"text-align:center\">최고 NaN:NaN · 런 10000000000",
+    "over:  <p id=\"ovBest\" class=\"msg\">최고 NaN:NaN · 처치 undefined</p>"
+   ]
+  },
+  {
+   "i": 63,
+   "save": "{\"v\":2,\"runs\":null,\"coins\":null,\"train\":3.5,\"owned\":{\"coin\":\"3\",\"rockhammer\":15},\"deck\":[\"veil\",\"talisman\"],\"stage\":99,\"bestN\":\"6\",\"bestH\":[],\"codex\":\"x\",\"best\"",
+   "errs": [],
+   "scan": [
+    "menu:lass=\"msg\" style=\"text-align:center\">최고 NaN:NaN · 런 Infinity회 ·",
+    "over:  <p id=\"ovBest\" class=\"msg\">최고 NaN:NaN · 처치 undefined</p>"
+   ]
+  },
+  {
+   "i": 64,
+   "save": "{\"v\":2,\"runs\":-37,\"shards\":3303,\"train\":{\"atk\":null,\"hp\":88,\"regen\":null,\"spd\":32,\"pick\":-3,\"bogus\":null},\"deck\":[\"sunblade\",null,\"mist\"],\"stage\":0,\"bestStage\":",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'length')",
+    "gacha: Cannot read properties of null (reading 'length')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 67,
+   "save": "{\"v\":2,\"shards\":1000000000000000,\"train\":{\"hp\":-2,\"regen\":36,\"spd\":\"4\",\"pick\":-3,\"bogus\":-2},\"deck\":[\"talisman\",7],\"stage\":1,\"diff\":5,\"bestStage\":-1,\"bestH\":-1,",
+   "errs": [
+    "renderStages: Cannot read properties of undefined (reading 'name')",
+    "tick: Cannot read properties of undefined (reading 'obst')",
+    "endRun: Cannot read properties of undefined (reading 'name')"
+   ],
+   "scan": [
+    "menu:title=\"\" style=\"width:13px;height:13px\">NaN</small></button><bu"
+   ]
+  },
+  {
+   "i": 69,
+   "save": "{\"v\":2,\"shards\":null,\"train\":{\"atk\":-3,\"hp\":null,\"regen\":null,\"spd\":23,\"pick\":null,\"bogus\":52},\"owned\":{\"sunblade\":\"3\",\"e:fire:all\":null,\"veil\":-1,\"mist\":11,\"co",
+   "errs": [],
+   "scan": [
+    "menu: style=\"text-align:center\">최고 10:01 · 런 NaN회 · 엽전 1000112</p>"
+   ]
+  },
+  {
+   "i": 71,
+   "save": "{\"v\":1,\"runs\":0,\"coins\":-5,\"train\":{\"atk\":1,\"hp\":4},\"weapons\":null,\"chars\":[1],\"stage\":1,\"bestStage\":7,\"codex\":[\"egg\"],\"best\":null}",
+   "errs": [
+    "endRun: Cannot read properties of null (reading 'time')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 73,
+   "save": "{\"v\":2,\"runs\":{},\"coins\":0,\"shards\":0,\"owned\":{\"boltcharm\":-1,\"orb\":-1,\"beads\":15},\"stage\":99,\"diff\":2,\"bestStage\":99,\"bestN\":-1,\"bestH\":-1,\"codex\":\"x\",\"best\":7",
+   "errs": [],
+   "scan": [
+    "menu: style=\"text-align:center\">최고 10:01 · 런 NaN회 · 엽전 1000090</p>"
+   ]
+  },
+  {
+   "i": 76,
+   "save": "{\"v\":1,\"runs\":0,\"coins\":0,\"train\":{\"atk\":\"3\"},\"weapons\":\"x\",\"chars\":[1],\"stage\":1,\"bestStage\":7,\"codex\":null,\"best\":5}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 78,
+   "save": "{\"v\":2,\"runs\":-87,\"coins\":\"55\",\"shards\":0,\"train\":[],\"owned\":-3,\"stage\":\"3\",\"diff\":5,\"bestStage\":7,\"bestN\":0,\"codex\":[],\"best\":{\"time\":\"a\"},\"chalBest\":100000000",
+   "errs": [],
+   "scan": [
+    "menu:lass=\"msg\" style=\"text-align:center\">최고 NaN:NaN · 런 -86회 · 엽전 1",
+    "over:  <p id=\"ovBest\" class=\"msg\">최고 NaN:NaN · 처치 undefined</p>"
+   ]
+  },
+  {
+   "i": 81,
+   "save": "{\"v\":1,\"runs\":8,\"coins\":\"12\",\"train\":null,\"weapons\":\"x\",\"chars\":[1],\"stage\":1,\"bestStage\":null,\"codex\":null,\"best\":null}",
+   "errs": [
+    "shrine.codex: Cannot read properties of null (reading 'includes')",
+    "gacha: Cannot read properties of null (reading 'includes')",
+    "endRun: Cannot read properties of null (reading 'time')"
+   ],
+   "scan": []
+  },
+  {
+   "i": 83,
+   "save": "{\"v\":2,\"runs\":-16,\"shards\":\"55\",\"train\":{\"atk\":8,\"hp\":57,\"regen\":null,\"spd\":\"4\",\"pick\":\"4\",\"bogus\":null},\"diff\":-1,\"bestStage\":7,\"bestN\":-1,\"evo\":5,\"best\":7,\"ch",
+   "errs": [
+    "shrine.codex: META.evo.includes is not a function",
+    "gacha: META.evo.includes is not a function"
+   ],
+   "scan": []
+  }
+ ],
+ "flowSteps": [
+  [
+   "fresh",
+   {
+    "vis": [
+     "menu"
+    ],
+    "mode": "menu",
+    "runs": 0,
+    "deck": "talisman",
+    "sh": false,
+    "ch": false,
+    "reg": false,
+    "scan": [],
+    "toast": "",
+    "ovCoins": "+0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "after-run1",
+   {
+    "vis": [
+     "over"
+    ],
+    "mode": "over",
+    "runs": 1,
+    "deck": "talisman,sword",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "목검을 익혔다 · 사당이 열렸다 (엽전 수련 · 부적 조각 뽑기)",
+    "ovCoins": "+5 · +0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "after-run2",
+   {
+    "vis": [
+     "over"
+    ],
+    "mode": "over",
+    "runs": 2,
+    "deck": "talisman,sword,bell",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "방울을 익혔다 — 덱에 넣어 두면 선택지에 나온다",
+    "ovCoins": "+4 · +0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "after-run3",
+   {
+    "vis": [
+     "over"
+    ],
+    "mode": "over",
+    "runs": 3,
+    "deck": "talisman,sword,bell",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
+    "ovCoins": "+4 · +0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "menu-after-3",
+   {
+    "vis": [
+     "menu"
+    ],
+    "mode": "menu",
+    "runs": 3,
+    "deck": "talisman,sword,bell",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
+    "ovCoins": "+4 · +0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "gacha1",
+   {
+    "sh0": 10,
+    "dis": false,
+    "sh1": 0,
+    "out": "죽창 획득!투척 — 덱에 추가됨",
+    "deck": "talisman,sword,bell,spear",
+    "wallet": " 13    0 (뽑기 0회)",
+    "menuBtn": "사당 · 강화13 10"
+   }
+  ],
+  [
+   "deckEdit",
+   {
+    "deck": "sword,bell,spear,talisman",
+    "labels": [
+     "부적투척 · 4번",
+     "죽창투척 · 3번",
+     "목검근접 · 1번",
+     "방울오라 · 2번"
+    ]
+   }
+  ],
+  [
+   "menu-after-shrine",
+   {
+    "vis": [
+     "menu"
+    ],
+    "mode": "menu",
+    "runs": 3,
+    "deck": "sword,bell,spear,talisman",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
+    "ovCoins": "+4 · +0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "run4",
+   {
+    "w": "sword",
+    "deck0": "sword",
+    "metaDeck0": "sword",
+    "names": [
+     "녹두",
+     "부적 가방",
+     "방울"
+    ],
+    "outside": [],
+    "vis": [
+     "lv"
+    ]
+   }
+  ],
+  [
+   "over-early",
+   {
+    "vis": [],
+    "againVisible": "none"
+   }
+  ],
+  [
+   "over-late",
+   {
+    "vis": [
+     "over"
+    ],
+    "mode": "over",
+    "runs": 6,
+    "deck": "sword,bell,spear,talisman",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
+    "ovCoins": "+2 · +0",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "chal",
+   {
+    "vis": [
+     "chal"
+    ],
+    "top": "이번 주 첫 도전자가 되어 보세요",
+    "desc": "2026w40 · 달빛 초원 · 고정 덱(부적·목검·방울·죽창·물구슬·낫"
+   }
+  ],
+  [
+   "chal-over",
+   {
+    "vis": [
+     "over"
+    ],
+    "mode": "over",
+    "runs": 6,
+    "deck": "sword,bell,spear,talisman",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "챌린지 점수 601,000",
+    "ovCoins": "챌린지는 보상 없음",
+    "start": "밤으로 나서기"
+   }
+  ],
+  [
+   "chal-meta",
+   {
+    "bestStage": 6,
+    "bestN": 0,
+    "runs": 6,
+    "chalBest": 601000,
+    "title": "동이 텄다",
+    "toast": "챌린지 점수 601,000",
+    "stagesState": "OLLLLL"
+   }
+  ],
+  [
+   "again-after-chal",
+   {
+    "chal": false,
+    "deck": "sword,bell,spear,talisman",
+    "diff": 1,
+    "stage": 0
+   }
+  ],
+  [
+   "final-menu",
+   {
+    "vis": [
+     "menu"
+    ],
+    "mode": "menu",
+    "runs": 7,
+    "deck": "sword,bell,spear,talisman",
+    "sh": true,
+    "ch": true,
+    "reg": true,
+    "scan": [],
+    "toast": "챌린지 점수 601,000",
+    "ovCoins": "+2 · +0",
+    "start": "밤으로 나서기"
+   }
+  ]
+ ],
+ "train": {
+  "issues": [],
+  "clicks": 150,
+  "disabledWhenPoor": true,
+  "btnTxt0": "30",
+  "total": "수련 총합 150/150 · 챌린지에서는 적용되지 않습니다",
+  "maxBefore": 30,
+  "maxAfter": 50,
+  "rowAfter": "피해 +1%/단 · 30/50 | 398 | bar=60%",
+  "hdr": " 엽전을 써서 영구 능력치를 조금씩, 50단까지 올립니다.",
+  "atkFinal": 50,
+  "staleClicks": {
+   "hp": 1,
+   "spent": 90,
+   "expectIf1": 30
+  },
+  "overBar": "166.667% 피해 +1%/단 · 50/30 최대 total=수련 총합 141/150 · 챌린지에서는 적용되지 않습니다",
+  "scan": []
+ },
+ "gacha": {
+  "issues": [
+   "gachaN(100) ran despite lock (direct call)",
+   "full deck: new weapon NOT added but text says 덱에 추가됨"
+  ],
+  "pulls": 2220,
+  "pool": {
+   "n3": 14,
+   "n4": 20,
+   "n5": 26,
+   "els3": [
+    "fire",
+    "water",
+    "wood",
+    "metal",
+    "none"
+   ],
+   "els4": [
+    "fire",
+    "water",
+    "wood",
+    "metal",
+    "light",
+    "dark",
+    "none"
+   ],
+   "els5": [
+    "fire",
+    "water",
+    "wood",
+    "metal",
+    "light",
+    "dark",
+    "earth",
+    "thunder",
+    "none"
+   ]
+  },
+  "lock100": "봉인×100(x)",
+  "lock100Direct": "RAN",
+  "btns99": [
+   false,
+   true,
+   true
+  ],
+  "ownedFinal": {
+   "talisman": 10,
+   "whip": 10,
+   "boltcharm": 10,
+   "brazier": 10,
+   "lantern": 10,
+   "sunblade": 10,
+   "bell": 10,
+   "beads": 10,
+   "veil": 10,
+   "rockhammer": 10,
+   "sickle": 10,
+   "thunderdrum": 10,
+   "torch": 10,
+   "orb": 10,
+   "boltspear": 10,
+   "shadowknife": 10,
+   "moonarrow": 10,
+   "moxa": 10,
+   "sword": 10,
+   "mist": 10,
+   "inkbrush": 10,
+   "sling": 10,
+   "spear": 10,
+   "sandstorm": 10,
+   "coin": 10,
+   "tiger": 10
+  },
+  "deckFinal": [
+   "talisman",
+   "whip",
+   "boltcharm",
+   "brazier",
+   "lantern",
+   "sunblade",
+   "bell",
+   "beads",
+   "veil",
+   "rockhammer"
+  ],
+  "coins": 9675,
+  "out": "×100 결과숙련 최대 → 엽전 +500",
+  "over10": "new owned=15 shards=0 gridText=투척 · 숙련 15",
+  "fullDeckNew": {
+   "inDeck": false,
+   "text": "낫 획득!근접 — 덱에 추가됨"
+  },
+  "scan": []
+ },
+ "deck": {
+  "issues": [],
+  "nBtns": 26,
+  "after30": 10,
+  "subFull": "출전 덱 10/10 —",
+  "minDeck": [
+   "coin"
+  ],
+  "toast": "무기는 하나 이상 넣어야 해요",
+  "emptyStart": {
+   "err": null,
+   "deck": [
+    "talisman"
+   ],
+   "w": [
+    "talisman"
+   ]
+  },
+  "deckAfterEmptyRun": [],
+  "dupCards": [
+   "목검",
+   "자석 호리병",
+   "부적"
+  ],
+  "dupSub": "출전 덱 3/10 — 런 ",
+  "dupLabels": [
+   "부적투척 · 3번",
+   "목검근접 · 1번"
+  ],
+  "dupAfterRemove": [
+   "talisman"
+  ],
+  "unknownSub": "출전 덱 2/10 — 런 ",
+  "unknownStart": [
+   "talisman"
+  ],
+  "scan": []
+ },
+ "stages": {
+  "issues": [],
+  "afterNext": {
+   "stage": 6,
+   "dot": 5,
+   "start": "봉인된 밤",
+   "dis": true
+  },
+  "afterPrev": {
+   "stage": 1,
+   "dot": 0,
+   "dis": false
+  },
+  "state3": "CCCOLL",
+  "diffBtns": [
+   "쉬움",
+   "보통 · 보상 ×3",
+   "봉인어려움 · 보상 ×8(x)"
+  ],
+  "afterNormal": {
+   "diff": 1,
+   "stage": 2,
+   "state": "COLLLL",
+   "dot": 1,
+   "start": false
+  },
+  "normalLocked": {
+   "stage": 3,
+   "dis": true
+  },
+  "backEasy": {
+   "diff": 0,
+   "stage": 3,
+   "dis": false
+  },
+  "hard": {
+   "diff": 2,
+   "stage": 1
+  },
+  "hardRevoked": {
+   "diff": 0,
+   "sel": 0
+  },
+  "afterClear": {
+   "st": "COLLLL",
+   "stage": 1,
+   "toast": "귀신의 숲 해금!",
+   "over": []
+  },
+  "vis": [
+   "menu"
+  ],
+  "scan": []
+ },
+ "codex": {
+  "issues": [
+   "codex header count stale: \"무기 · 기본 12 · 진화 0/74 발견 — Lv5 둘을 합치면 진화\" (WEAPONS=26)",
+   "evo count includes unknown id: 무기 · 기본 12 · 진화 2/74 발견 — Lv5 둘을 합치면 진화"
+  ],
+  "counts": {
+   "nW": 26,
+   "nE": 74,
+   "nEn": 42
+  },
+  "wCards": 100,
+  "enemyCards": 42,
+  "enemyGrids": 6,
+  "header": "무기 · 기본 12 · 진화 0/74 발견 — Lv5 둘을 합치면 진화",
+  "offW": 99,
+  "unlockTooltips": 0,
+  "allSeen": {
+   "wOff": 0,
+   "eOff": 0,
+   "q": 0
+  },
+  "bogusHeader": "무기 · 기본 12 · 진화 2/74 발견 — Lv5 둘을 합치면 진화",
+  "scan": [],
+  "undef": 0
+ }
+}

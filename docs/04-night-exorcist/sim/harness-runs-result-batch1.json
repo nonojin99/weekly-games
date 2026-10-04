@@ -1,0 +1,4337 @@
+{
+ "summary": {
+  "runs": 66,
+  "stat": [
+   {
+    "diff": "E",
+    "runs": 6,
+    "clear": 1,
+    "avgT": 208,
+    "avgLv": 6
+   },
+   {
+    "diff": "N",
+    "runs": 12,
+    "clear": 0,
+    "avgT": 65,
+    "avgLv": 3.8
+   },
+   {
+    "diff": "H",
+    "runs": 13,
+    "clear": 0,
+    "avgT": 29,
+    "avgLv": 1.4
+   }
+  ],
+  "perStage": "s1:0/3 s2:0/6 s3:0/8 s4:1/3 s5:0/2 s6:0/9",
+  "violations": {
+   "reset-hp": {
+    "runs": 2,
+    "n": 2,
+    "ex": [
+     "#33 s6H @0s 103.6/103.60000000000001",
+     "#42 s2N @0s 103.6/103.60000000000001"
+    ]
+   },
+   "tick-throw": {
+    "runs": 1,
+    "n": 1,
+    "ex": [
+     "#63 s6H @159.9s TypeError: Cannot read properties of undefined (reading 'x')\n    at updateWeapons (file:///home/claude/weekly-games/games/night-exorcist/index.html?test=1:644:101)\n    at Object.tick (file:///home/claude/weekly-games/games/night-exorcist/index.html?test=1:700:51)\n    at eval (eval at evaluate (:311:30), <anonymous>:72:52)\n    at async <anonymous>:337:30"
+    ]
+   }
+  },
+  "consoleErrors": {},
+  "evoPicks": 4,
+  "chests": 39,
+  "maxE": 62,
+  "maxPFX": 261,
+  "maxB": 45,
+  "maxG": 815,
+  "chestWhileLv": 0
+ },
+ "runs": [
+  {
+   "cfg": {
+    "id": 0,
+    "stage": 1,
+    "diff": 1,
+    "deck": [
+     "boltcharm",
+     "sunblade",
+     "spear",
+     "torch",
+     "lantern"
+    ],
+    "owned": {
+     "boltcharm": 6,
+     "sunblade": 4,
+     "spear": 0,
+     "torch": 4,
+     "lantern": 3
+    },
+    "train": {
+     "atk": 14,
+     "hp": 12,
+     "regen": 31,
+     "spd": 8,
+     "pick": 2
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 469.7833666668242,
+    "lvl": 19,
+    "kills": 1241,
+    "mode": "over",
+    "hp": -5.8407566999833485
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 18,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 12,
+    "maxG": 549,
+    "steps": 14024,
+    "wall": 3411,
+    "chestWhileLv": 0,
+    "w": {
+     "boltcharm": 4,
+     "spear": 4,
+     "lantern": 2
+    },
+    "p": {
+     "salt": 2,
+     "bag": 1,
+     "xp": 2,
+     "hp": 1,
+     "cd": 4
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 1,
+    "stage": 3,
+    "diff": 2,
+    "deck": [
+     "shadowknife",
+     "beads",
+     "mist",
+     "coin",
+     "sandstorm",
+     "rockhammer",
+     "spear",
+     "boltcharm",
+     "moxa",
+     "tiger"
+    ],
+    "owned": {
+     "shadowknife": 8,
+     "beads": 6,
+     "mist": 1,
+     "coin": 8,
+     "sandstorm": 3,
+     "rockhammer": 7,
+     "spear": 9,
+     "boltcharm": 8,
+     "moxa": 2,
+     "tiger": 10
+    },
+    "train": {
+     "atk": 44,
+     "hp": 49,
+     "regen": 20,
+     "spd": 0,
+     "pick": 24
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0332666667781,
+    "lvl": 25,
+    "kills": 1591,
+    "mode": "over",
+    "hp": 158.6496666666667
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 24,
+    "evoPicks": 0,
+    "chests": 3,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 35,
+    "maxG": 87,
+    "steps": 17931,
+    "wall": 2688,
+    "chestWhileLv": 0,
+    "w": {
+     "shadowknife": 5,
+     "spear": 5,
+     "beads": 5,
+     "coin": 5,
+     "moxa": 5
+    },
+    "p": {
+     "salt": 3,
+     "cd": 3,
+     "pick": 2,
+     "xp": 2,
+     "bag": 3
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 2,
+    "stage": 4,
+    "diff": 1,
+    "deck": [
+     "spear",
+     "orb",
+     "talisman",
+     "inkbrush",
+     "rockhammer",
+     "sword"
+    ],
+    "owned": {
+     "spear": 1,
+     "orb": 3,
+     "talisman": 3,
+     "inkbrush": 9,
+     "rockhammer": 1,
+     "sword": 8
+    },
+    "train": {
+     "atk": 5,
+     "hp": 39,
+     "regen": 27,
+     "spd": 25,
+     "pick": 7
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 20.000000000000153,
+    "lvl": 2,
+    "kills": 13,
+    "mode": "over",
+    "hp": -1.9912000000001044
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 18,
+    "maxPFX": 111,
+    "maxB": 2,
+    "maxG": 2,
+    "steps": 600,
+    "wall": 179,
+    "chestWhileLv": 0,
+    "w": {
+     "spear": 1,
+     "sword": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 3,
+    "stage": 5,
+    "diff": 1,
+    "deck": [
+     "torch",
+     "sword",
+     "inkbrush",
+     "sunblade",
+     "talisman",
+     "tiger",
+     "sandstorm",
+     "brazier",
+     "boltspear",
+     "bell"
+    ],
+    "owned": {
+     "torch": 3,
+     "sword": 6,
+     "inkbrush": 0,
+     "sunblade": 10,
+     "talisman": 6,
+     "tiger": 2,
+     "sandstorm": 9,
+     "brazier": 2,
+     "boltspear": 1,
+     "bell": 8
+    },
+    "train": {
+     "atk": 37,
+     "hp": 7,
+     "regen": 12,
+     "spd": 26,
+     "pick": 24
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0333000001115,
+    "lvl": 19,
+    "kills": 665,
+    "mode": "over",
+    "hp": 124.66
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 18,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 6,
+    "maxG": 27,
+    "steps": 17915,
+    "wall": 5591,
+    "chestWhileLv": 0,
+    "w": {
+     "torch": 2,
+     "brazier": 2,
+     "tiger": 3,
+     "talisman": 2,
+     "sandstorm": 2
+    },
+    "p": {
+     "hp": 1,
+     "bag": 2,
+     "salt": 1,
+     "xp": 2,
+     "pick": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 4,
+    "stage": 5,
+    "diff": 1,
+    "deck": [
+     "talisman",
+     "moonarrow",
+     "shadowknife",
+     "sandstorm",
+     "spear",
+     "thunderdrum"
+    ],
+    "owned": {
+     "talisman": 0,
+     "moonarrow": 10,
+     "shadowknife": 2,
+     "sandstorm": 9,
+     "spear": 6,
+     "thunderdrum": 10
+    },
+    "train": {
+     "atk": 29,
+     "hp": 19,
+     "regen": 24,
+     "spd": 28,
+     "pick": 49
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 15.533333333333289,
+    "lvl": 1,
+    "kills": 10,
+    "mode": "over",
+    "hp": -0.03799999999948067
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 15,
+    "maxPFX": 164,
+    "maxB": 2,
+    "maxG": 0,
+    "steps": 466,
+    "wall": 67,
+    "chestWhileLv": 0,
+    "w": {
+     "talisman": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 5,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "talisman",
+     "tiger",
+     "spear",
+     "veil",
+     "boltcharm",
+     "shadowknife"
+    ],
+    "owned": {
+     "talisman": 5,
+     "tiger": 1,
+     "spear": 3,
+     "veil": 4,
+     "boltcharm": 7,
+     "shadowknife": 9
+    },
+    "train": {
+     "atk": 40,
+     "hp": 39,
+     "regen": 39,
+     "spd": 42,
+     "pick": 45
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0329333334447,
+    "lvl": 17,
+    "kills": 641,
+    "mode": "over",
+    "hp": 194.14299999999997
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 16,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 5,
+    "maxG": 37,
+    "steps": 17905,
+    "wall": 4366,
+    "chestWhileLv": 0,
+    "w": {
+     "talisman": 2,
+     "spear": 2,
+     "shadowknife": 1,
+     "veil": 3,
+     "tiger": 2
+    },
+    "p": {
+     "spd": 2,
+     "hp": 2,
+     "salt": 1,
+     "pick": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 6,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "veil",
+     "whip",
+     "moxa",
+     "sandstorm",
+     "rockhammer"
+    ],
+    "owned": {
+     "veil": 9,
+     "whip": 4,
+     "moxa": 1,
+     "sandstorm": 0,
+     "rockhammer": 4
+    },
+    "train": {
+     "atk": 35,
+     "hp": 16,
+     "regen": 1,
+     "spd": 12,
+     "pick": 22
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 13.033333333333298,
+    "lvl": 2,
+    "kills": 12,
+    "mode": "over",
+    "hp": -1.2411679069523833
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 12,
+    "maxPFX": 132,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 391,
+    "wall": 407,
+    "chestWhileLv": 0,
+    "w": {
+     "veil": 1
+    },
+    "p": {
+     "armor": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 7,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "sling",
+     "sword",
+     "mist",
+     "beads",
+     "moxa",
+     "brazier",
+     "orb",
+     "spear",
+     "moonarrow"
+    ],
+    "owned": {
+     "sling": 8,
+     "sword": 2,
+     "mist": 10,
+     "beads": 9,
+     "moxa": 4,
+     "brazier": 7,
+     "orb": 0,
+     "spear": 3,
+     "moonarrow": 6
+    },
+    "train": {
+     "atk": 10,
+     "hp": 16,
+     "regen": 29,
+     "spd": 44,
+     "pick": 50
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0332333334447,
+    "lvl": 18,
+    "kills": 755,
+    "mode": "over",
+    "hp": 119.19999999999999
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 17,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 11,
+    "maxG": 160,
+    "steps": 17902,
+    "wall": 6592,
+    "chestWhileLv": 0,
+    "w": {
+     "sling": 1,
+     "spear": 2,
+     "moonarrow": 1,
+     "sword": 2,
+     "brazier": 1
+    },
+    "p": {
+     "xp": 3,
+     "bag": 2,
+     "salt": 1,
+     "spd": 3,
+     "armor": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 8,
+    "stage": 4,
+    "diff": 2,
+    "deck": [
+     "boltcharm",
+     "talisman",
+     "lantern",
+     "moxa",
+     "whip",
+     "beads",
+     "sunblade",
+     "shadowknife"
+    ],
+    "owned": {
+     "boltcharm": 1,
+     "talisman": 9,
+     "lantern": 0,
+     "moxa": 10,
+     "whip": 8,
+     "beads": 5,
+     "sunblade": 2,
+     "shadowknife": 5
+    },
+    "train": {
+     "atk": 37,
+     "hp": 50,
+     "regen": 48,
+     "spd": 15,
+     "pick": 21
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 13.833333333333295,
+    "lvl": 1,
+    "kills": 7,
+    "mode": "over",
+    "hp": -6.678199999999873
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 18,
+    "maxPFX": 73,
+    "maxB": 1,
+    "maxG": 1,
+    "steps": 415,
+    "wall": 73,
+    "chestWhileLv": 0,
+    "w": {
+     "boltcharm": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 9,
+    "stage": 4,
+    "diff": 1,
+    "deck": [
+     "whip",
+     "sling",
+     "brazier",
+     "rockhammer",
+     "lantern"
+    ],
+    "owned": {
+     "whip": 10,
+     "sling": 1,
+     "brazier": 4,
+     "rockhammer": 9,
+     "lantern": 7
+    },
+    "train": {
+     "atk": 4,
+     "hp": 26,
+     "regen": 8,
+     "spd": 20,
+     "pick": 16
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0330333334448,
+    "lvl": 11,
+    "kills": 276,
+    "mode": "over",
+    "hp": 173.512
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 10,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 1,
+    "maxG": 49,
+    "steps": 17908,
+    "wall": 5581,
+    "chestWhileLv": 0,
+    "w": {
+     "whip": 4,
+     "brazier": 1,
+     "sling": 1
+    },
+    "p": {
+     "hp": 2,
+     "cd": 1,
+     "bag": 1,
+     "armor": 1,
+     "spd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 10,
+    "stage": 1,
+    "diff": 0,
+    "deck": [
+     "sword",
+     "spear",
+     "sling",
+     "sandstorm",
+     "whip",
+     "boltspear",
+     "veil",
+     "brazier"
+    ],
+    "owned": {
+     "sword": 0,
+     "spear": 6,
+     "sling": 5,
+     "sandstorm": 9,
+     "whip": 8,
+     "boltspear": 6,
+     "veil": 3,
+     "brazier": 3
+    },
+    "train": {
+     "atk": 43,
+     "hp": 0,
+     "regen": 9,
+     "spd": 22,
+     "pick": 49
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 14.133333333333294,
+    "lvl": 1,
+    "kills": 4,
+    "mode": "over",
+    "hp": -0.8286999999994968
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 13,
+    "maxPFX": 8,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 424,
+    "wall": 44,
+    "chestWhileLv": 0,
+    "w": {
+     "sword": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 11,
+    "stage": 2,
+    "diff": 0,
+    "deck": [
+     "sword",
+     "moxa",
+     "sunblade",
+     "boltcharm",
+     "sling",
+     "beads",
+     "talisman"
+    ],
+    "owned": {
+     "sword": 8,
+     "moxa": 7,
+     "sunblade": 1,
+     "boltcharm": 10,
+     "sling": 4,
+     "beads": 9,
+     "talisman": 8
+    },
+    "train": {
+     "atk": 23,
+     "hp": 43,
+     "regen": 20,
+     "spd": 23,
+     "pick": 24
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0166666667783,
+    "lvl": 18,
+    "kills": 833,
+    "mode": "over",
+    "hp": 151.6
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 17,
+    "evoPicks": 0,
+    "chests": 2,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 4,
+    "maxG": 100,
+    "steps": 17916,
+    "wall": 4172,
+    "chestWhileLv": 0,
+    "w": {
+     "sword": 3,
+     "moxa": 2,
+     "beads": 2,
+     "boltcharm": 2,
+     "sunblade": 5
+    },
+    "p": {
+     "armor": 2,
+     "bag": 1,
+     "cd": 1,
+     "pick": 2,
+     "salt": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 12,
+    "stage": 2,
+    "diff": 0,
+    "deck": [
+     "brazier",
+     "tiger",
+     "bell",
+     "veil"
+    ],
+    "owned": {
+     "brazier": 5,
+     "tiger": 2,
+     "bell": 2,
+     "veil": 5
+    },
+    "train": {
+     "atk": 45,
+     "hp": 41,
+     "regen": 47,
+     "spd": 17,
+     "pick": 6
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 180.91673333332562,
+    "lvl": 11,
+    "kills": 253,
+    "mode": "over",
+    "hp": -0.16193849325435705
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 10,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 60,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 23,
+    "steps": 5401,
+    "wall": 1180,
+    "chestWhileLv": 0,
+    "w": {
+     "brazier": 2,
+     "bell": 2,
+     "veil": 1
+    },
+    "p": {
+     "hp": 1,
+     "salt": 2,
+     "cd": 2,
+     "spd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 13,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "thunderdrum",
+     "talisman",
+     "whip",
+     "moxa",
+     "moonarrow",
+     "rockhammer"
+    ],
+    "owned": {
+     "thunderdrum": 8,
+     "talisman": 8,
+     "whip": 9,
+     "moxa": 6,
+     "moonarrow": 5,
+     "rockhammer": 3
+    },
+    "train": {
+     "atk": 35,
+     "hp": 35,
+     "regen": 36,
+     "spd": 38,
+     "pick": 44
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0168333334447,
+    "lvl": 21,
+    "kills": 1019,
+    "mode": "over",
+    "hp": 142
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 20,
+    "evoPicks": 0,
+    "chests": 2,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 14,
+    "maxG": 23,
+    "steps": 17907,
+    "wall": 6510,
+    "chestWhileLv": 0,
+    "w": {
+     "thunderdrum": 1,
+     "rockhammer": 5,
+     "moonarrow": 5,
+     "talisman": 3,
+     "moxa": 1
+    },
+    "p": {
+     "bag": 3,
+     "pick": 4,
+     "armor": 1,
+     "spd": 2,
+     "salt": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 14,
+    "stage": 2,
+    "diff": 2,
+    "deck": [
+     "rockhammer",
+     "tiger",
+     "talisman",
+     "veil",
+     "sickle",
+     "inkbrush"
+    ],
+    "owned": {
+     "rockhammer": 0,
+     "tiger": 7,
+     "talisman": 6,
+     "veil": 3,
+     "sickle": 6,
+     "inkbrush": 6
+    },
+    "train": {
+     "atk": 42,
+     "hp": 34,
+     "regen": 10,
+     "spd": 20,
+     "pick": 38
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 11.733333333333302,
+    "lvl": 1,
+    "kills": 1,
+    "mode": "over",
+    "hp": -0.1480000000001036
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 20,
+    "maxPFX": 2,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 352,
+    "wall": 62,
+    "chestWhileLv": 0,
+    "w": {
+     "rockhammer": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 15,
+    "stage": 5,
+    "diff": 0,
+    "deck": [
+     "whip",
+     "sword",
+     "veil",
+     "boltspear",
+     "bell",
+     "moonarrow",
+     "moxa",
+     "boltcharm",
+     "lantern",
+     "sandstorm"
+    ],
+    "owned": {
+     "whip": 8,
+     "sword": 9,
+     "veil": 2,
+     "boltspear": 6,
+     "bell": 4,
+     "moonarrow": 9,
+     "moxa": 3,
+     "boltcharm": 5,
+     "lantern": 8,
+     "sandstorm": 1
+    },
+    "train": {
+     "atk": 48,
+     "hp": 0,
+     "regen": 39,
+     "spd": 36,
+     "pick": 43
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0331000001115,
+    "lvl": 13,
+    "kills": 374,
+    "mode": "over",
+    "hp": 152.07146666666665
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 12,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 51,
+    "steps": 17898,
+    "wall": 5927,
+    "chestWhileLv": 0,
+    "w": {
+     "whip": 2,
+     "sword": 1,
+     "lantern": 1,
+     "sandstorm": 1,
+     "veil": 1
+    },
+    "p": {
+     "spd": 1,
+     "hp": 3,
+     "bag": 1,
+     "armor": 1,
+     "cd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 16,
+    "stage": 5,
+    "diff": 1,
+    "deck": [
+     "torch",
+     "coin",
+     "whip",
+     "sword"
+    ],
+    "owned": {
+     "torch": 4,
+     "coin": 5,
+     "whip": 2,
+     "sword": 2
+    },
+    "train": {
+     "atk": 31,
+     "hp": 35,
+     "regen": 35,
+     "spd": 9,
+     "pick": 23
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 14.999999999999957,
+    "lvl": 1,
+    "kills": 6,
+    "mode": "over",
+    "hp": -1.3558333333326176
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 17,
+    "maxPFX": 138,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 450,
+    "wall": 65,
+    "chestWhileLv": 0,
+    "w": {
+     "torch": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 17,
+    "stage": 3,
+    "diff": 2,
+    "deck": [
+     "lantern",
+     "brazier",
+     "shadowknife",
+     "torch"
+    ],
+    "owned": {
+     "lantern": 4,
+     "brazier": 10,
+     "shadowknife": 10,
+     "torch": 8
+    },
+    "train": {
+     "atk": 25,
+     "hp": 33,
+     "regen": 15,
+     "spd": 21,
+     "pick": 20
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0162666667778,
+    "lvl": 18,
+    "kills": 675,
+    "mode": "over",
+    "hp": 212.18824999999995
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 17,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 2,
+    "maxG": 26,
+    "steps": 17921,
+    "wall": 2808,
+    "chestWhileLv": 0,
+    "w": {
+     "lantern": 3,
+     "torch": 2,
+     "shadowknife": 2
+    },
+    "p": {
+     "hp": 3,
+     "xp": 3,
+     "cd": 1,
+     "armor": 2,
+     "pick": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 18,
+    "stage": 3,
+    "diff": 2,
+    "deck": [
+     "bell",
+     "sickle",
+     "boltspear",
+     "orb",
+     "moonarrow",
+     "sunblade",
+     "moxa",
+     "sword"
+    ],
+    "owned": {
+     "bell": 3,
+     "sickle": 6,
+     "boltspear": 5,
+     "orb": 8,
+     "moonarrow": 9,
+     "sunblade": 8,
+     "moxa": 6,
+     "sword": 5
+    },
+    "train": {
+     "atk": 42,
+     "hp": 27,
+     "regen": 15,
+     "spd": 37,
+     "pick": 46
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 29.300000000000612,
+    "lvl": 2,
+    "kills": 14,
+    "mode": "over",
+    "hp": -4.257499999999398
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 43,
+    "maxPFX": 29,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 876,
+    "wall": 129,
+    "chestWhileLv": 0,
+    "w": {
+     "bell": 1
+    },
+    "p": {
+     "xp": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 19,
+    "stage": 0,
+    "diff": 2,
+    "deck": [
+     "whip",
+     "sunblade",
+     "rockhammer",
+     "beads",
+     "spear",
+     "sandstorm"
+    ],
+    "owned": {
+     "whip": 3,
+     "sunblade": 7,
+     "rockhammer": 1,
+     "beads": 9,
+     "spear": 5,
+     "sandstorm": 2
+    },
+    "train": {
+     "atk": 41,
+     "hp": 41,
+     "regen": 0,
+     "spd": 28,
+     "pick": 43
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.033266666778,
+    "lvl": 4,
+    "kills": 46,
+    "mode": "over",
+    "hp": 171.57999999999998
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 3,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 62,
+    "maxPFX": 48,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 17933,
+    "wall": 2458,
+    "chestWhileLv": 0,
+    "w": {
+     "whip": 2,
+     "sandstorm": 1
+    },
+    "p": {
+     "spd": 1,
+     "hp": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 20,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "whip",
+     "mist",
+     "boltcharm",
+     "sandstorm"
+    ],
+    "owned": {
+     "whip": 9,
+     "mist": 4,
+     "boltcharm": 10,
+     "sandstorm": 1
+    },
+    "train": {
+     "atk": 41,
+     "hp": 10,
+     "regen": 36,
+     "spd": 28,
+     "pick": 41
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 13.299999999999963,
+    "lvl": 1,
+    "kills": 3,
+    "mode": "over",
+    "hp": -0.38300000000034373
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 21,
+    "maxPFX": 132,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 399,
+    "wall": 78,
+    "chestWhileLv": 0,
+    "w": {
+     "whip": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 24,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "sword",
+     "shadowknife",
+     "sickle",
+     "spear",
+     "inkbrush",
+     "rockhammer",
+     "brazier",
+     "sling",
+     "torch",
+     "thunderdrum"
+    ],
+    "owned": {
+     "sword": 2,
+     "shadowknife": 0,
+     "sickle": 10,
+     "spear": 2,
+     "inkbrush": 2,
+     "rockhammer": 0,
+     "brazier": 10,
+     "sling": 0,
+     "torch": 6,
+     "thunderdrum": 0
+    },
+    "train": {
+     "atk": 17,
+     "hp": 40,
+     "regen": 5,
+     "spd": 8,
+     "pick": 19
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 13.033333333333298,
+    "lvl": 1,
+    "kills": 3,
+    "mode": "over",
+    "hp": -14.72700000000009
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 21,
+    "maxPFX": 114,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 391,
+    "wall": 69,
+    "chestWhileLv": 0,
+    "w": {
+     "sword": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 25,
+    "stage": 1,
+    "diff": 1,
+    "deck": [
+     "spear",
+     "orb",
+     "sickle",
+     "coin",
+     "veil",
+     "sunblade",
+     "brazier"
+    ],
+    "owned": {
+     "spear": 8,
+     "orb": 2,
+     "sickle": 9,
+     "coin": 4,
+     "veil": 1,
+     "sunblade": 1,
+     "brazier": 1
+    },
+    "train": {
+     "atk": 40,
+     "hp": 46,
+     "regen": 32,
+     "spd": 20,
+     "pick": 0
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0165333334446,
+    "lvl": 24,
+    "kills": 1830,
+    "mode": "over",
+    "hp": 205.25199999999998
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 23,
+    "evoPicks": 1,
+    "chests": 4,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 20,
+    "maxG": 542,
+    "steps": 17930,
+    "wall": 3052,
+    "chestWhileLv": 0,
+    "w": {
+     "sickle": 3,
+     "sunblade": 3,
+     "veil": 2,
+     "e:throw:wood+metal": 2
+    },
+    "p": {
+     "bag": 3,
+     "hp": 2,
+     "salt": 2,
+     "xp": 4,
+     "pick": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 26,
+    "stage": 0,
+    "diff": 2,
+    "deck": [
+     "torch",
+     "moonarrow",
+     "spear"
+    ],
+    "owned": {
+     "torch": 4,
+     "moonarrow": 7,
+     "spear": 5
+    },
+    "train": {
+     "atk": 15,
+     "hp": 39,
+     "regen": 4,
+     "spd": 29,
+     "pick": 33
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 205.4999666666576,
+    "lvl": 1,
+    "kills": 0,
+    "mode": "over",
+    "hp": -8.566087399999292
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 62,
+    "maxPFX": 0,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 6140,
+    "wall": 794,
+    "chestWhileLv": 0,
+    "w": {
+     "torch": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 21,
+    "stage": 2,
+    "diff": 0,
+    "deck": [
+     "shadowknife",
+     "veil",
+     "boltspear",
+     "lantern",
+     "moonarrow",
+     "thunderdrum",
+     "inkbrush",
+     "coin",
+     "sword",
+     "torch"
+    ],
+    "owned": {
+     "shadowknife": 5,
+     "veil": 5,
+     "boltspear": 4,
+     "lantern": 3,
+     "moonarrow": 0,
+     "thunderdrum": 4,
+     "inkbrush": 7,
+     "coin": 6,
+     "sword": 1,
+     "torch": 10
+    },
+    "train": {
+     "atk": 25,
+     "hp": 48,
+     "regen": 1,
+     "spd": 12,
+     "pick": 42
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0001666667781,
+    "lvl": 18,
+    "kills": 710,
+    "mode": "over",
+    "hp": 157.6
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 17,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 3,
+    "maxG": 18,
+    "steps": 17909,
+    "wall": 3913,
+    "chestWhileLv": 0,
+    "w": {
+     "shadowknife": 1,
+     "thunderdrum": 2,
+     "lantern": 3,
+     "torch": 3,
+     "inkbrush": 2
+    },
+    "p": {
+     "armor": 1,
+     "xp": 2,
+     "cd": 2,
+     "pick": 3,
+     "spd": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 22,
+    "stage": 5,
+    "diff": 1,
+    "deck": [
+     "moxa",
+     "sword",
+     "lantern",
+     "bell",
+     "sunblade",
+     "sling",
+     "boltspear",
+     "boltcharm",
+     "brazier",
+     "shadowknife"
+    ],
+    "owned": {
+     "moxa": 10,
+     "sword": 8,
+     "lantern": 8,
+     "bell": 7,
+     "sunblade": 10,
+     "sling": 9,
+     "boltspear": 8,
+     "boltcharm": 5,
+     "brazier": 6,
+     "shadowknife": 9
+    },
+    "train": {
+     "atk": 19,
+     "hp": 43,
+     "regen": 31,
+     "spd": 13,
+     "pick": 14
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 23.616600000000332,
+    "lvl": 2,
+    "kills": 24,
+    "mode": "over",
+    "hp": -3.4070877999991884
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 14,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 708,
+    "wall": 101,
+    "chestWhileLv": 0,
+    "w": {
+     "moxa": 1,
+     "sword": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 23,
+    "stage": 5,
+    "diff": 0,
+    "deck": [
+     "torch",
+     "moxa",
+     "moonarrow",
+     "thunderdrum",
+     "spear",
+     "shadowknife"
+    ],
+    "owned": {
+     "torch": 6,
+     "moxa": 0,
+     "moonarrow": 3,
+     "thunderdrum": 9,
+     "spear": 3,
+     "shadowknife": 8
+    },
+    "train": {
+     "atk": 42,
+     "hp": 42,
+     "regen": 13,
+     "spd": 38,
+     "pick": 20
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0331666667781,
+    "lvl": 22,
+    "kills": 1359,
+    "mode": "over",
+    "hp": 150.4
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 21,
+    "evoPicks": 0,
+    "chests": 2,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 25,
+    "maxG": 249,
+    "steps": 17900,
+    "wall": 5366,
+    "chestWhileLv": 0,
+    "w": {
+     "torch": 2,
+     "spear": 5,
+     "shadowknife": 5,
+     "moxa": 1,
+     "moonarrow": 4
+    },
+    "p": {
+     "spd": 1,
+     "cd": 2,
+     "pick": 2,
+     "bag": 2,
+     "xp": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 27,
+    "stage": 4,
+    "diff": 1,
+    "deck": [
+     "orb",
+     "mist",
+     "sunblade"
+    ],
+    "owned": {
+     "orb": 3,
+     "mist": 6,
+     "sunblade": 1
+    },
+    "train": {
+     "atk": 13,
+     "hp": 22,
+     "regen": 3,
+     "spd": 38,
+     "pick": 49
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0330666667782,
+    "lvl": 13,
+    "kills": 377,
+    "mode": "over",
+    "hp": 145.35999999999999
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 12,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 4,
+    "maxG": 60,
+    "steps": 17903,
+    "wall": 5418,
+    "chestWhileLv": 0,
+    "w": {
+     "orb": 3,
+     "mist": 3
+    },
+    "p": {
+     "cd": 2,
+     "bag": 1,
+     "salt": 1,
+     "hp": 1,
+     "xp": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 28,
+    "stage": 2,
+    "diff": 0,
+    "deck": [
+     "mist",
+     "sword",
+     "bell",
+     "whip"
+    ],
+    "owned": {
+     "mist": 7,
+     "sword": 6,
+     "bell": 4,
+     "whip": 3
+    },
+    "train": {
+     "atk": 34,
+     "hp": 34,
+     "regen": 19,
+     "spd": 1,
+     "pick": 23
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 23.583466666666997,
+    "lvl": 2,
+    "kills": 21,
+    "mode": "over",
+    "hp": -3.3851856000016554
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 10,
+    "maxPFX": 42,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 707,
+    "wall": 125,
+    "chestWhileLv": 0,
+    "w": {
+     "mist": 1
+    },
+    "p": {
+     "cd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 29,
+    "stage": 3,
+    "diff": 0,
+    "deck": [
+     "sandstorm",
+     "inkbrush",
+     "sword",
+     "tiger",
+     "rockhammer",
+     "talisman",
+     "sunblade"
+    ],
+    "owned": {
+     "sandstorm": 5,
+     "inkbrush": 6,
+     "sword": 5,
+     "tiger": 2,
+     "rockhammer": 3,
+     "talisman": 8,
+     "sunblade": 3
+    },
+    "train": {
+     "atk": 23,
+     "hp": 23,
+     "regen": 13,
+     "spd": 3,
+     "pick": 2
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0332333334446,
+    "lvl": 7,
+    "kills": 124,
+    "mode": "over",
+    "hp": 127.46136666666668
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 6,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 157,
+    "maxB": 0,
+    "maxG": 26,
+    "steps": 17929,
+    "wall": 2703,
+    "chestWhileLv": 0,
+    "w": {
+     "sandstorm": 2,
+     "sunblade": 2
+    },
+    "p": {
+     "armor": 1,
+     "cd": 1,
+     "pick": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 30,
+    "stage": 3,
+    "diff": 0,
+    "deck": [
+     "spear",
+     "brazier",
+     "sunblade",
+     "bell",
+     "beads",
+     "coin",
+     "sling",
+     "shadowknife"
+    ],
+    "owned": {
+     "spear": 1,
+     "brazier": 9,
+     "sunblade": 10,
+     "bell": 9,
+     "beads": 0,
+     "coin": 6,
+     "sling": 2,
+     "shadowknife": 5
+    },
+    "train": {
+     "atk": 39,
+     "hp": 21,
+     "regen": 46,
+     "spd": 37,
+     "pick": 18
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0165333334446,
+    "lvl": 20,
+    "kills": 787,
+    "mode": "over",
+    "hp": 92.77138840912431
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 19,
+    "evoPicks": 1,
+    "chests": 4,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 8,
+    "maxG": 77,
+    "steps": 17940,
+    "wall": 2417,
+    "chestWhileLv": 0,
+    "w": {
+     "coin": 4,
+     "shadowknife": 3,
+     "bell": 5,
+     "e:wood:throw+aura": 1,
+     "brazier": 2
+    },
+    "p": {
+     "xp": 1,
+     "spd": 2,
+     "cd": 2,
+     "hp": 1,
+     "salt": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 31,
+    "stage": 0,
+    "diff": 1,
+    "deck": [
+     "moonarrow",
+     "shadowknife",
+     "sickle",
+     "lantern",
+     "talisman"
+    ],
+    "owned": {
+     "moonarrow": 3,
+     "shadowknife": 5,
+     "sickle": 5,
+     "lantern": 7,
+     "talisman": 2
+    },
+    "train": {
+     "atk": 2,
+     "hp": 27,
+     "regen": 34,
+     "spd": 43,
+     "pick": 28
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0169000001114,
+    "lvl": 19,
+    "kills": 1577,
+    "mode": "over",
+    "hp": 201.36384999999999
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 18,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 18,
+    "maxG": 815,
+    "steps": 17933,
+    "wall": 2924,
+    "chestWhileLv": 0,
+    "w": {
+     "moonarrow": 2,
+     "talisman": 3,
+     "shadowknife": 3
+    },
+    "p": {
+     "bag": 2,
+     "hp": 3,
+     "cd": 1,
+     "salt": 3,
+     "armor": 3
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 32,
+    "stage": 0,
+    "diff": 0,
+    "deck": [
+     "boltspear",
+     "orb",
+     "talisman",
+     "sickle"
+    ],
+    "owned": {
+     "boltspear": 5,
+     "orb": 1,
+     "talisman": 9,
+     "sickle": 1
+    },
+    "train": {
+     "atk": 16,
+     "hp": 4,
+     "regen": 36,
+     "spd": 34,
+     "pick": 7
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 225.16673333332315,
+    "lvl": 1,
+    "kills": 5,
+    "mode": "over",
+    "hp": -0.6316799333351373
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 23,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 6733,
+    "wall": 750,
+    "chestWhileLv": 0,
+    "w": {
+     "boltspear": 2
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 36,
+    "stage": 1,
+    "diff": 1,
+    "deck": [
+     "sunblade",
+     "tiger",
+     "shadowknife",
+     "thunderdrum",
+     "boltspear",
+     "sling"
+    ],
+    "owned": {
+     "sunblade": 3,
+     "tiger": 6,
+     "shadowknife": 9,
+     "thunderdrum": 1,
+     "boltspear": 5,
+     "sling": 10
+    },
+    "train": {
+     "atk": 48,
+     "hp": 4,
+     "regen": 22,
+     "spd": 48,
+     "pick": 29
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 15.733333333333288,
+    "lvl": 1,
+    "kills": 8,
+    "mode": "over",
+    "hp": -1.7735999999989787
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 16,
+    "maxPFX": 16,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 472,
+    "wall": 174,
+    "chestWhileLv": 0,
+    "w": {
+     "sunblade": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 37,
+    "stage": 2,
+    "diff": 1,
+    "deck": [
+     "moonarrow",
+     "shadowknife",
+     "mist"
+    ],
+    "owned": {
+     "moonarrow": 4,
+     "shadowknife": 3,
+     "mist": 2
+    },
+    "train": {
+     "atk": 49,
+     "hp": 42,
+     "regen": 36,
+     "spd": 50,
+     "pick": 5
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0166000001115,
+    "lvl": 16,
+    "kills": 1036,
+    "mode": "over",
+    "hp": 150.4
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 15,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 16,
+    "maxG": 500,
+    "steps": 17904,
+    "wall": 4676,
+    "chestWhileLv": 0,
+    "w": {
+     "moonarrow": 2,
+     "mist": 1,
+     "shadowknife": 2
+    },
+    "p": {
+     "armor": 2,
+     "spd": 4,
+     "bag": 3,
+     "pick": 1,
+     "xp": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 38,
+    "stage": 2,
+    "diff": 1,
+    "deck": [
+     "lantern",
+     "sword",
+     "shadowknife",
+     "torch"
+    ],
+    "owned": {
+     "lantern": 3,
+     "sword": 5,
+     "shadowknife": 10,
+     "torch": 0
+    },
+    "train": {
+     "atk": 28,
+     "hp": 28,
+     "regen": 43,
+     "spd": 14,
+     "pick": 37
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 20.000000000000153,
+    "lvl": 2,
+    "kills": 20,
+    "mode": "over",
+    "hp": -5.471800000000628
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 13,
+    "maxPFX": 41,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 600,
+    "wall": 88,
+    "chestWhileLv": 0,
+    "w": {
+     "lantern": 1
+    },
+    "p": {
+     "spd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 33,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "sandstorm",
+     "lantern",
+     "bell"
+    ],
+    "owned": {
+     "sandstorm": 0,
+     "lantern": 5,
+     "bell": 2
+    },
+    "train": {
+     "atk": 21,
+     "hp": 3,
+     "regen": 8,
+     "spd": 47,
+     "pick": 39
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0001666667782,
+    "lvl": 8,
+    "kills": 210,
+    "mode": "over",
+    "hp": 103.60000000000001
+   },
+   "V": [
+    {
+     "k": "reset-hp",
+     "t": 0,
+     "info": "103.6/103.60000000000001",
+     "n": 1
+    }
+   ],
+   "stats": {
+    "lvPicks": 7,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 106,
+    "steps": 17903,
+    "wall": 6320,
+    "chestWhileLv": 0,
+    "w": {
+     "sandstorm": 1,
+     "lantern": 2,
+     "bell": 1
+    },
+    "p": {
+     "armor": 2,
+     "cd": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 34,
+    "stage": 3,
+    "diff": 1,
+    "deck": [
+     "talisman",
+     "mist",
+     "sword",
+     "sling",
+     "inkbrush",
+     "sunblade",
+     "torch",
+     "moxa",
+     "moonarrow"
+    ],
+    "owned": {
+     "talisman": 0,
+     "mist": 9,
+     "sword": 4,
+     "sling": 3,
+     "inkbrush": 7,
+     "sunblade": 10,
+     "torch": 8,
+     "moxa": 9,
+     "moonarrow": 1
+    },
+    "train": {
+     "atk": 35,
+     "hp": 14,
+     "regen": 2,
+     "spd": 30,
+     "pick": 20
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 132.8499666666617,
+    "lvl": 11,
+    "kills": 246,
+    "mode": "over",
+    "hp": -1.342847286661069
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 10,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 37,
+    "maxPFX": 261,
+    "maxB": 4,
+    "maxG": 16,
+    "steps": 3977,
+    "wall": 406,
+    "chestWhileLv": 0,
+    "w": {
+     "talisman": 1,
+     "moxa": 2,
+     "sling": 1,
+     "torch": 2,
+     "moonarrow": 1
+    },
+    "p": {
+     "cd": 1,
+     "hp": 1,
+     "pick": 1,
+     "xp": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 35,
+    "stage": 0,
+    "diff": 0,
+    "deck": [
+     "whip",
+     "sickle",
+     "bell",
+     "moxa",
+     "shadowknife",
+     "lantern",
+     "orb",
+     "sling",
+     "brazier"
+    ],
+    "owned": {
+     "whip": 9,
+     "sickle": 10,
+     "bell": 10,
+     "moxa": 0,
+     "shadowknife": 7,
+     "lantern": 4,
+     "orb": 6,
+     "sling": 6,
+     "brazier": 6
+    },
+    "train": {
+     "atk": 16,
+     "hp": 15,
+     "regen": 26,
+     "spd": 27,
+     "pick": 41
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0332333334449,
+    "lvl": 11,
+    "kills": 191,
+    "mode": "over",
+    "hp": 118
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 10,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 195,
+    "maxB": 2,
+    "maxG": 40,
+    "steps": 17935,
+    "wall": 2348,
+    "chestWhileLv": 0,
+    "w": {
+     "whip": 5,
+     "sling": 1,
+     "moxa": 2,
+     "bell": 1,
+     "sickle": 1
+    },
+    "p": {
+     "xp": 2,
+     "spd": 1,
+     "bag": 1,
+     "armor": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 42,
+    "stage": 1,
+    "diff": 1,
+    "deck": [
+     "sword",
+     "shadowknife",
+     "bell",
+     "coin",
+     "talisman",
+     "lantern",
+     "orb",
+     "inkbrush",
+     "thunderdrum"
+    ],
+    "owned": {
+     "sword": 6,
+     "shadowknife": 5,
+     "bell": 10,
+     "coin": 0,
+     "talisman": 3,
+     "lantern": 7,
+     "orb": 3,
+     "inkbrush": 10,
+     "thunderdrum": 6
+    },
+    "train": {
+     "atk": 34,
+     "hp": 3,
+     "regen": 18,
+     "spd": 4,
+     "pick": 12
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 13.433333333333296,
+    "lvl": 1,
+    "kills": 2,
+    "mode": "over",
+    "hp": -0.8183999999998184
+   },
+   "V": [
+    {
+     "k": "reset-hp",
+     "t": 0,
+     "info": "103.6/103.60000000000001",
+     "n": 1
+    }
+   ],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 18,
+    "maxPFX": 4,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 403,
+    "wall": 60,
+    "chestWhileLv": 0,
+    "w": {
+     "sword": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 43,
+    "stage": 1,
+    "diff": 1,
+    "deck": [
+     "torch",
+     "mist",
+     "beads",
+     "orb",
+     "sword"
+    ],
+    "owned": {
+     "torch": 8,
+     "mist": 0,
+     "beads": 0,
+     "orb": 6,
+     "sword": 6
+    },
+    "train": {
+     "atk": 11,
+     "hp": 42,
+     "regen": 31,
+     "spd": 9,
+     "pick": 24
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0163666667781,
+    "lvl": 10,
+    "kills": 228,
+    "mode": "over",
+    "hp": 150.4
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 9,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 134,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 17915,
+    "wall": 4040,
+    "chestWhileLv": 0,
+    "w": {
+     "torch": 2,
+     "mist": 1,
+     "sword": 2
+    },
+    "p": {
+     "spd": 1,
+     "salt": 1,
+     "bag": 2,
+     "cd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 44,
+    "stage": 2,
+    "diff": 2,
+    "deck": [
+     "thunderdrum",
+     "bell",
+     "tiger",
+     "talisman",
+     "inkbrush"
+    ],
+    "owned": {
+     "thunderdrum": 1,
+     "bell": 1,
+     "tiger": 7,
+     "talisman": 6,
+     "inkbrush": 5
+    },
+    "train": {
+     "atk": 19,
+     "hp": 7,
+     "regen": 44,
+     "spd": 20,
+     "pick": 2
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 12.699999999999966,
+    "lvl": 1,
+    "kills": 7,
+    "mode": "over",
+    "hp": -3.5333999999994106
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 16,
+    "maxPFX": 56,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 381,
+    "wall": 137,
+    "chestWhileLv": 0,
+    "w": {
+     "thunderdrum": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 39,
+    "stage": 0,
+    "diff": 1,
+    "deck": [
+     "sickle",
+     "talisman",
+     "torch",
+     "whip",
+     "coin",
+     "orb"
+    ],
+    "owned": {
+     "sickle": 1,
+     "talisman": 0,
+     "torch": 10,
+     "whip": 9,
+     "coin": 3,
+     "orb": 7
+    },
+    "train": {
+     "atk": 14,
+     "hp": 32,
+     "regen": 8,
+     "spd": 14,
+     "pick": 13
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0165000001111,
+    "lvl": 12,
+    "kills": 234,
+    "mode": "over",
+    "hp": 183.03399999999993
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 11,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 225,
+    "maxB": 3,
+    "maxG": 29,
+    "steps": 17922,
+    "wall": 2922,
+    "chestWhileLv": 0,
+    "w": {
+     "sickle": 5,
+     "orb": 1,
+     "whip": 2,
+     "torch": 1
+    },
+    "p": {
+     "salt": 1,
+     "bag": 2,
+     "hp": 2,
+     "armor": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 40,
+    "stage": 2,
+    "diff": 1,
+    "deck": [
+     "bell",
+     "spear",
+     "beads",
+     "talisman",
+     "sunblade",
+     "inkbrush"
+    ],
+    "owned": {
+     "bell": 5,
+     "spear": 5,
+     "beads": 10,
+     "talisman": 6,
+     "sunblade": 0,
+     "inkbrush": 3
+    },
+    "train": {
+     "atk": 13,
+     "hp": 29,
+     "regen": 8,
+     "spd": 49,
+     "pick": 8
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 25.933400000000447,
+    "lvl": 2,
+    "kills": 21,
+    "mode": "over",
+    "hp": -3.4111729333349228
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 21,
+    "maxPFX": 46,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 777,
+    "wall": 127,
+    "chestWhileLv": 0,
+    "w": {
+     "bell": 1
+    },
+    "p": {
+     "pick": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 41,
+    "stage": 4,
+    "diff": 0,
+    "deck": [
+     "lantern",
+     "mist",
+     "torch",
+     "orb",
+     "shadowknife",
+     "sickle"
+    ],
+    "owned": {
+     "lantern": 9,
+     "mist": 4,
+     "torch": 4,
+     "orb": 8,
+     "shadowknife": 8,
+     "sickle": 3
+    },
+    "train": {
+     "atk": 31,
+     "hp": 44,
+     "regen": 12,
+     "spd": 34,
+     "pick": 28
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0332666667776,
+    "lvl": 13,
+    "kills": 368,
+    "mode": "over",
+    "hp": 152.8
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 12,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 3,
+    "maxG": 10,
+    "steps": 17912,
+    "wall": 4052,
+    "chestWhileLv": 0,
+    "w": {
+     "lantern": 2,
+     "mist": 1,
+     "orb": 1,
+     "torch": 2
+    },
+    "p": {
+     "pick": 2,
+     "salt": 2,
+     "bag": 1,
+     "spd": 1,
+     "armor": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 48,
+    "stage": 2,
+    "diff": 2,
+    "deck": [
+     "inkbrush",
+     "brazier",
+     "rockhammer",
+     "torch",
+     "lantern"
+    ],
+    "owned": {
+     "inkbrush": 2,
+     "brazier": 3,
+     "rockhammer": 2,
+     "torch": 5,
+     "lantern": 5
+    },
+    "train": {
+     "atk": 10,
+     "hp": 19,
+     "regen": 32,
+     "spd": 45,
+     "pick": 21
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 12.666666666666632,
+    "lvl": 1,
+    "kills": 2,
+    "mode": "over",
+    "hp": -4.188008165968381
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 20,
+    "maxPFX": 4,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 380,
+    "wall": 67,
+    "chestWhileLv": 0,
+    "w": {
+     "inkbrush": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 49,
+    "stage": 1,
+    "diff": 1,
+    "deck": [
+     "sandstorm",
+     "mist",
+     "veil",
+     "torch",
+     "talisman"
+    ],
+    "owned": {
+     "sandstorm": 2,
+     "mist": 2,
+     "veil": 6,
+     "torch": 10,
+     "talisman": 4
+    },
+    "train": {
+     "atk": 45,
+     "hp": 28,
+     "regen": 18,
+     "spd": 6,
+     "pick": 16
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0165333334445,
+    "lvl": 19,
+    "kills": 980,
+    "mode": "over",
+    "hp": 153.64
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 18,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 2,
+    "maxG": 96,
+    "steps": 17923,
+    "wall": 3016,
+    "chestWhileLv": 0,
+    "w": {
+     "sandstorm": 3,
+     "mist": 2,
+     "talisman": 3,
+     "torch": 2
+    },
+    "p": {
+     "pick": 2,
+     "xp": 2,
+     "hp": 1,
+     "cd": 2,
+     "armor": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 50,
+    "stage": 5,
+    "diff": 1,
+    "deck": [
+     "lantern",
+     "boltspear",
+     "coin"
+    ],
+    "owned": {
+     "lantern": 6,
+     "boltspear": 2,
+     "coin": 8
+    },
+    "train": {
+     "atk": 16,
+     "hp": 15,
+     "regen": 10,
+     "spd": 18,
+     "pick": 29
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 14.366666666666626,
+    "lvl": 1,
+    "kills": 10,
+    "mode": "over",
+    "hp": -0.09200000000046815
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 13,
+    "maxPFX": 146,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 431,
+    "wall": 140,
+    "chestWhileLv": 0,
+    "w": {
+     "lantern": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 45,
+    "stage": 2,
+    "diff": 2,
+    "deck": [
+     "shadowknife",
+     "thunderdrum",
+     "sunblade",
+     "sickle",
+     "talisman",
+     "sling",
+     "moxa",
+     "sandstorm"
+    ],
+    "owned": {
+     "shadowknife": 1,
+     "thunderdrum": 4,
+     "sunblade": 0,
+     "sickle": 7,
+     "talisman": 9,
+     "sling": 6,
+     "moxa": 3,
+     "sandstorm": 8
+    },
+    "train": {
+     "atk": 40,
+     "hp": 49,
+     "regen": 30,
+     "spd": 35,
+     "pick": 1
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0165000001114,
+    "lvl": 13,
+    "kills": 726,
+    "mode": "over",
+    "hp": 158.8
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 12,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 8,
+    "maxG": 412,
+    "steps": 17913,
+    "wall": 3739,
+    "chestWhileLv": 0,
+    "w": {
+     "shadowknife": 2,
+     "sickle": 2,
+     "sandstorm": 1,
+     "talisman": 1
+    },
+    "p": {
+     "cd": 2,
+     "salt": 3,
+     "bag": 1,
+     "spd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 46,
+    "stage": 0,
+    "diff": 0,
+    "deck": [
+     "sunblade",
+     "rockhammer",
+     "talisman",
+     "sling"
+    ],
+    "owned": {
+     "sunblade": 9,
+     "rockhammer": 9,
+     "talisman": 1,
+     "sling": 5
+    },
+    "train": {
+     "atk": 5,
+     "hp": 31,
+     "regen": 50,
+     "spd": 27,
+     "pick": 40
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 206.16656666665756,
+    "lvl": 1,
+    "kills": 2,
+    "mode": "over",
+    "hp": -0.26495333333476623
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 4,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 6167,
+    "wall": 579,
+    "chestWhileLv": 0,
+    "w": {
+     "sunblade": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 47,
+    "stage": 5,
+    "diff": 0,
+    "deck": [
+     "sickle",
+     "sandstorm",
+     "lantern",
+     "rockhammer"
+    ],
+    "owned": {
+     "sickle": 8,
+     "sandstorm": 4,
+     "lantern": 10,
+     "rockhammer": 9
+    },
+    "train": {
+     "atk": 3,
+     "hp": 7,
+     "regen": 2,
+     "spd": 25,
+     "pick": 29
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0333000001116,
+    "lvl": 13,
+    "kills": 347,
+    "mode": "over",
+    "hp": 108.4
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 12,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 73,
+    "steps": 17907,
+    "wall": 5508,
+    "chestWhileLv": 0,
+    "w": {
+     "sickle": 2,
+     "sandstorm": 1,
+     "lantern": 1
+    },
+    "p": {
+     "salt": 1,
+     "armor": 3,
+     "xp": 3,
+     "bag": 1,
+     "pick": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 51,
+    "stage": 0,
+    "diff": 2,
+    "deck": [
+     "lantern",
+     "bell",
+     "brazier",
+     "thunderdrum"
+    ],
+    "owned": {
+     "lantern": 0,
+     "bell": 5,
+     "brazier": 1,
+     "thunderdrum": 6
+    },
+    "train": {
+     "atk": 20,
+     "hp": 32,
+     "regen": 3,
+     "spd": 21,
+     "pick": 34
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0331333334448,
+    "lvl": 9,
+    "kills": 149,
+    "mode": "over",
+    "hp": 159.15999999999997
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 8,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 2,
+    "steps": 17935,
+    "wall": 3112,
+    "chestWhileLv": 0,
+    "w": {
+     "lantern": 2,
+     "thunderdrum": 1,
+     "bell": 1
+    },
+    "p": {
+     "hp": 1,
+     "spd": 2,
+     "bag": 2,
+     "salt": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 52,
+    "stage": 2,
+    "diff": 1,
+    "deck": [
+     "thunderdrum",
+     "sling",
+     "talisman",
+     "rockhammer",
+     "mist",
+     "lantern",
+     "bell",
+     "moxa"
+    ],
+    "owned": {
+     "thunderdrum": 4,
+     "sling": 8,
+     "talisman": 9,
+     "rockhammer": 0,
+     "mist": 4,
+     "lantern": 0,
+     "bell": 6,
+     "moxa": 2
+    },
+    "train": {
+     "atk": 2,
+     "hp": 7,
+     "regen": 49,
+     "spd": 1,
+     "pick": 39
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 15.23333333333329,
+    "lvl": 2,
+    "kills": 12,
+    "mode": "over",
+    "hp": -4.508300000000158
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 11,
+    "maxPFX": 75,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 457,
+    "wall": 100,
+    "chestWhileLv": 0,
+    "w": {
+     "thunderdrum": 1
+    },
+    "p": {
+     "salt": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 53,
+    "stage": 1,
+    "diff": 2,
+    "deck": [
+     "sunblade",
+     "torch",
+     "whip",
+     "mist",
+     "sword",
+     "lantern",
+     "veil"
+    ],
+    "owned": {
+     "sunblade": 1,
+     "torch": 5,
+     "whip": 4,
+     "mist": 6,
+     "sword": 4,
+     "lantern": 6,
+     "veil": 8
+    },
+    "train": {
+     "atk": 23,
+     "hp": 27,
+     "regen": 30,
+     "spd": 22,
+     "pick": 38
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0000000001112,
+    "lvl": 6,
+    "kills": 100,
+    "mode": "over",
+    "hp": 152.26
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 5,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 64,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 17910,
+    "wall": 3733,
+    "chestWhileLv": 0,
+    "w": {
+     "sunblade": 1
+    },
+    "p": {
+     "hp": 1,
+     "pick": 1,
+     "spd": 1,
+     "xp": 1,
+     "cd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 54,
+    "stage": 1,
+    "diff": 2,
+    "deck": [
+     "beads",
+     "veil",
+     "whip",
+     "sunblade",
+     "orb",
+     "sword",
+     "bell",
+     "sickle"
+    ],
+    "owned": {
+     "beads": 2,
+     "veil": 10,
+     "whip": 3,
+     "sunblade": 6,
+     "orb": 5,
+     "sword": 9,
+     "bell": 8,
+     "sickle": 8
+    },
+    "train": {
+     "atk": 50,
+     "hp": 16,
+     "regen": 31,
+     "spd": 25,
+     "pick": 16
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 12.633333333333299,
+    "lvl": 2,
+    "kills": 15,
+    "mode": "over",
+    "hp": -0.07571828531274871
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 10,
+    "maxPFX": 30,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 379,
+    "wall": 69,
+    "chestWhileLv": 0,
+    "w": {
+     "beads": 1,
+     "veil": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 55,
+    "stage": 2,
+    "diff": 0,
+    "deck": [
+     "mist",
+     "bell",
+     "sword",
+     "whip",
+     "talisman",
+     "boltcharm"
+    ],
+    "owned": {
+     "mist": 2,
+     "bell": 2,
+     "sword": 7,
+     "whip": 0,
+     "talisman": 7,
+     "boltcharm": 6
+    },
+    "train": {
+     "atk": 6,
+     "hp": 44,
+     "regen": 33,
+     "spd": 37,
+     "pick": 19
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0166000001115,
+    "lvl": 15,
+    "kills": 942,
+    "mode": "over",
+    "hp": 152.59856666666667
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 14,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 8,
+    "maxG": 519,
+    "steps": 17911,
+    "wall": 4510,
+    "chestWhileLv": 0,
+    "w": {
+     "mist": 4,
+     "boltcharm": 1,
+     "talisman": 3,
+     "whip": 2
+    },
+    "p": {
+     "cd": 2,
+     "xp": 1,
+     "spd": 1,
+     "armor": 1,
+     "bag": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 56,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "moxa",
+     "moonarrow",
+     "shadowknife"
+    ],
+    "owned": {
+     "moxa": 4,
+     "moonarrow": 6,
+     "shadowknife": 8
+    },
+    "train": {
+     "atk": 43,
+     "hp": 23,
+     "regen": 22,
+     "spd": 22,
+     "pick": 22
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 9.799999999999976,
+    "lvl": 1,
+    "kills": 8,
+    "mode": "over",
+    "hp": -3.359199999999568
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 10,
+    "maxPFX": 106,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 294,
+    "wall": 52,
+    "chestWhileLv": 0,
+    "w": {
+     "moxa": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 57,
+    "stage": 1,
+    "diff": 2,
+    "deck": [
+     "brazier",
+     "tiger",
+     "talisman",
+     "sandstorm",
+     "coin",
+     "veil"
+    ],
+    "owned": {
+     "brazier": 3,
+     "tiger": 6,
+     "talisman": 1,
+     "sandstorm": 10,
+     "coin": 9,
+     "veil": 0
+    },
+    "train": {
+     "atk": 22,
+     "hp": 31,
+     "regen": 1,
+     "spd": 20,
+     "pick": 44
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0332000001114,
+    "lvl": 21,
+    "kills": 1346,
+    "mode": "over",
+    "hp": 181.44699999999995
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 20,
+    "evoPicks": 0,
+    "chests": 2,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 8,
+    "maxG": 161,
+    "steps": 17926,
+    "wall": 2895,
+    "chestWhileLv": 0,
+    "w": {
+     "brazier": 4,
+     "veil": 2,
+     "sandstorm": 5,
+     "talisman": 5,
+     "tiger": 4
+    },
+    "p": {
+     "salt": 1,
+     "pick": 1,
+     "bag": 2,
+     "hp": 2,
+     "cd": 3
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 58,
+    "stage": 1,
+    "diff": 2,
+    "deck": [
+     "veil",
+     "boltspear",
+     "boltcharm",
+     "whip"
+    ],
+    "owned": {
+     "veil": 0,
+     "boltspear": 7,
+     "boltcharm": 7,
+     "whip": 3
+    },
+    "train": {
+     "atk": 40,
+     "hp": 34,
+     "regen": 2,
+     "spd": 13,
+     "pick": 5
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 15.866666666666621,
+    "lvl": 2,
+    "kills": 15,
+    "mode": "over",
+    "hp": -0.12261059903094425
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 16,
+    "maxPFX": 30,
+    "maxB": 0,
+    "maxG": 1,
+    "steps": 476,
+    "wall": 48,
+    "chestWhileLv": 0,
+    "w": {
+     "veil": 1
+    },
+    "p": {
+     "spd": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 59,
+    "stage": 3,
+    "diff": 0,
+    "deck": [
+     "whip",
+     "torch",
+     "moonarrow",
+     "bell",
+     "inkbrush",
+     "boltspear",
+     "thunderdrum"
+    ],
+    "owned": {
+     "whip": 6,
+     "torch": 8,
+     "moonarrow": 2,
+     "bell": 7,
+     "inkbrush": 0,
+     "boltspear": 6,
+     "thunderdrum": 1
+    },
+    "train": {
+     "atk": 32,
+     "hp": 44,
+     "regen": 3,
+     "spd": 36,
+     "pick": 20
+    },
+    "wander": true,
+    "preferEvo": false,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0163000001112,
+    "lvl": 19,
+    "kills": 727,
+    "mode": "over",
+    "hp": 175.59130000000002
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 18,
+    "evoPicks": 0,
+    "chests": 1,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 4,
+    "maxG": 110,
+    "steps": 17916,
+    "wall": 3338,
+    "chestWhileLv": 0,
+    "w": {
+     "whip": 1,
+     "moonarrow": 4,
+     "torch": 1,
+     "bell": 2,
+     "inkbrush": 2
+    },
+    "p": {
+     "xp": 4,
+     "salt": 2,
+     "armor": 2,
+     "pick": 1,
+     "hp": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 60,
+    "stage": 0,
+    "diff": 0,
+    "deck": [
+     "sickle",
+     "sling",
+     "boltcharm",
+     "spear",
+     "boltspear",
+     "torch",
+     "coin",
+     "beads"
+    ],
+    "owned": {
+     "sickle": 0,
+     "sling": 4,
+     "boltcharm": 7,
+     "spear": 4,
+     "boltspear": 8,
+     "torch": 7,
+     "coin": 8,
+     "beads": 10
+    },
+    "train": {
+     "atk": 14,
+     "hp": 37,
+     "regen": 13,
+     "spd": 11,
+     "pick": 21
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false,
+    "extreme": "still"
+   },
+   "res": {
+    "cleared": false,
+    "t": 18.16666666666673,
+    "lvl": 1,
+    "kills": 5,
+    "mode": "over",
+    "hp": -0.6460999999989725
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 0,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 18,
+    "maxPFX": 10,
+    "maxB": 0,
+    "maxG": 0,
+    "steps": 545,
+    "wall": 47,
+    "chestWhileLv": 0,
+    "w": {
+     "sickle": 1
+    },
+    "p": {}
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 61,
+    "stage": 3,
+    "diff": 1,
+    "deck": [
+     "brazier",
+     "torch",
+     "boltspear",
+     "lantern",
+     "rockhammer"
+    ],
+    "owned": {
+     "brazier": 9,
+     "torch": 7,
+     "boltspear": 3,
+     "lantern": 10,
+     "rockhammer": 3
+    },
+    "train": {
+     "atk": 3,
+     "hp": 33,
+     "regen": 42,
+     "spd": 36,
+     "pick": 43
+    },
+    "wander": false,
+    "preferEvo": false,
+    "god": true,
+    "extreme": "still"
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0331666667779,
+    "lvl": 29,
+    "kills": 2258,
+    "mode": "over",
+    "hp": 205.84654999999995
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 28,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 0,
+    "maxG": 4,
+    "steps": 17917,
+    "wall": 4134,
+    "chestWhileLv": 0,
+    "w": {
+     "brazier": 3,
+     "lantern": 5,
+     "rockhammer": 2,
+     "boltspear": 5
+    },
+    "p": {
+     "xp": 4,
+     "salt": 2,
+     "hp": 3,
+     "pick": 3,
+     "armor": 2
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 62,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "talisman",
+     "torch",
+     "brazier",
+     "orb",
+     "whip",
+     "mist",
+     "spear",
+     "sword",
+     "beads",
+     "coin"
+    ],
+    "owned": {
+     "talisman": 10,
+     "torch": 10,
+     "brazier": 10,
+     "orb": 10,
+     "whip": 10,
+     "mist": 10,
+     "spear": 10,
+     "sword": 10,
+     "beads": 10,
+     "coin": 10
+    },
+    "train": {
+     "atk": 18,
+     "hp": 36,
+     "regen": 39,
+     "spd": 1,
+     "pick": 37
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false,
+    "extreme": "evo5",
+    "evoIds": [
+     "e:fire:all",
+     "e:water:all",
+     "e:wood:all",
+     "e:metal:all",
+     "e:light:all"
+    ]
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0002000001112,
+    "lvl": 30,
+    "kills": 2975,
+    "mode": "over",
+    "hp": 143.2
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 21,
+    "evoPicks": 0,
+    "chests": 4,
+    "maxE": 60,
+    "maxPFX": 261,
+    "maxB": 45,
+    "maxG": 38,
+    "steps": 17903,
+    "wall": 6723,
+    "chestWhileLv": 0,
+    "w": {
+     "e:fire:all": 5,
+     "e:water:all": 5,
+     "e:wood:all": 5,
+     "e:metal:all": 5,
+     "e:light:all": 5
+    },
+    "p": {
+     "pick": 5,
+     "armor": 5,
+     "spd": 5,
+     "salt": 3,
+     "bag": 3
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 63,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "boltcharm",
+     "boltspear",
+     "thunderdrum",
+     "sling",
+     "rockhammer",
+     "sandstorm"
+    ],
+    "owned": {
+     "boltcharm": 10,
+     "boltspear": 10,
+     "thunderdrum": 10,
+     "sling": 10,
+     "rockhammer": 10,
+     "sandstorm": 10
+    },
+    "train": {
+     "atk": 50,
+     "hp": 50,
+     "regen": 50,
+     "spd": 50,
+     "pick": 50
+    },
+    "wander": true,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": false,
+    "t": 159.86676666666017,
+    "lvl": 14,
+    "kills": 408,
+    "mode": "play",
+    "hp": 184
+   },
+   "V": [
+    {
+     "k": "tick-throw",
+     "t": 159.9,
+     "info": "TypeError: Cannot read properties of undefined (reading 'x')\n    at updateWeapons (file:///home/claude/weekly-games/games/night-exorcist/index.html?test=1:644:101)\n    at Object.tick (file:///home/claude/weekly-games/games/night-exorcist/index.html?test=1:700:51)\n    at eval (eval at evaluate (:311:30), <anonymous>:72:52)\n    at async <anonymous>:337:30",
+     "n": 1
+    }
+   ],
+   "stats": {
+    "lvPicks": 13,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 25,
+    "maxPFX": 261,
+    "maxB": 6,
+    "maxG": 67,
+    "steps": 4777,
+    "wall": 1657,
+    "chestWhileLv": 0,
+    "w": {
+     "boltcharm": 4,
+     "sling": 2,
+     "sandstorm": 1,
+     "rockhammer": 1
+    },
+    "p": {
+     "xp": 1,
+     "cd": 2,
+     "hp": 1,
+     "spd": 1,
+     "armor": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 64,
+    "stage": 5,
+    "diff": 2,
+    "deck": [
+     "moonarrow",
+     "sunblade",
+     "lantern",
+     "shadowknife",
+     "inkbrush",
+     "veil"
+    ],
+    "owned": {
+     "moonarrow": 10,
+     "sunblade": 10,
+     "lantern": 10,
+     "shadowknife": 10,
+     "inkbrush": 10,
+     "veil": 10
+    },
+    "train": {
+     "atk": 50,
+     "hp": 50,
+     "regen": 50,
+     "spd": 50,
+     "pick": 50
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": false
+   },
+   "res": {
+    "cleared": false,
+    "t": 19.366666666666788,
+    "lvl": 2,
+    "kills": 18,
+    "mode": "over",
+    "hp": -1.1666666666672114
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 1,
+    "evoPicks": 0,
+    "chests": 0,
+    "maxE": 19,
+    "maxPFX": 216,
+    "maxB": 2,
+    "maxG": 1,
+    "steps": 581,
+    "wall": 91,
+    "chestWhileLv": 0,
+    "w": {
+     "moonarrow": 1
+    },
+    "p": {
+     "salt": 1
+    }
+   },
+   "consoleErrs": []
+  },
+  {
+   "cfg": {
+    "id": 65,
+    "stage": 3,
+    "diff": 0,
+    "deck": [
+     "talisman",
+     "torch",
+     "brazier"
+    ],
+    "owned": {
+     "talisman": 10,
+     "torch": 10,
+     "brazier": 10
+    },
+    "train": {
+     "atk": 50,
+     "hp": 50,
+     "regen": 50,
+     "spd": 50,
+     "pick": 50
+    },
+    "wander": false,
+    "preferEvo": true,
+    "god": true
+   },
+   "res": {
+    "cleared": true,
+    "t": 600.0165333334446,
+    "lvl": 23,
+    "kills": 1212,
+    "mode": "over",
+    "hp": 243.23355199999997
+   },
+   "V": [],
+   "stats": {
+    "lvPicks": 22,
+    "evoPicks": 2,
+    "chests": 5,
+    "maxE": 61,
+    "maxPFX": 261,
+    "maxB": 8,
+    "maxG": 72,
+    "steps": 17940,
+    "wall": 2595,
+    "chestWhileLv": 0,
+    "w": {
+     "e:fire:all": 1
+    },
+    "p": {
+     "cd": 2,
+     "spd": 3,
+     "armor": 3,
+     "hp": 3,
+     "bag": 2
+    }
+   },
+   "consoleErrs": []
+  }
+ ]
+}
