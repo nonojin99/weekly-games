@@ -11,10 +11,10 @@ await pg.evaluate(() => { GAME.META.runs = 3; GAME.META.stage = 6; GAME.META.bes
 const c6 = await pg.evaluate(() => { GAME.S.t = 600; GAME.S.coins = 0; GAME.endRun(true); return { best: GAME.META.bestStage, shards: GAME.META.shards, coins: GAME.META.coins, un1: GAME.diffUnlocked(1), un2: GAME.diffUnlocked(2), toast: document.getElementById('toast').textContent }; });
 check('6스테이지 쉬움 첫 클리어: 30×2 = 600 조각 · 보통 해금 · 어려움 아직 · 토스트', c6.best === 6 && c6.shards === 600 && c6.coins === 160 && c6.un1 && !c6.un2 && /보통.*해금.*×100/.test(c6.toast), JSON.stringify(c6));
 await pg.click('#homeBtn'); await pg.waitForTimeout(150);
-const menu = await pg.evaluate(() => ({ hidden: document.getElementById('diffs').classList.contains('hide'), btns: [...document.querySelectorAll('#diffs button')].map(b => b.textContent + (b.disabled ? '(x)' : '')), stages: [...document.querySelectorAll('#stages button')].filter(b => !b.disabled).length }));
+const menu = await pg.evaluate(() => ({ hidden: document.getElementById('diffs').classList.contains('hide'), btns: [...document.querySelectorAll('#diffs button')].map(b => b.textContent + (b.disabled ? '(x)' : '')), stages: document.querySelectorAll('#stages .stcard:not(.locked)').length }));
 check('메뉴: 난이도 줄 표시 · 보통 열림 · 어려움 잠김 · 쉬움 6스테이지 전부 열림', !menu.hidden && menu.btns[1] === '보통 · 보상 ×3' && /봉인어려움/.test(menu.btns[2]) && menu.btns[2].endsWith('(x)') && menu.stages === 6, JSON.stringify(menu));
 await pg.evaluate(() => { document.querySelectorAll('#diffs button')[1].click(); });
-const sel = await pg.evaluate(() => ({ diff: GAME.META.diff, stage: GAME.META.stage, open: [...document.querySelectorAll('#stages button')].filter(b => !b.disabled).length }));
+const sel = await pg.evaluate(() => ({ diff: GAME.META.diff, stage: GAME.META.stage, open: document.querySelectorAll('#stages .stcard:not(.locked)').length }));
 check('보통 선택: 스테이지 1만 열림, 선택 스테이지 1로 내려감', sel.diff === 1 && sel.stage === 1 && sel.open === 1, JSON.stringify(sel));
 await pg.screenshot({ path: path.join(here, 'shots/m6-menu.png') });
 await pg.click('#startBtn'); await pg.waitForTimeout(200);

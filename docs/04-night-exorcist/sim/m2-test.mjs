@@ -51,7 +51,7 @@ check('런2·3: 방울 해금 · 사당 열림 · 런3 조각 +10(+런 내 2)', 
 
 // 6. 사당: 수련 구매 · 뽑기(신규/중복 숙련) · 덱 편집 10 상한
 await page.click('#homeBtn'); await page.waitForTimeout(100); await page.click('#shrineBtn'); await page.waitForTimeout(100);
-const train = await page.evaluate(() => { GAME.META.coins = 1000; GAME.renderShrine(); const btn = document.querySelector('#shBody .stat button'); btn.click(); return { atk: GAME.META.train.atk, coins: GAME.META.coins, cost: GAME.trainCost(0) }; });
+const train = await page.evaluate(() => { GAME.META.coins = 1000; GAME.renderShrine(); const btn = document.querySelector('#shBody .trow button'); btn.click(); return { atk: GAME.META.train.atk, coins: GAME.META.coins, cost: GAME.trainCost(0) }; });
 check('수련: 공격 1단 구매 → coins -40', train.atk === 1 && train.coins === 1000 - train.cost && train.cost === 40, JSON.stringify(train));
 const g = await page.evaluate(() => { GAME.META.shards = 200; const before = Object.keys(GAME.META.owned).length; const outs = []; for (let i = 0; i < 20; i++) outs.push(GAME.gacha().id); const own = GAME.META.owned; const mast = Object.values(own).reduce((a, b) => a + b, 0); return { before, after: Object.keys(own).length, shards: GAME.META.shards, mast, deck: GAME.META.deck.length, uniq: new Set(outs).size }; });
 check('뽑기 20회: 조각 -200 · 보유 증가 · 중복=숙련 합 = 20 - 신규수 · 덱 ≤10', g.shards === 0 && g.after > g.before && g.mast === 20 - (g.after - g.before) && g.deck <= 10, JSON.stringify(g));

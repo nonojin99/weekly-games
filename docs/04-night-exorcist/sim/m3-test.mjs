@@ -7,8 +7,8 @@ await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'a
 await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
 const data = await pg.evaluate(() => { const E = GAME.ENEMY, S = GAME.STAGES.filter(s => !s.soon); const ids = new Set(); for (const st of S) for (const id of [...st.roster, ...st.bosses]) ids.add(id); const bad = [...ids].filter(id => !E[id] || !GAME.GRIDS[E[id].spr]); return { n: ids.size, bad, stages: S.map(s => s.roster.length + '+' + s.bosses.length), soon: GAME.STAGES.filter(s => s.soon).length, bossEl: S.map(s => s.bosses.map(b => E[b].el).join('/')) }; });
 check('요괴 42종 (스테이지별 5+2 ×6) · 스프라이트 전부 존재', data.n === 42 && data.bad.length === 0 && data.stages.join() === '5+2,5+2,5+2,5+2,5+2,5+2' && data.soon === 0, JSON.stringify(data));
-const menu = await pg.evaluate(() => [...document.querySelectorAll('#stages button')].map(b => b.textContent.replace(/\s+/g, ' ')));
-check('스테이지 선택: 속성 3 + 배율 + 보스 이름 표시, 예정 칸 비활성', menu.length === 6 && /화 금 수.*×1.*두억시니·이무기/.test(menu[0]) && /목 수 금.*백호·대지네/.test(menu[1]) && /산성/.test(menu[4]), menu.join(' | '));
+const menu = await pg.evaluate(() => [...document.querySelectorAll('#stages .stcard')].map(b => b.textContent.replace(/\s+/g, ' ')));
+check('스테이지 선택: 속성 3 + 배율 + 보스 이름 표시, 예정 칸 비활성', menu.length === 6 && /달빛 초원.*×1.*두억시니.*이무기/.test(menu[0]) && /귀신의 숲.*백호.*대지네/.test(menu[1]) && /산성/.test(menu[4]), menu.join(' | '));
 await pg.screenshot({ path: path.join(here, 'shots/m3-menu.png') });
 for (const [stage, els] of [[1, ['fire','metal','water']], [2, ['wood','water','metal']], [3, ['fire','wood','metal']]]) {
   await pg.evaluate(s => { GAME.META.stage = s; GAME.META.bestStage = 2; }, stage); await pg.click('#startBtn'); await pg.waitForTimeout(200);
