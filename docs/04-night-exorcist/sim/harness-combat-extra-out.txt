@@ -1,0 +1,24 @@
+
+1 boss shoot → burn regardless of element
+   {"whitetiger":{"el":"metal","burnAfterProjectile":true,"burnT":2},"lanternking":{"el":"light","burnAfterProjectile":true,"burnT":2},"fortgeneral":{"el":"earth","burnAfterProjectile":true,"burnT":2},"thundergod":{"el":"thunder","burnAfterProjectile":true,"burnT":2},"boss1":{"el":"fire","burnAfterProjectile":true,"burnT":2}}
+
+2 enemies permanently stuck behind obstacles (60 spawned, 70s)
+   {"s2":{"farAfter70s":60,"stuck10s":1,"ex":[{"type":"maiden","x":-491,"y":-128,"d":508,"near":["tree@-469,-141","tree@-506,-151"]}]},"s3":{"farAfter70s":59,"stuck10s":1,"ex":[{"type":"skullmonk","x":-510,"y":-242,"d":565,"near":["wall@-571,-225 w102","wall@-485,-266 w79"]}]},"s5":{"farAfter70s":60,"stuck10s":0,"ex":[]}}
+
+3 effects vs unkillable enemies
+   {"e:melee:all2":{"stunTicks":208,"kbTicks":849},"bell":{"stunTicks":0,"kbTicks":0},"sickle":{"stunTicks":0,"kbTicks":368},"coin":{"stunTicks":0,"kbTicks":502},"e:aura:all":{"stunTicks":0,"kbTicks":0}}
+
+4 burn DoT vs boss2 (s1 easy, t=540) · 20s damage
+   {"brazierLv1_vs_boss2":{"bossHp":9304,"dmg":3845,"pct":41,"burnSec":20,"killed":false},"torchLv1_vs_boss2":{"bossHp":9304,"dmg":2689,"pct":29,"burnSec":14.1,"killed":false},"rockhammerLv5_vs_boss2":{"bossHp":9304,"dmg":146,"pct":2,"burnSec":0,"killed":false},"sickleLv5_vs_boss2":{"bossHp":9304,"dmg":158,"pct":2,"burnSec":0,"killed":false},"spearLv5_vs_boss2_favorable":{"bossHp":9304,"dmg":1406,"pct":15,"burnSec":0,"killed":false},"brazierLv1_vs_boss1":{"bossHp":1248,"dmg":635,"pct":51,"burnSec":20,"killed":false},"sickleLv5_vs_boss1":{"bossHp":1248,"dmg":237,"pct":19,"burnSec":0,"killed":false},"brazierLv1_vs_firedragon_s6":{"bossHp":44659,"dmg":17948,"pct":40,"burnSec":20,"killed":false}}
+
+5 evolution DPS cliff (6s dmg vs 20 unkillable eggs)
+   {"fireThrowMelee":{"parentsLv5":1678668888,"evoLv1":1062000672,"ratioLv1":0.63,"evoLv3":1284001507,"evoLv4":1423336107,"evoLv5":1678670611},"fireAll":{"preT3":2400006889,"t3Lv1":2273337319,"ratioLv1":0.95,"t3Lv3":2336673994,"t3Lv5":2400015098},"throwFireWater":{"parentsLv5":746001898,"evoLv1":425333690,"ratioLv1":0.57,"evoLv5":746003487}}
+
+6 salt/earth vs boss
+   {"saltKbOnBoss":260,"saltStunOnBoss":0.4,"earthStunOnBoss":0.4,"weaponKbOnBoss":0,"sickleKbOnBoss":0}
+
+7 strike dmg float vs actual with armor
+   {"actual":7.91,"floatShows":12,"expectedActual":7.91}
+
+8 boss spawn vs bound (peak)
+   {"of400":16,"maxOverlapPx":17.8}

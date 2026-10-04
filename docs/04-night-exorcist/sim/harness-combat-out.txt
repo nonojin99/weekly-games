@@ -1,0 +1,944 @@
+
+===== 1 damage matrix =====
+{
+ "cells": 10200,
+ "issues": [],
+ "nIssues": 0,
+ "affSeen": {
+  "base": {
+   "1": 612,
+   "1.5": 714,
+   "0.6": 714,
+   "2.25": 102,
+   "0.9": 204,
+   "0.36": 102
+  },
+  "neutral": {
+   "1": 204
+  },
+  "evo": {
+   "1": 2754,
+   "1.5": 4080,
+   "2.25": 714
+  }
+ },
+ "dpsLow": [
+  {
+   "id": "moxa",
+   "tier": 1,
+   "dps1": 9.8,
+   "parts": [
+    "moxa"
+   ]
+  },
+  {
+   "id": "mist",
+   "tier": 1,
+   "dps1": 11.7,
+   "parts": [
+    "mist"
+   ]
+  },
+  {
+   "id": "brazier",
+   "tier": 1,
+   "dps1": 15.6,
+   "parts": [
+    "brazier"
+   ]
+  },
+  {
+   "id": "bell",
+   "tier": 1,
+   "dps1": 15.6,
+   "parts": [
+    "bell"
+   ]
+  },
+  {
+   "id": "lantern",
+   "tier": 1,
+   "dps1": 15.6,
+   "parts": [
+    "lantern"
+   ]
+  }
+ ],
+ "dpsHigh": [
+  {
+   "id": "talisman",
+   "tier": 1,
+   "dps1": 28.6,
+   "parts": [
+    "talisman"
+   ]
+  },
+  {
+   "id": "moonarrow",
+   "tier": 1,
+   "dps1": 29.3,
+   "parts": [
+    "moonarrow"
+   ]
+  },
+  {
+   "id": "shadowknife",
+   "tier": 1,
+   "dps1": 29.3,
+   "parts": [
+    "shadowknife"
+   ]
+  },
+  {
+   "id": "sling",
+   "tier": 1,
+   "dps1": 30.7,
+   "parts": [
+    "sling"
+   ]
+  },
+  {
+   "id": "tiger",
+   "tier": 1,
+   "dps1": 32,
+   "parts": [
+    "tiger"
+   ]
+  }
+ ],
+ "medianBaseDps": 23.4,
+ "evoCliffRatio": {
+  "2": [
+   0.614
+  ],
+  "3": [
+   0.901
+  ]
+ },
+ "t3vsT2lv5": 0.601,
+ "weaponCount": 26,
+ "evoCount": 74,
+ "enemyCount": 42
+}
+
+===== 2 evolution graph =====
+{
+ "evos": 74,
+ "tier2": 60,
+ "tier3": 14,
+ "recipes": 102,
+ "t3recipes": 42,
+ "okExact": 102,
+ "okPartial": 204,
+ "okPick": 102,
+ "unnamed": [],
+ "dupSets": [],
+ "orphans": [],
+ "neutralsInEvo": [],
+ "byK": {},
+ "issues": [],
+ "extraSame": []
+}
+stage 1: weapons=100 zeroDmg=[] errs=0  maxB=16 maxPFX=80 nan=0
+stage 2: weapons=100 zeroDmg=[] errs=0  maxB=16 maxPFX=90 nan=0
+stage 3: weapons=100 zeroDmg=[] errs=0  maxB=16 maxPFX=108 nan=0
+stage 4: weapons=100 zeroDmg=[] errs=0  maxB=16 maxPFX=101 nan=0
+stage 5: weapons=100 zeroDmg=[] errs=0  maxB=16 maxPFX=136 nan=0
+stage 6: weapons=100 zeroDmg=[] errs=0  maxB=16 maxPFX=118 nan=0
+
+===== 3 live firing =====
+{
+ "zeroAny": [],
+ "errAny": [],
+ "nErr": 0,
+ "byEl": {
+  "fire": {
+   "weapons": 114,
+   "burn": 58512,
+   "slow": 11183,
+   "kb": 17013,
+   "stun": 0,
+   "arc": 0,
+   "heal": 0
+  },
+  "water": {
+   "weapons": 114,
+   "burn": 9247,
+   "slow": 54673,
+   "kb": 13287,
+   "stun": 0,
+   "arc": 0,
+   "heal": 0
+  },
+  "wood": {
+   "weapons": 114,
+   "burn": 8278,
+   "slow": 10085,
+   "kb": 14618,
+   "stun": 0,
+   "arc": 0,
+   "heal": 0
+  },
+  "metal": {
+   "weapons": 114,
+   "burn": 8599,
+   "slow": 41085,
+   "kb": 16746,
+   "stun": 0,
+   "arc": 0,
+   "heal": 0
+  },
+  "light": {
+   "weapons": 114,
+   "burn": 0,
+   "slow": 9498,
+   "kb": 13207,
+   "stun": 4178,
+   "arc": 494,
+   "heal": 1649.2800000000004
+  },
+  "dark": {
+   "weapons": 114,
+   "burn": 0,
+   "slow": 37948,
+   "kb": 14666,
+   "stun": 4184,
+   "arc": 450,
+   "heal": 3152.11
+  },
+  "earth": {
+   "weapons": 114,
+   "burn": 0,
+   "slow": 38292,
+   "kb": 4464,
+   "stun": 30933,
+   "arc": 453,
+   "heal": 880.1500000000001
+  },
+  "thunder": {
+   "weapons": 114,
+   "burn": 0,
+   "slow": 6220,
+   "kb": 10283,
+   "stun": 3136,
+   "arc": 2741,
+   "heal": 784.6600000000001
+  },
+  "none": {
+   "weapons": 12,
+   "burn": 0,
+   "slow": 0,
+   "kb": 3784,
+   "stun": 0,
+   "arc": 0,
+   "heal": 129
+  }
+ },
+ "effectMissing": [
+  "bell:kb(aura)",
+  "e:aura:fire+metal:kb(aura)",
+  "e:aura:water+metal:kb(aura)",
+  "e:aura:wood+metal:kb(aura)",
+  "e:melee:all2:stun",
+  "e:aura:all:kb(aura)"
+ ],
+ "bounds": {
+  "maxB": 16,
+  "maxPFX": 136,
+  "maxZ": 0
+ },
+ "nan": 0,
+ "s1BaseLow": [
+  "rockhammer 44% k8",
+  "whip 50% k10",
+  "sickle 57% k10",
+  "torch 65% k12",
+  "boltspear 65% k13",
+  "sunblade 66% k13"
+ ],
+ "s1BaseHigh": [
+  "lantern 100% k20",
+  "veil 100% k20",
+  "sandstorm 100% k20",
+  "boltcharm 100% k20",
+  "thunderdrum 100% k20",
+  "moxa 100% k20"
+ ],
+ "s1BaseMedianDmg": 540.1,
+ "s1Tier2": [
+  "e:melee:water+metal 79%",
+  "e:melee:water+wood 81%",
+  "e:melee:fire+wood 83%",
+  "e:melee:light+earth 83%",
+  "…",
+  "e:aura:light+thunder 100%",
+  "e:aura:dark+earth 100%",
+  "e:aura:dark+thunder 100%",
+  "e:aura:earth+thunder 100%"
+ ],
+ "s1Tier3": [
+  "e:melee:all2 90%",
+  "e:fire:all 100%",
+  "e:water:all 100%",
+  "e:wood:all 100%",
+  "e:metal:all 100%",
+  "e:light:all 100%",
+  "e:dark:all 100%",
+  "e:earth:all 100%",
+  "e:thunder:all 100%",
+  "e:throw:all 100%",
+  "e:throw:all2 100%",
+  "e:melee:all 100%",
+  "e:aura:all 100%",
+  "e:aura:all2 100%"
+ ],
+ "perStageKillPct": {
+  "s1": 94,
+  "s2": 92,
+  "s3": 88,
+  "s4": 84,
+  "s5": 74,
+  "s6": 72
+ }
+}
+
+===== 3b earth stun lock / salt vs boss =====
+{
+ "earthAllLv5_vs_boss1": {
+  "stunFrac": 0.85,
+  "moved": 258,
+  "minDist": 27,
+  "contactTicks": 546,
+  "bossKbMax": 0
+ },
+ "sandstormLv5_cd5": {
+  "stunFrac": 1,
+  "moved": 123,
+  "minDist": 27,
+  "contactTicks": 595,
+  "bossKbMax": 0
+ },
+ "sandstormLv1": {
+  "stunFrac": 0.69,
+  "moved": 570,
+  "minDist": 1,
+  "contactTicks": 600,
+  "bossKbMax": 0
+ },
+ "rockhammerLv5": {
+  "stunFrac": 0.19,
+  "moved": 1614,
+  "minDist": 0,
+  "contactTicks": 600,
+  "bossKbMax": 0
+ },
+ "slingLv5_bag3": {
+  "stunFrac": 0.49,
+  "moved": 1114,
+  "minDist": 0,
+  "contactTicks": 600,
+  "bossKbMax": 0
+ },
+ "earthAll_vs_boss2": {
+  "stunFrac": 0.85,
+  "moved": 358,
+  "minDist": 27,
+  "contactTicks": 87,
+  "bossKbMax": 0
+ },
+ "noWeapon_salt3_vs_boss1": {
+  "stunFrac": 0.5,
+  "moved": 1062,
+  "minDist": 39,
+  "contactTicks": 292,
+  "bossKbMax": 469
+ },
+ "noWeapon_vs_boss1": {
+  "stunFrac": 0,
+  "moved": 979,
+  "minDist": 1,
+  "contactTicks": 300,
+  "bossKbMax": 0
+ },
+ "sickleLv5_vs_boss1_kb": {
+  "stunFrac": 0,
+  "moved": 468,
+  "minDist": 1,
+  "contactTicks": 150,
+  "bossKbMax": 0
+ }
+}
+
+===== 4 passives =====
+{
+ "out": {
+  "spd": {
+   "max": 5,
+   "vals": [
+    110,
+    121,
+    133.1,
+    146.41,
+    161.051,
+    177.156
+   ]
+  },
+  "hp": {
+   "max": 5,
+   "vals": [
+    100,
+    115,
+    132.25,
+    152.087,
+    174.901,
+    201.136
+   ]
+  },
+  "cd": {
+   "max": 5,
+   "vals": [
+    0.954,
+    0.879,
+    0.81,
+    0.747,
+    0.688,
+    0.635
+   ]
+  },
+  "pick": {
+   "max": 5,
+   "vals": [
+    69.983,
+    90.967,
+    118.286,
+    153.772,
+    199.915,
+    259.9
+   ]
+  },
+  "armor": {
+   "max": 5,
+   "vals": [
+    3,
+    2.76,
+    2.539,
+    2.336,
+    2.149,
+    1.977
+   ]
+  },
+  "salt": {
+   "max": 3,
+   "vals": [
+    {
+     "kb": 0,
+     "stun": 0
+    },
+    {
+     "kb": 260,
+     "stun": 0.4
+    },
+    {
+     "kb": 364,
+     "stun": 0.6
+    },
+    {
+     "kb": 468,
+     "stun": 0.8
+    }
+   ]
+  },
+  "xp": {
+   "max": 5,
+   "vals": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ]
+  },
+  "bag": {
+   "max": 3,
+   "vals": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "hpPickHeal": {
+   "before": 10,
+   "after": 46,
+   "maxBefore": 100,
+   "maxAfter": 114.99999999999999,
+   "expect": 46
+  }
+ },
+ "issues": []
+}
+
+===== 5 hazards =====
+{
+ "shrink": {
+  "Rs": [
+   600,
+   585.9,
+   571.8
+  ],
+  "r60": 557.8,
+  "decreasing": true,
+  "pausedWhileBoss": true,
+  "resumedAfterKill": true,
+  "outsideDmg1s": 5.85,
+  "expectOutside": 4.65,
+  "fogT": 1,
+  "insideDmg1s": 0.45,
+  "rEnd": 220,
+  "r1": 220,
+  "r0": 600
+ },
+ "rock": {
+  "rate": 0.7,
+  "expectRate": 0.77,
+  "firstT": 2.62,
+  "maxLive": 2,
+  "kinds": [
+   "rock"
+  ],
+  "playerHitAt": 1,
+  "tele": 1,
+  "dmgPlayer": 23.7,
+  "expectDmg": 12,
+  "dmgOutside": 0,
+  "enemyDmg": 12,
+  "expectEnemy": 12,
+  "bossDmg": 0,
+  "spawnDists": [
+   151,
+   158
+  ]
+ },
+ "bolt": {
+  "rate": 1.65,
+  "expectRate": 1.67,
+  "firstT": 1.83,
+  "maxLive": 3,
+  "kinds": [
+   "bolt"
+  ],
+  "playerHitAt": 0.67,
+  "tele": 0.7,
+  "dmgPlayer": 13.5,
+  "expectDmg": 14,
+  "dmgOutside": 0,
+  "enemyDmg": 21,
+  "expectEnemy": 21,
+  "bossDmg": 0,
+  "spawnDists": [
+   106,
+   172,
+   54
+  ]
+ },
+ "bound1": {
+  "bound": 280,
+  "playerMaxAbsY_up": 268,
+  "playerMaxAbsY_down": 268,
+  "limit": 268,
+  "spawnOutOfBound": 0,
+  "outAfterTick": 0,
+  "maxSpawnAbsY": 258,
+  "bossSpawnOut": 4
+ },
+ "bound5": {
+  "bound": 260,
+  "playerMaxAbsY_up": 248,
+  "playerMaxAbsY_down": 248,
+  "limit": 248,
+  "spawnOutOfBound": 0,
+  "outAfterTick": 0,
+  "maxSpawnAbsY": 238,
+  "bossSpawnOut": 3
+ },
+ "obst1": {
+  "solidsTested": 8,
+  "maxPenetration": 0,
+  "fireDmg1s": null,
+  "enemiesFarAfter20s": 39,
+  "stuck5s": 1,
+  "stuckEx": [
+   {
+    "type": "maiden",
+    "x": -257,
+    "y": 123,
+    "d": 285,
+    "near": [
+     "tree@-258,96",
+     "tree@-231,119"
+    ]
+   }
+  ],
+  "alive": 60
+ },
+ "obst2": {
+  "solidsTested": 8,
+  "maxPenetration": 0,
+  "fireDmg1s": 6.85,
+  "enemiesFarAfter20s": 58,
+  "stuck5s": 1,
+  "stuckEx": [
+   {
+    "type": "stonestatue",
+    "x": 223,
+    "y": 356,
+    "d": 420,
+    "near": [
+     "wall@173,339",
+     "wall@290,334"
+    ]
+   }
+  ],
+  "alive": 60
+ },
+ "obst4": {
+  "solidsTested": 8,
+  "maxPenetration": 0,
+  "fireDmg1s": null,
+  "enemiesFarAfter20s": 51,
+  "stuck5s": 0,
+  "stuckEx": [],
+  "alive": 60
+ }
+}
+
+===== 6 chests =====
+{
+ "grades": {
+  "레어": 889,
+  "일반": 1801,
+  "에픽": 310
+ },
+ "eliteCoins": 8,
+ "eliteShards": 1,
+ "results": {
+  "partial:일반": {
+   "ups": 60,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "partial:레어": {
+   "ups": 180,
+   "coins": 0,
+   "rows": [
+    1,
+    2
+   ]
+  },
+  "partial:에픽": {
+   "ups": 300,
+   "coins": 0,
+   "rows": [
+    2
+   ]
+  },
+  "allMaxed:일반": {
+   "ups": 0,
+   "coins": 600,
+   "rows": [
+    1
+   ]
+  },
+  "allMaxed:레어": {
+   "ups": 0,
+   "coins": 1800,
+   "rows": [
+    3
+   ]
+  },
+  "allMaxed:에픽": {
+   "ups": 0,
+   "coins": 3000,
+   "rows": [
+    5
+   ]
+  },
+  "evoLv4:일반": {
+   "ups": 60,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "evoLv4:레어": {
+   "ups": 180,
+   "coins": 0,
+   "rows": [
+    2,
+    1
+   ]
+  },
+  "evoLv4:에픽": {
+   "ups": 240,
+   "coins": 600,
+   "rows": [
+    3
+   ]
+  },
+  "oneSlot1:일반": {
+   "ups": 60,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "oneSlot1:레어": {
+   "ups": 180,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "oneSlot1:에픽": {
+   "ups": 240,
+   "coins": 600,
+   "rows": [
+    2
+   ]
+  },
+  "fiveMixed:일반": {
+   "ups": 60,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "fiveMixed:레어": {
+   "ups": 180,
+   "coins": 0,
+   "rows": [
+    2,
+    1
+   ]
+  },
+  "fiveMixed:에픽": {
+   "ups": 240,
+   "coins": 600,
+   "rows": [
+    3
+   ]
+  },
+  "evoT3lv5+base:일반": {
+   "ups": 60,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "evoT3lv5+base:레어": {
+   "ups": 180,
+   "coins": 0,
+   "rows": [
+    1
+   ]
+  },
+  "evoT3lv5+base:에픽": {
+   "ups": 240,
+   "coins": 600,
+   "rows": [
+    2
+   ]
+  },
+  "empty:일반": {
+   "ups": 0,
+   "coins": 600,
+   "rows": [
+    1
+   ]
+  },
+  "empty:레어": {
+   "ups": 0,
+   "coins": 1800,
+   "rows": [
+    3
+   ]
+  },
+  "empty:에픽": {
+   "ups": 0,
+   "coins": 3000,
+   "rows": [
+    5
+   ]
+  }
+ },
+ "byK": {},
+ "issues": []
+}
+
+===== 7 bosses =====
+{
+ "issues": [],
+ "hpMuls": [
+  "s1d0: b1 1 b2 1",
+  "s1d1: b1 1.35 b2 1.35",
+  "s1d2: b1 1.8 b2 1.8",
+  "s2d0: b1 1.595 b2 1.595",
+  "s2d1: b1 2.153 b2 2.153",
+  "s2d2: b1 2.871 b2 2.871",
+  "s3d0: b1 2.16 b2 2.16",
+  "s3d1: b1 2.916 b2 2.916",
+  "s3d2: b1 3.888 b2 3.888",
+  "s4d0: b1 2.86 b2 2.86",
+  "s4d1: b1 3.861 b2 3.861",
+  "s4d2: b1 5.148 b2 5.148",
+  "s5d0: b1 3.78 b2 3.78",
+  "s5d1: b1 5.103 b2 5.103",
+  "s5d2: b1 6.804 b2 6.804",
+  "s6d0: b1 4.8 b2 4.8",
+  "s6d1: b1 6.48 b2 6.48",
+  "s6d2: b1 8.64 b2 8.64"
+ ],
+ "els": [
+  "s1: boss1/fire boss2/water",
+  "s2: whitetiger/metal centipede/wood",
+  "s3: phoenix/fire yaksha/metal",
+  "s4: lanternking/light mistserpent/dark",
+  "s5: fortgeneral/earth thunderbird/thunder",
+  "s6: thundergod/thunder firedragon/fire"
+ ],
+ "atRunEnd": [
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true",
+  "true:over:true"
+ ],
+ "patterns": [
+  "s1: {\"EB\":5,\"ZONE\":0} {\"EB\":0,\"ZONE\":3}",
+  "s2: {\"EB\":5,\"ZONE\":0} {\"EB\":0,\"ZONE\":3}",
+  "s3: {\"EB\":5,\"ZONE\":0} {\"EB\":0,\"ZONE\":3}",
+  "s4: {\"EB\":5,\"ZONE\":0} {\"EB\":0,\"ZONE\":3}",
+  "s5: {\"EB\":5,\"ZONE\":0} {\"EB\":0,\"ZONE\":3}",
+  "s6: {\"EB\":5,\"ZONE\":0} {\"EB\":0,\"ZONE\":3}"
+ ],
+ "deathMsgStage2": {
+  "afterBoss2": "이무기 앞에서…",
+  "afterBoss1": "두억시니에게…",
+  "actualBosses": [
+   "백호",
+   "대지네"
+  ]
+ }
+}
+
+===== 8 level-up cards =====
+{
+ "stats": {
+  "n": 400,
+  "cards": {
+   "1": 2,
+   "3": 398
+  },
+  "evo": 42,
+  "newW": 330,
+  "upW": 135,
+  "newP": 506,
+  "upP": 158,
+  "evoUp": 25,
+  "empty": 0,
+  "lessThan3": 2
+ },
+ "byK": {},
+ "issues": [],
+ "det": {
+  "allMaxedNoEvo": [],
+  "allMaxedFallback": {
+   "mode": "play",
+   "coins": 5,
+   "shown": false
+  },
+  "fiveMaxedWithEvos": [
+   "e:e:water:throw+melee p:hp p:pick",
+   "e:e:water:throw+melee p:bag p:pick",
+   "e:e:melee:fire+water p:bag p:hp",
+   "e:e:throw:fire+water p:salt p:xp",
+   "e:e:fire:throw+melee p:xp p:armor",
+   "e:e:fire:throw+aura p:armor p:salt"
+  ],
+  "slotsFullOnlyUpgrades": true,
+  "slotsFullSet": [
+   "p:armor:up",
+   "p:cd:up",
+   "p:hp:up",
+   "p:pick:up",
+   "p:spd:up",
+   "w:brazier:up",
+   "w:orb:up",
+   "w:talisman:up",
+   "w:torch:up",
+   "w:whip:up"
+  ],
+  "deck1": [
+   "p:salt",
+   "p:spd",
+   "w:talisman"
+  ],
+  "deck1AllMax": 0
+ }
+}
+
+===== PAGE ERRORS =====
+{
+ "1-matrix": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "2-evo": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "3-fire": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "3b-stun": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "4-passives": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "5-hazards": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "6-chest": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "7-boss": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ],
+ "8-levelup": [
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "console: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED"
+ ]
+}
