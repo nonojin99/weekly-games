@@ -1,0 +1,12 @@
+import { chromium } from 'playwright'; import path from 'path'; import { fileURLToPath } from 'url';
+const here = path.dirname(fileURLToPath(import.meta.url));
+const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' }); const pg = await br.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const errs = []; pg.on('pageerror', e => errs.push(e.message));
+await pg.route('**supabase.co/**', r => r.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+await pg.goto('file://' + path.resolve(here, '../../../games/night-exorcist/index.html') + '?test=1'); await pg.waitForFunction(() => window.GAME);
+await pg.evaluate(() => { GAME.META.runs = 3; GAME.META.deck = ['brazier','mist','talisman','orb','spear']; GAME.META.owned = Object.fromEntries(GAME.META.deck.map(x => [x, 0])); GAME.META.stage = 1; });
+await pg.click('#startBtn'); await pg.waitForTimeout(300);
+await pg.evaluate(() => { GAME.P.w = { brazier:4, mist:2, talisman:3, orb:2, spear:2 }; GAME.S.hp = 1e9; GAME.S.maxhp = 1e9; GAME.S.xp = -1e9; for (let i = 0; i < 16; i++) { const o = GAME.spawn('jiangshi'); const a = i * .39; o.x = GAME.P.x + Math.cos(a) * (90 + i * 8); o.y = GAME.P.y + Math.sin(a) * (90 + i * 8); o.hp = 1e5; o.burn = 10; o.stun = 10; } GAME.ZONE.push({ x: GAME.P.x - 120, y: GAME.P.y + 90, r: 46, life: 8, max: 8 }); });
+await pg.waitForTimeout(1200); await pg.screenshot({ path: path.join(here, 'shots/fx-aura.png') });
+await pg.waitForTimeout(400); await pg.screenshot({ path: path.join(here, 'shots/fx-aura2.png') });
+const perf = await pg.evaluate(() => { const a = GAME.frameMs().slice(-200).sort((x, y) => x - y); return { p50: a[a.length >> 1].toFixed(2), p95: a[(a.length * .95) | 0].toFixed(2), pfx: GAME.PFX.length }; });
+console.log('perf', perf, 'errs', errs); await br.close();
