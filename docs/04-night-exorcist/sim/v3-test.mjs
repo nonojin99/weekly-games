@@ -19,7 +19,7 @@ ok('두억시니 투사체 5발', await pg.evaluate(() => GAME.EB.length === 5))
 await pg.evaluate(() => { GAME.EB.length = 0; GAME.E.length = 0; GAME.spawn('boss2', true); GAME.bossPattern(GAME.E[0]); });
 ok('이무기 물웅덩이 3개', await pg.evaluate(() => GAME.ZONE.length === 3));
 ok('물웅덩이 안 → 둔화', await pg.evaluate(() => { GAME.ZONE[0].x = GAME.P.x; GAME.ZONE[0].y = GAME.P.y; GAME.tick(1/30); return GAME.S.slowT > 0; }));
-ok('보스 접촉 → 속성 디버프 (이무기=둔화)', await pg.evaluate(() => { const b = GAME.E[0]; b.x = GAME.P.x; b.y = GAME.P.y; GAME.S.slowT = 0; GAME.ZONE.length = 0; GAME.tick(1/30); return GAME.S.slowT >= 1.9; }));
+ok('보스 접촉 → 속성 디버프 (이무기=둔화)', await pg.evaluate(() => { const b = GAME.E[0]; b.x = GAME.P.x; b.y = GAME.P.y; GAME.S.slowT = 0; GAME.S.grace = 0; GAME.ZONE.length = 0; GAME.tick(1/30); return GAME.S.slowT >= 1.9; }));
 // 스테이지 2: 경계·나무 충돌
 await pg.evaluate(() => { GAME.META.bestStage = 2; GAME.META.stage = 2; document.getElementById('againBtn').click(); });
 await pg.waitForTimeout(100);
