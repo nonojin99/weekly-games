@@ -85,7 +85,7 @@
     "reg": true,
     "scan": [],
     "toast": "방울을 익혔다 — 덱에 넣어 두면 선택지에 나온다",
-    "ovCoins": "+5 · +0",
+    "ovCoins": "+4 · +0",
     "start": "밤으로 나서기"
    }
   ],
@@ -103,7 +103,7 @@
     "reg": true,
     "scan": [],
     "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
-    "ovCoins": "+4 · +0",
+    "ovCoins": "+5 · +0",
     "start": "밤으로 나서기"
    }
   ],
@@ -121,7 +121,7 @@
     "reg": true,
     "scan": [],
     "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
-    "ovCoins": "+4 · +0",
+    "ovCoins": "+5 · +0",
     "start": "밤으로 나서기"
    }
   ],
@@ -131,8 +131,8 @@
     "sh0": 10,
     "dis": false,
     "sh1": 0,
-    "out": "엽전표창 획득!투척 — 덱에 추가됨",
-    "deck": "talisman,sword,bell,coin",
+    "out": "종이 호랑이 획득!중립 — 덱에 추가됨",
+    "deck": "talisman,sword,bell,tiger",
     "wallet": " 13    0 (뽑기 0회)",
     "menuBtn": "사당 · 강화13 10"
    }
@@ -140,12 +140,12 @@
   [
    "deckEdit",
    {
-    "deck": "sword,bell,coin,talisman",
+    "deck": "sword,bell,tiger,talisman",
     "labels": [
      "부적투척 · 4번",
      "목검근접 · 1번",
-     "엽전표창투척 · 3번",
-     "방울오라 · 2번"
+     "방울오라 · 2번",
+     "종이 호랑이중립 · 3번"
     ]
    }
   ],
@@ -157,13 +157,13 @@
     ],
     "mode": "menu",
     "runs": 3,
-    "deck": "sword,bell,coin,talisman",
+    "deck": "sword,bell,tiger,talisman",
     "sh": true,
     "ch": true,
     "reg": true,
     "scan": [],
     "toast": "부적 조각 10개 — 사당에서 첫 뽑기를 해보자",
-    "ovCoins": "+4 · +0",
+    "ovCoins": "+5 · +0",
     "start": "밤으로 나서기"
    }
   ],
@@ -174,9 +174,9 @@
     "deck0": "sword",
     "metaDeck0": "sword",
     "names": [
-     "도롱이",
-     "부적 가방",
-     "녹두"
+     "녹두",
+     "산삼",
+     "종이 호랑이"
     ],
     "outside": [],
     "vis": [
@@ -199,7 +199,7 @@
     ],
     "mode": "over",
     "runs": 6,
-    "deck": "sword,bell,coin,talisman",
+    "deck": "sword,bell,tiger,talisman",
     "sh": true,
     "ch": true,
     "reg": true,
@@ -216,7 +216,7 @@
      "chal"
     ],
     "top": "이번 주 첫 도전자가 되어 보세요",
-    "desc": "2026w40 · 달빛 초원 · 고정 덱(부적·목검·방울·죽창·물구슬·낫"
+    "desc": "2026w41 · 달빛 초원 · 고정 덱(부적·목검·방울·죽창·물구슬·낫"
    }
   ],
   [
@@ -227,7 +227,7 @@
     ],
     "mode": "over",
     "runs": 6,
-    "deck": "sword,bell,coin,talisman",
+    "deck": "sword,bell,tiger,talisman",
     "sh": true,
     "ch": true,
     "reg": true,
@@ -253,7 +253,7 @@
    "again-after-chal",
    {
     "chal": false,
-    "deck": "sword,bell,coin,talisman",
+    "deck": "sword,bell,tiger,talisman",
     "diff": 1,
     "stage": 0
    }
@@ -266,7 +266,7 @@
     ],
     "mode": "menu",
     "runs": 7,
-    "deck": "sword,bell,coin,talisman",
+    "deck": "sword,bell,tiger,talisman",
     "sh": true,
     "ch": true,
     "reg": true,
@@ -340,50 +340,50 @@
   ],
   "ownedFinal": {
    "talisman": 10,
-   "bell": 10,
+   "brazier": 10,
+   "sword": 10,
    "orb": 10,
-   "shadowknife": 10,
-   "lantern": 10,
+   "moonarrow": 10,
+   "rockhammer": 10,
+   "spear": 10,
+   "torch": 10,
+   "tiger": 10,
+   "inkbrush": 10,
+   "sunblade": 10,
    "whip": 10,
    "sling": 10,
-   "beads": 10,
-   "torch": 10,
-   "thunderdrum": 10,
-   "sickle": 10,
-   "sandstorm": 10,
-   "rockhammer": 10,
-   "tiger": 10,
-   "spear": 10,
-   "sword": 10,
-   "sunblade": 10,
-   "moonarrow": 10,
-   "coin": 10,
    "boltspear": 10,
-   "veil": 10,
    "mist": 10,
-   "brazier": 10,
-   "inkbrush": 10,
+   "sandstorm": 10,
+   "boltcharm": 10,
+   "thunderdrum": 10,
    "moxa": 10,
-   "boltcharm": 10
+   "shadowknife": 10,
+   "bell": 10,
+   "veil": 10,
+   "lantern": 10,
+   "sickle": 10,
+   "beads": 10,
+   "coin": 10
   },
   "deckFinal": [
    "talisman",
-   "bell",
+   "brazier",
+   "sword",
    "orb",
-   "shadowknife",
-   "lantern",
-   "whip",
-   "sling",
-   "beads",
+   "moonarrow",
+   "rockhammer",
+   "spear",
    "torch",
-   "thunderdrum"
+   "tiger",
+   "inkbrush"
   ],
   "coins": 9675,
   "out": "×100 결과숙련 최대 → 엽전 +500",
   "over10": "new owned=15 shards=0 gridText=투척 · 숙련 15",
   "fullDeckNew": {
    "inDeck": false,
-   "text": "종이 호랑이 획득!중립 — 덱이 가득 차 보관함에"
+   "text": "칠흑 장막 획득!오라 — 덱이 가득 차 보관함에"
   },
   "scan": []
  },
@@ -407,9 +407,9 @@
   },
   "deckAfterEmptyRun": [],
   "dupCards": [
-   "부적 가방",
-   "도롱이",
-   "소금 주머니"
+   "산삼",
+   "짚신",
+   "도롱이"
   ],
   "dupSub": "출전 덱 3/10 — 런 ",
   "dupLabels": [
