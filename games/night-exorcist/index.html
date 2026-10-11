@@ -730,7 +730,7 @@ function showCards(ch) { const box = document.getElementById('lvCards'); box.inn
   for (const c of ch) { const b = document.createElement('button'); b.className = 'card'; b.innerHTML = `<canvas class="ic" width="88" height="88"></canvas><span><b>${c.d.name}</b><small>${c.lv ? c.d.up || c.d.desc : c.d.desc}</small></span><span class="lvl">${c.lv ? `Lv ${c.lv}→${c.lv + 1}` : '새로 익힘'}</span>`;
     if (c.kind === 'w' && (c.d.el || c.d.neutral)) b.querySelector('b').innerHTML += ` <small class="el-${c.d.el || 'none'}">${wTag(c.d)}</small>`;
     if (c.kind === 'w' && c.d.els) b.querySelector('b').innerHTML += ` <small>${c.d.els.map(e => elImg(e, 12)).join('')}${c.d.types.map(t => TYPE_NAME[t]).join('·')}</small>`;
-    if (c.kind === 'e') { b.classList.add('evo'); b.querySelector('b').innerHTML = `진화 — ${c.d.name}`; b.querySelector('.lvl').textContent = `${c.d.tier}단`; b.querySelector('small').textContent = `${c.consume.map(id => weaponOf(id).name).join(' + ')} → ${c.d.name} · ${c.d.desc}`; }
+    if (c.kind === 'e') { b.classList.add('evo'); b.querySelector('b').innerHTML = `진화 — ${c.d.name}`; b.querySelector('.lvl').textContent = `${c.d.tier}단`; b.querySelector('small').textContent = `${c.consume.map(id => weaponOf(id).name).join(' + ')} → ${c.d.name} · ${c.d.desc}` + (c.d.tier >= 3 ? ` · 영물 「${FAM_NAME[c.d.els[0]] || '정령'}」이 따라온다` : ' · 영력 구슬이 머리 위를 돈다'); }
     b.addEventListener('click', () => pick(c)); box.appendChild(b); drawIcon(b.querySelector('canvas'), c); }
   show('lv', true);
 }
@@ -789,6 +789,14 @@ function float(x, y, txt, col, sz = 14) { if (NET.host) NET.ev.push(['f', Math.r
 // ───────── 도트 스프라이트 (문자 격자 → 오프스크린 캔버스, 2x) ─────────
 const PAL = { u:'#5fc8ff', F:'#f2a65a', D:'#6a1a12', d:'#a8352a', O:'#ff8a6a', T:'#fff', g:'#114a2a', M:'#3fa06a', m:'#8ff0b0', K:'#1a1612', H:'#221c17', S:'#f0c9a0', W:'#f4efe2', w:'#c9c0a8', R:'#8a2a2a', B:'#2b2a3a', E:'#fbf8f2', e:'#c8c0b4', L:'#bfeeff', l:'#4fa8e8', N:'#1a1f44', G:'#b8dcc0', Y:'#f2d26a', C:'#5a6fc0', c:'#3a4f9a', r:'#c0362a', p:'#9a6ad8', P:'#5a3a8a', o:'#e07a2a', b:'#8a5a2a', q:'#4a2e18', k:'#e8e0c8', x:'#8a8a96', X:'#4a4a56', v:'#5ab84a', V:'#2a6a2a', i:'#ff9ad0', a:'#2a2a34', A:'#55556a', f:'#ffd04a', h:'#ff5a2a' };
 const GRIDS = {
+  fam_fire: [['..K.K.......','.KoKoK...KK.','.KoooK..KooK','.KTKoKKKKoTK','..KooooooooK','..KoooooooK.','...KoKKKoK..','...KK...KK..']],
+  fam_water: [['............','..KKKK......','.KuLuuK..K..','KuTuuuuK.KK.','KuuuuuuKKuK.','.KuluuuKKuK.','..KKKK...K..']],
+  fam_wood: [['..KK.KK.....','.KEiKEiK....','.KEEKEEK....','..KEEEEK.KK.','..KEKEEKKEEK','.KEEEEEEEEEK','.KEEEEEEEEK.','..KEKKKKEK..','..KK....KK..']],
+  fam_metal: [['..rK........','.KWKK.......','.KWK........','..KWKKKKKK..','..KWWWWWWaK.','..KWWWWWaaK.','...KWWWWaK..','....KKKKK...','.....K.K....','.....K.K....']],
+  fam_light: [['.KKK...KKK..','KYYYK.KYYYK.','KYTYYKYYTYK.','KYYYYaYYYYK.','.KYYYaYYYK..','.KfYYaYYfK..','..KffaffK...','...KK.KK....']],
+  fam_dark: [['...KKK......','..KBpBK.....','.KBBBBKK....','KxKBBBBBK...','..KBBBBBBK..','..KBpBBBBBK.','...KBBBBBK..','....KKKK....','.....K.K....']],
+  fam_earth: [['....KKKKK...','...KbqbqbK..','..KbqbqbqbK.','.KKbbbbbbbKK','KvvKqqqqqqKK','KvKKKKKKKKK.','.K.KvK.KvK..']],
+  fam_thunder: [['.....KKK....','....KbfbK...','....KbbbKK..','KKKKKbbbbfK.','KbbbbbbbbK..','.KbbbbbbbK..','..KKbbbbK...','....KKKK....','.....f.f....']],
   pet_tiger: [[
 '..............KK','.K...........KoK','KoK.KKKKKKK.KooK','.KoKoooooooKoooK','..KooKooKooooWoK','..KoooooooooKKoK','..KoKooKooKoooK.','..KoooooooooKK..','...KoooooooK....','...KoKKKKKoK....','...KoK...KoK....','...KKK...KKK....'],[
 '..............KK','..K..........KoK','.KoKKKKKKKK.KooK','..KoooooooooooK.','..KooKooKooooWoK','..KoooooooooKKoK','..KoKooKooKoooK.','..KoooooooooKK..','...KoooooooK....','...KKoKKKoKK....','..KoK.....KoK...','..KKK.....KKK...']],
@@ -1042,11 +1050,25 @@ function drawGround(st) {
   const night = Math.min(1, S.t / C.RUN); ctx.fillStyle = st.fog; ctx.fillRect(0, 0, W, H);
   const v = ctx.createRadialGradient(W / 2, H * .46, Math.min(W, H) * .25, W / 2, H * .46, Math.max(W, H) * .75); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, `rgba(0,0,0,${.55 + night * .3})`); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
 }
+const FAM_NAME = { fire:'불여우', water:'잉어', wood:'토끼', metal:'학', light:'나비', dark:'까마귀', earth:'거북', thunder:'매' };
+function evoLook(pl) { // 진화 무기 → 겉모습 재료. 2단: 구슬, 3단: 영물. 갓끈 = 가장 높은 단의 첫 속성
+  const orbs = [], fams = []; let top = null; for (const id in pl.w) { const e = EBY[id]; if (!e || !pl.w[id]) continue; const el = e.els[0] || 'none'; if (e.tier >= 3) fams.push({ id, el }); else orbs.push({ id, el }); if (!top || e.tier > top.tier) top = { tier:e.tier, el }; }
+  return { orbs, fams, top }; }
+function drawFamiliars(pl, t) { // 영물은 발자국을 따라온다 (플레이어 뒤 18px, 여러 마리면 14px 씩 더 뒤)
+  const look = evoLook(pl); if (!look.fams.length) { pl.fam = null; return; } if (!pl.fam) pl.fam = look.fams.map((f, k) => ({ x:pl.x - 20 - k * 14, y:pl.y }));
+  while (pl.fam.length < look.fams.length) pl.fam.push({ x:pl.x - 20, y:pl.y }); pl.fam.length = look.fams.length;
+  const n = look.fams.length, fa = Math.atan2(pl.dy || 0, pl.dx || 1); look.fams.forEach((f, k) => { const s = pl.fam[k], a = fa + Math.PI + (k - (n - 1) / 2) * .7, d = 24 + (k % 2) * 10, tx = pl.x + Math.cos(a) * d, ty = pl.y + Math.sin(a) * d * .6; s.x += (tx - s.x) * .12; s.y += (ty - s.y) * .12;
+    const fly = f.el === 'light' || f.el === 'dark' || f.el === 'thunder' || f.el === 'water', bob = fly ? Math.sin(t * 5 + k) * 3 - 10 : Math.abs(Math.sin(t * 7 + k)) * 1.5, X = sx(s.x), Y = sy(s.y);
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(X, Y + 2, 8, 3, 0, 0, 6.283); ctx.fill(); blit('fam_' + f.el, 0, X, Y - bob, (tx - s.x) < -1 || (pl.dx < 0 && Math.abs(tx - s.x) <= 1), false, 1); }); }
+function drawOrbs(x, y, t, look) { // 영력 구슬: 머리 위를 돈다
+  const n = look.orbs.length; if (!n) return; look.orbs.forEach((o, k) => { const a = t * 1.6 + k * 6.283 / n, ox = x + Math.cos(a) * 17, oy = y - 34 + Math.sin(a) * 6 + Math.sin(t * 3 + k) * 1.5, c = EL_COL[o.el] || '#fff'; ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(Math.round(ox) - 3, Math.round(oy) - 3, 6, 6); ctx.fillStyle = c; ctx.fillRect(Math.round(ox) - 2, Math.round(oy) - 2, 4, 4); ctx.fillStyle = '#fff'; ctx.fillRect(Math.round(ox) - 2, Math.round(oy) - 2, 2, 2); }); }
 function drawPlayer(x, y, t) {
-  const bob = P.moving ? Math.abs(Math.sin(P.walk)) * 1.5 : Math.sin(t * 2) * .6, frame = P.moving ? (Math.floor(P.walk / 1.6) % 2 ? 1 : 2) : 0, flip = P.dx < 0;
+  const bob = P.moving ? Math.abs(Math.sin(P.walk)) * 1.5 : Math.sin(t * 2) * .6, frame = P.moving ? (Math.floor(P.walk / 1.6) % 2 ? 1 : 2) : 0, flip = P.dx < 0, look = evoLook(P);
   ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(x, y + 13, 11, 4, 0, 0, 6.283); ctx.fill();
   if (S.hitT > 0) { ctx.save(); ctx.shadowColor = '#ff6a4a'; ctx.shadowBlur = 16; blit('hero', frame, x, y + 14 - bob, flip, Math.floor(S.hitT * 30) % 2 === 0); ctx.restore(); }
   else blit('hero', frame, x, y + 14 - bob, flip);
+  if (look.top) { const top = y + 14 - bob - 40; ctx.fillStyle = EL_COL[look.top.el] || '#fff'; ctx.fillRect(x - 4, top + 6, 8, 2); if (look.top.tier >= 3) { ctx.fillRect(x - 10, top + 8, 20, 1); } }   // 갓끈: 진화 속성색, 3단이면 챙까지
+  drawOrbs(x, y, t, look);
 }
 function drawEnemy(o, x, y, t) {
   const d = o.d, r = o.r, hit = o.hit > 0;
@@ -1156,6 +1178,7 @@ function draw() {
     if (Math.random() < .5) pfx(b.x - b.vx * .02, b.y - b.vy * .02, EL_FX[b.w.el] || 'fx_spark', { vy:0, life:.25, sc:.5 }); }
   ctx.imageSmoothingEnabled = true;
   if (S.grace > 0) { ctx.save(); ctx.globalAlpha = .35 + .3 * Math.sin(t * 25); ctx.strokeStyle = '#fff2b8'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(sx(P.x), sy(P.y), P.r + 10, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+  for (const pl of PL) drawFamiliars(pl, t);
   for (const pl of PL) { if (pl === P) continue; const x = sx(pl.x), y = sy(pl.y); if (x < -40 || x > W + 40 || y < -40 || y > H + 40) continue; asP(pl, () => { if (P.down) ctx.globalAlpha = .45; drawPlayer(x, y, t); ctx.globalAlpha = 1; }); ctx.font = '10px "Galmuri9", "Galmuri11", monospace'; ctx.textAlign = 'center'; ctx.fillStyle = '#f1ead8'; ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = 3; ctx.strokeText(pl.nick || '동료', x, y - 30); ctx.fillText(pl.nick || '동료', x, y - 30); if (pl.down) drawRevive(pl, x, y); }
   if (P.down) ctx.globalAlpha = .45; drawPlayer(sx(P.x), sy(P.y), t); ctx.globalAlpha = 1; if (P.down) drawRevive(P, sx(P.x), sy(P.y));
   if (PL.length > 1) for (const pl of PL) { if (pl === P) continue; const x = sx(pl.x), y = sy(pl.y); if (x >= 0 && x <= W && y >= 0 && y <= H) continue; const dx = pl.x - P.x, dy = pl.y - P.y, a = Math.atan2(dy, dx), cx = W / 2, cy = H / 2, m = Math.min(cx - 30, cy - 90) ; const ex = cx + Math.cos(a) * m, ey = cy + Math.sin(a) * m; ctx.save(); ctx.translate(ex, ey); ctx.rotate(a); ctx.fillStyle = pl.down ? '#ff6a5a' : '#fff2b8'; ctx.beginPath(); ctx.moveTo(10, 0); ctx.lineTo(-6, -7); ctx.lineTo(-3, 0); ctx.lineTo(-6, 7); ctx.closePath(); ctx.fill(); ctx.restore(); ctx.font = '10px "Galmuri9", "Galmuri11", monospace'; ctx.textAlign = 'center'; ctx.fillStyle = '#f1ead8'; ctx.fillText(`${pl.nick || '동료'} ${Math.round(Math.hypot(dx, dy) / 10) * 10}`, ex, ey + 18); }
@@ -1236,7 +1259,7 @@ function netRecv(m) { // 양쪽 공통 수신
 // 스냅샷: 호스트 → 게스트 20Hz (게스트 화면 근처만)
 function buildSnapshot() {
   const g = P2, R2 = (Math.hypot(W, H) * .8) ** 2, near = (x, y) => (x - g.x) ** 2 + (y - g.y) ** 2 < R2, r1 = v => Math.round(v);
-  const pl = PL.map(p => [r1(p.x), r1(p.y), r1(p.hp), r1(p.maxhp), +p.dx.toFixed(2), +p.dy.toFixed(2), p.moving ? 1 : 0, p.down ? 1 : 0, +p.revT.toFixed(1), (p.hitT > 0 ? 1 : 0) | (p.grace > 0 ? 2 : 0) | (p.burnT > 0 ? 4 : 0) | (p.slowT > 0 ? 8 : 0)]);
+  const pl = PL.map(p => [r1(p.x), r1(p.y), r1(p.hp), r1(p.maxhp), +p.dx.toFixed(2), +p.dy.toFixed(2), p.moving ? 1 : 0, p.down ? 1 : 0, +p.revT.toFixed(1), (p.hitT > 0 ? 1 : 0) | (p.grace > 0 ? 2 : 0) | (p.burnT > 0 ? 4 : 0) | (p.slowT > 0 ? 8 : 0), Object.keys(p.w).filter(id => EBY[id]).join(',')]);
   const e = []; for (const o of E) if (o.boss || near(o.x, o.y)) e.push([o.uid, EKEYS.indexOf(o.type), r1(o.x), r1(o.y), r1(o.hp / o.maxhp * 100), ELX.indexOf(o.el), (o.boss ? 1 : 0) | (o.elite ? 2 : 0) | (o.hit > 0 ? 4 : 0) | (o.stun > 0 ? 8 : 0) | (o.burn > 0 ? 16 : 0) | (o.slow > 0 ? 32 : 0) | (o.charging > 0 ? 64 : 0)]);
   const b = []; for (const x of B) if (near(x.x, x.y)) b.push([WIDX[x.w.id], r1(x.x), r1(x.y), +x.a.toFixed(2), r1(x.vx), r1(x.vy)]);
   const gm = []; for (const x of G) if (near(x.x, x.y)) gm.push([r1(x.x), r1(x.y), x.v]);
@@ -1246,7 +1269,7 @@ function buildSnapshot() {
 function applySnapshot(m) {
   NET.stat.snaps++; const st = m.st; S.t = st[0]; S.lvl = st[1]; S.xp = st[2]; S.need = st[3]; S.kills = st[4]; S.coins = st[5]; S.shrinkT = st[6];
   m.pl.forEach((a, i) => { const p = PL[i]; if (!p) return; if (p !== LP) { p.tx = a[0]; p.ty = a[1]; if (p.tx0 == null || Math.hypot(p.tx - p.x, p.ty - p.y) > 200) { p.x = p.tx; p.y = p.ty; } p.tx0 = 1; p.dx = a[4]; p.dy = a[5]; p.moving = !!a[6]; } else if (Math.hypot(a[0] - p.x, a[1] - p.y) > 120) { p.x = a[0]; p.y = a[1]; }
-    p.hp = a[2]; p.maxhp = a[3]; p.down = a[7]; p.revT = a[8]; const f = a[9]; p.hitT = f & 1 ? .2 : 0; p.grace = f & 2 ? 1 : 0; p.burnT = f & 4 ? 1 : 0; p.slowT = f & 8 ? 1 : 0; });
+    if (p !== LP) { const ev = a[10] ? a[10].split(',') : []; if (ev.join() !== Object.keys(p.w).join()) p.w = Object.fromEntries(ev.map(id => [id, 1])); } p.hp = a[2]; p.maxhp = a[3]; p.down = a[7]; p.revT = a[8]; const f = a[9]; p.hitT = f & 1 ? .2 : 0; p.grace = f & 2 ? 1 : 0; p.burnT = f & 4 ? 1 : 0; p.slowT = f & 8 ? 1 : 0; });
   const seen = new Set();
   for (const a of m.e) { seen.add(a[0]); let o = NET.uidMap.get(a[0]); const type = EKEYS[a[1]], d = ENEMY[type]; if (!d) continue;
     if (!o) { o = { uid:a[0], type, d, x:a[2], y:a[3], hp:100, maxhp:100, hit:0, hop:Math.random() * 6.28, ph:Math.random() * 6.28, slow:0, burn:0, stun:0, charging:0, kx:0, ky:0 }; NET.uidMap.set(a[0], o); E.push(o); }
@@ -1479,7 +1502,7 @@ function frame(ts) { let dt = (ts - last) / 1000 || 0; last = ts; if (dt > .1) d
   if (S.mode === 'play') { if (NET.guest) guestTick(dt); else tick(dt); } else if (S.mode === 'lv') lvTick(dt); else if (S.mode === 'chest' && !NET.guest) { CH.t += dt; if (CH.t >= 15) closeChest(); }
   if (NET.on) netFrame(dt); fx(dt); draw(); if (TEST) { frameMs.push(performance.now() - t0); if (frameMs.length > 600) frameMs.shift(); } requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-if (TEST) window.GAME = { S, get P() { return P; }, P1, P2, PL, get LP() { return LP; }, NET, netRecv, buildSnapshot, applySnapshot, asP, setLocal, netReset, coopHost, coopJoin, LV, CH, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, WCD, dropGem, gachaPool, BEATS, LOOPS, arenaR, STRIKES, ARC, DIFFS, diffUnlocked, bestOf, gachaN, curDiff, elIcon, statIcon, renderStages, PFX, pfx, TRAIN_MAX, TRAIN_MAX_HARD, trainMax, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate:m => pruneDeck(migrate(m)), isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
+if (TEST) window.GAME = { S, get P() { return P; }, P1, P2, PL, get LP() { return LP; }, NET, netRecv, buildSnapshot, applySnapshot, asP, setLocal, netReset, coopHost, coopJoin, LV, CH, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, WCD, dropGem, gachaPool, BEATS, LOOPS, arenaR, STRIKES, ARC, DIFFS, diffUnlocked, bestOf, gachaN, curDiff, elIcon, statIcon, renderStages, PFX, pfx, evoLook, FAM_NAME, TRAIN_MAX, TRAIN_MAX_HARD, trainMax, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate:m => pruneDeck(migrate(m)), isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
 </script>
 </body>
 </html>
