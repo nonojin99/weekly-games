@@ -88,6 +88,17 @@
   .stcard { flex:0 0 100%; scroll-snap-align:center; background:rgba(255,255,255,.4); border:1px solid rgba(28,26,23,.4); border-radius:3px; padding:0 0 10px; text-align:left; box-shadow:none; min-height:0; font-weight:400; position:relative; overflow:hidden; }
   .stcard canvas { width:100%; height:118px; display:block; border-bottom:1px solid rgba(28,26,23,.3); }
   .stcard .nm { font-family:'Song Myung', serif; font-size:18px; margin:8px 12px 2px; display:flex; align-items:center; gap:6px; }
+  #story { z-index:40; }
+  body.storyon::before { content:''; position:fixed; inset:0; background:rgba(8,8,14,.74); z-index:39; }
+  .storyb p { font-family:'Gowun Batang', serif; font-size:15.5px; line-height:1.75; margin:0 0 10px; color:var(--ink); }
+  .storyb b { color:var(--red); font-weight:700; }
+  .wicks { display:flex; align-items:center; justify-content:center; gap:5px; margin:6px 0 4px; font-size:11.5px; color:var(--ink2); }
+  .wicks i { width:9px; height:15px; border:1px solid rgba(28,26,23,.45); border-radius:5px 5px 2px 2px; background:rgba(28,26,23,.08); }
+  .wicks i.on { background:linear-gradient(#ffe39a, #e8a43a 60%, #b5392f); border-color:#b5392f; box-shadow:0 0 6px rgba(232,164,58,.8); }
+  .wicks .wk { margin:0 4px; }
+  .stcard .lore { font-size:12px; color:#7a4a2a; margin:5px 12px 0; font-family:'Gowun Batang', serif; display:flex; gap:6px; align-items:center; }
+  .stcard .lore i { flex:0 0 7px; height:11px; border-radius:4px 4px 1px 1px; border:1px solid rgba(28,26,23,.4); }
+  .stcard .lore i.wkon { background:linear-gradient(#ffe39a, #e8a43a 60%, #b5392f); border-color:#b5392f; }
   .stcard .ds { font-size:12.5px; color:var(--ink2); margin:0 12px; line-height:1.45; }
   .stcard .mt { font-size:12px; color:var(--ink2); margin:6px 12px 0; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   .stcard.locked canvas { filter:grayscale(.8) brightness(.6); }
@@ -111,6 +122,7 @@
 <div id="menu" class="panel show">
   <h1>밤의 퇴마사</h1>
   <p class="sub">움직이기만 하세요. 공격은 알아서 합니다. 동이 틀 때까지 10분.</p>
+  <p id="menuWicks" class="wicks hide"></p>
   <div id="diffs" class="row" style="margin:0 0 6px"></div>
   <div id="stages"></div>
   <div class="stnav"><button id="stPrev" class="ghost">‹ 이전 밤</button><div id="stDots" class="dots"></div><button id="stNext" class="ghost">다음 밤 ›</button></div>
@@ -144,6 +156,13 @@
   <p id="coopStatus" class="msg" style="text-align:center; min-height:1.4em"></p>
   <button id="coopGo" class="big hide">함께 출발</button>
   <button id="coopBack" class="ghost" style="width:100%; margin-top:8px">돌아가기</button>
+</div>
+
+<div id="story" class="panel">
+  <h1 id="stTitle" style="font-size:24px">봉인 등불</h1>
+  <div id="stBody" class="storyb"></div>
+  <p id="stWicks" class="wicks"></p>
+  <button id="stNext2" class="big">밤으로</button>
 </div>
 
 <div id="lv" class="panel">
@@ -208,14 +227,45 @@ const EL_COL = { fire:'#ff7a4a', water:'#5fc8ff', wood:'#7fe06a', metal:'#d8d8e8
 const power = r => 1 + C.META_G * (1 - Math.pow(C.META_D, r));
 
 // ───────── 메타 세이브 ─────────
-const META0 = { v:2, runs:0, coins:0, shards:0, train:{ atk:0, hp:0, regen:0, spd:0, pick:0 }, owned:{ talisman:0 }, deck:['talisman'], stage:1, diff:0, bestStage:0, bestN:0, bestH:0, codex:[], evo:[], best:{ time:0, kills:0 }, chalBest:0, trainV2:1, lastSeen:0 };
+// 스토리 (호원 승인 2026-10-20). 보스2가 심지 가닥을 물고 있다 → 동이 틀 때까지 버티면 되찾는다.
+const STORY = {
+  pro:['백 년에 한 번, 마을 사당의 <b>봉인 등불</b>이 꺼진다.', '불이 꺼진 그 밤, 요괴들이 심지를 여섯 가닥으로 찢어 저마다의 땅으로 물고 갔다.', '마지막 퇴마사여 — 동이 트기 전에 여섯 가닥을 되찾아 등불을 다시 밝혀라.'],
+  st:[
+    { wick:'달빛 심지', intro:['사당 앞 들판이 벌써 요괴로 하얗다. 첫 가닥을 문 이무기가 늪 쪽으로 기어가려 한다.', '동이 틀 때까지 붙잡아 두어라.'], clear:'이무기가 토해낸 첫 가닥 — 달빛 심지를 되찾았다.' },
+    { wick:'숲의 심지', intro:['심지 냄새가 숲으로 이어진다.', '백 년 전 이 숲을 지키던 백호마저 요괴가 되어 길을 막는다.'], clear:'대지네의 마디 속에서 숲의 심지를 꺼냈다.' },
+    { wick:'업화의 심지', intro:['옛 퇴마사들이 봉인에 실패하고 불타 버린 절터.', '그날의 불씨가 아직도 꺼지지 않았다.'], clear:'야차왕의 칼집에 감겨 있던 업화의 심지를 풀어냈다.' },
+    { wick:'안개의 심지', intro:['심지가 가까워질수록 안개가 조여 온다.', '요괴들이 눈치챘다 — 늪 전체가 너를 가두려 한다.'], clear:'안개 구렁이가 흩어지자, 늪 바닥에서 안개의 심지가 빛났다.' },
+    { wick:'돌의 심지', intro:['등불을 지키던 옛 결계가 바로 이 성벽이었다.', '무너진 결계가 돌이 되어 쏟아진다.'], clear:'뇌조가 떨군 깃털 사이에서 돌의 심지를 주웠다.' },
+    { wick:'벼락의 심지', intro:['심지는 본래 벼락에서 났다. 마지막 가닥은 하늘에 있다.', '뇌신과 화룡이 서로 차지하려 다툰다.'], clear:'화룡의 불꽃 속에서 벼락의 심지를 낚아챘다.' } ],
+  end:[
+    ['여섯 가닥을 꼬아 등불에 꽂자, 사당에 불이 들어왔다.', '요괴들이 안개처럼 흩어지고 — 백 년 만에 진짜 아침이 왔다.', '…그런데 등불 아래, 낯선 그림자 하나가 웃고 있었다.', '<b>「보통」 — 다음 백 년의 밤은 더 길다.</b>'],
+    ['두 번째로 등불이 켜졌다.', '그림자가 속삭였다. "세 번째 밤엔, 네 손의 불도 꺼질 거다."', '<b>「어려움」 해금</b>'],
+    ['세 번의 밤을 모두 넘겼다.', '그림자는 등불 속으로 사라지고, 불씨는 이제 네 손에 남았다.'] ] };
+const seenStory = (k, m = META) => (m.story || []).includes(k);
+function markStory(k) { if (!META.story) META.story = []; if (!META.story.includes(k)) { META.story.push(k); saveMeta(); } }
+const wicks = () => Math.min(nStages(), bestOf(0));
+// 이야기 패널: pages = [{ title, lines, keys }] 를 차례로, 끝나면 done()
+const STP = { pages:[], i:0, done:null };
+function showStory(pages, done) { STP.pages = pages; STP.i = 0; STP.done = done; storyPage(); show('story', true); document.body.classList.add('storyon'); }
+function storyPage() { const p = STP.pages[STP.i]; document.getElementById('stTitle').innerHTML = p.title; document.getElementById('stBody').innerHTML = p.lines.map(l => `<p>${l}</p>`).join('');
+  document.getElementById('stNext2').textContent = STP.i < STP.pages.length - 1 ? '다음' : (p.btn || '밤으로'); document.getElementById('stWicks').innerHTML = wickRow(); }
+function storyNext(remote) { const p = STP.pages[STP.i]; if (!p) return; (p.keys || []).forEach(markStory); STP.i++; if (STP.i < STP.pages.length && !remote) { storyPage(); return; }
+  for (let k = STP.i; k < STP.pages.length; k++) (STP.pages[k].keys || []).forEach(markStory); show('story', false); document.body.classList.remove('storyon'); const d = STP.done; STP.done = null; STP.pages = []; if (d) d(); }
+function wickRow() { const n = wicks(), N = nStages(); return `<span class="wk">봉인 등불 심지</span>${Array.from({ length:N }, (_, i) => `<i class="${i < n ? 'on' : ''}" title="${STORY.st[i] ? STORY.st[i].wick : ''}"></i>`).join('')}<span class="wk">${n}/${N}</span>`; }
+// 런 시작 전 이야기: 프롤로그(처음) + 그 밤의 인트로(처음). 코옵이면 둘 중 하나라도 안 봤으면
+const storyOn = () => !TEST || /story=1/.test(location.search);   // 테스트 모드에선 ?story=1 일 때만 (기존 테스트는 바로 플레이를 기대)
+function storyPagesFor(stage) { if (S.chal || !storyOn()) return []; const other = NET.host && P2.meta ? P2.meta : null, need = k => !seenStory(k) || (other && !seenStory(k, other)), out = [];
+  if (need('pro')) out.push({ title:'봉인 등불', lines:STORY.pro, keys:['pro'] });
+  const st = STORY.st[stage]; if (st && need('i' + stage)) out.push({ title:`${stage + 1}. ${STAGES[stage].name}`, lines:st.intro, keys:['i' + stage] });
+  return out; }
+const META0 = { v:2, runs:0, coins:0, shards:0, train:{ atk:0, hp:0, regen:0, spd:0, pick:0 }, owned:{ talisman:0 }, deck:['talisman'], stage:1, diff:0, bestStage:0, bestN:0, bestH:0, codex:[], evo:[], best:{ time:0, kills:0 }, chalBest:0, trainV2:1, story:[], lastSeen:0 };
 const TRAIN_MAX = 30, TRAIN_MAX_HARD = 50;   // 잘게 쪼갠 수련: 30단, 어려움 해금 시 50단 (호원: 어려움 전용 상한) — migrate 보다 앞에 둘 것(TDZ)
 function migrate(m) { if (!m) return JSON.parse(JSON.stringify(META0)); const base = JSON.parse(JSON.stringify(META0)); if (m.v === 1) { const w = m.weapons || []; m.owned = {}; if (w[0]) m.owned.talisman = 0; if (w[1]) m.owned.sword = 0; if (w[2]) m.owned.bell = 0; m.deck = Object.keys(m.owned); delete m.weapons; delete m.chars; m.v = 2; } const out = { ...base, ...m }; out.train = { ...base.train, ...(m.train || {}) }; if (!m.trainV2) { for (const k in out.train) out.train[k] = Math.min(TRAIN_MAX, out.train[k] * 5); out.trainV2 = 1; } return sanitizeMeta(out); }
 // 손상·조작된 세이브 방어: 숫자 범위·배열 모양만 맞춘다 (무기 id 검증은 WBY 정의 뒤 pruneDeck 에서)
 function sanitizeMeta(out) { const num = (v, lo, hi, d = 0) => { v = +v; return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v))) : d; }, arr = v => Array.isArray(v) ? v : [], obj = v => v && typeof v === 'object' && !Array.isArray(v) ? v : {};
   const nS = nStages(); out.runs = num(out.runs, 0, 1e9); out.coins = num(out.coins, 0, 1e9); out.shards = num(out.shards, 0, 1e9); out.stage = num(out.stage, 1, nS, 1); out.diff = num(out.diff, 0, 2); out.bestStage = num(out.bestStage, 0, nS); out.bestN = num(out.bestN, 0, nS); out.bestH = num(out.bestH, 0, nS); out.chalBest = num(out.chalBest, 0, 1e9); out.lastSeen = num(out.lastSeen, 0, 1e13);
   const tr = obj(out.train); out.train = {}; for (const k of ['atk', 'hp', 'regen', 'spd', 'pick']) out.train[k] = num(tr[k], 0, TRAIN_MAX_HARD); const ow = obj(out.owned); out.owned = {}; for (const k in ow) if (typeof k === 'string') out.owned[k] = num(ow[k], 0, 10);
-  out.deck = [...new Set(arr(out.deck).filter(x => typeof x === 'string'))].slice(0, 10); out.codex = arr(out.codex).filter(x => typeof x === 'string'); out.evo = arr(out.evo).filter(x => typeof x === 'string'); const b = obj(out.best); out.best = { time:num(b.time, 0, 1e6), kills:num(b.kills, 0, 1e9) };
+  out.deck = [...new Set(arr(out.deck).filter(x => typeof x === 'string'))].slice(0, 10); out.codex = arr(out.codex).filter(x => typeof x === 'string'); out.story = arr(out.story).filter(x => typeof x === 'string'); out.evo = arr(out.evo).filter(x => typeof x === 'string'); const b = obj(out.best); out.best = { time:num(b.time, 0, 1e6), kills:num(b.kills, 0, 1e9) };
   if (out.owned.talisman == null) out.owned.talisman = 0; if (!out.deck.length) out.deck = ['talisman']; return out; }
 let META; try { META = migrate(JSON.parse(store.get(SAVE_KEY) || 'null')); } catch (e) { console.warn('세이브 복구 실패, 초기화', e); META = migrate(null); }
 function saveMeta() { META.lastSeen = Date.now(); store.set(SAVE_KEY, JSON.stringify(META)); cloudSave(); }
@@ -1220,7 +1270,7 @@ const EKEYS = Object.keys(ENEMY), WIDX = Object.fromEntries(WEAPONS.map((w, i) =
 function netSend(chn, msg) { const c = NET.ch[chn] && NET.ch[chn].readyState === 'open' ? NET.ch[chn] : NET.ch.r; if (!c || c.readyState !== 'open') return false; const s = JSON.stringify(msg); NET.stat.tx += s.length; try { c.send(s); } catch (e) { return false; } return true; }
 function netSetup(pc) { NET.pc = pc; pc.onconnectionstatechange = () => { if (['failed', 'disconnected', 'closed'].includes(pc.connectionState) && NET.on) netDrop('연결이 끊겼다'); }; }
 function netBind(c) { NET.ch[c.label] = c; c.onmessage = e => { NET.stat.rx += e.data.length; let m; try { m = JSON.parse(e.data); } catch (x) { return; } netRecv(m); }; c.onopen = () => { if (c.label === 'r') netOpen(); }; }
-function netOpen() { NET.on = true; if (NET.guest) netSend('r', { t:'hello', nick:store.get('ne-nick') || '', train:META.train, owned:META.owned, deck:META.deck.filter(id => WBY[id]), evo:META.evo }); coopStatus(NET.host ? '연결됨 — 친구를 기다리는 중…' : '연결됨 — 호스트가 밤을 고르는 중…'); }
+function netOpen() { NET.on = true; if (NET.guest) netSend('r', { t:'hello', nick:store.get('ne-nick') || '', train:META.train, owned:META.owned, deck:META.deck.filter(id => WBY[id]), evo:META.evo, story:META.story || [] }); coopStatus(NET.host ? '연결됨 — 친구를 기다리는 중…' : '연결됨 — 호스트가 밤을 고르는 중…'); }
 async function gatherSdp(pc) { if (pc.iceGatheringState !== 'complete') await new Promise(res => { const to = setTimeout(res, 2500); pc.onicegatheringstatechange = () => { if (pc.iceGatheringState === 'complete') { clearTimeout(to); res(); } }; }); return JSON.stringify(pc.localDescription); }
 const roomUrl = code => `${SB_URL}/rest/v1/coop_rooms?code=eq.${encodeURIComponent(code)}&select=offer,answer`;
 async function coopHost() { // 방 만들기: offer 올리고 answer 폴링
@@ -1243,15 +1293,18 @@ function netLeave() { netSend('r', { t:'leave' }); netReset(); coopStatus(''); }
 function netDrop(msg) { netReset(); toast(msg); if (S.mode === 'play' || S.mode === 'lv' || S.mode === 'chest') { show('lv', false); show('chest', false); S.mode = 'menu'; show('menu', true); renderMenu(); } }
 function netRecv(m) { // 양쪽 공통 수신
   switch (m.t) {
-    case 'hello': if (!NET.host) return; NET.peer = m; P2.meta = { train:m.train || {}, owned:m.owned || {}, evo:m.evo || [] }; P2.nick = (m.nick || '').slice(0, 8); P2.deck = (m.deck || []).filter(id => WBY[id]); if (!P2.deck.length) P2.deck = ['talisman']; setLocal(P1); coopStatus(`${P2.nick || '친구'} 입장 — 밤을 고르고 출발`); document.getElementById('coopGo').classList.remove('hide'); break;
+    case 'hello': if (!NET.host) return; NET.peer = m; P2.meta = { train:m.train || {}, owned:m.owned || {}, evo:m.evo || [], story:m.story || [] }; P2.nick = (m.nick || '').slice(0, 8); P2.deck = (m.deck || []).filter(id => WBY[id]); if (!P2.deck.length) P2.deck = ['talisman']; setLocal(P1); coopStatus(`${P2.nick || '친구'} 입장 — 밤을 고르고 출발`); document.getElementById('coopGo').classList.remove('hide'); break;
     case 'start': if (!NET.guest) return; NET.startMsg = m; P1.deck = m.deck; show('coop', false); startGame(); break;
     case 'i': if (!NET.host) return; P2.x = m.x; P2.y = m.y; P2.dx = m.dx; P2.dy = m.dy; P2.moving = !!m.m; break;
     case 's': if (!NET.guest) return; applySnapshot(m); break;
     case 'lv': if (!NET.guest) return; { const ch = m.ch.map(c => ({ kind:c.kind, d:c.kind === 'p' ? PBY[c.id] : weaponOf(c.id), lv:c.lv, consume:c.consume })).filter(c => c.d); LV.chs[LP.id] = ch; S.mode = 'lv'; S.flash = 1; SND.levelup(); if (ch.length) showCards(ch); else toast('동료가 고르는 중…'); } break;
     case 'pick': if (!NET.host || S.mode !== 'lv' || LV.picked[P2.id]) return; { const ch = LV.chs[P2.id] || [], c = ch[m.i]; if (c) applyPick(P2, c); LV.picked[P2.id] = 1; lvCheck(); } break;
     case 'chest': if (!NET.guest) return; { const g = CHEST[m.g]; S.mode = 'chest'; const got = m.got.map(x => x.coin ? x : { w:weaponOf(x.id), from:x.from, to:x.to }); for (const x of got) if (x.w && m.who === LP.id) LP.w[x.w.id] = x.to; if (m.who === LP.id) showChest(g, m.from, got); else toast(`${P1.nick || '호스트'}가 ${g.g} 상자를 열었다 — 잠시 대기`); } break;
+    case 'story': if (!NET.guest) return; S.mode = 'story'; showStory(m.pages, null); break;
+    case 'stnext': if (!NET.host || !STP.pages.length) return; storyNext(); if (NET.host && STP.pages.length) netSend('r', { t:'stpage', i:STP.i }); break;
+    case 'stpage': if (!NET.guest || !STP.pages.length) return; while (STP.i < m.i && STP.pages.length) storyNext(); break;
     case 'chclose': if (!NET.host || S.mode !== 'chest') return; closeChest(); break;
-    case 'resume': if (!NET.guest) return; show('lv', false); show('chest', false); S.mode = 'play'; LP.grace = C.GRACE; break;
+    case 'resume': if (!NET.guest) return; show('lv', false); show('chest', false); if (STP.pages.length) storyNext(true); S.mode = 'play'; LP.grace = C.GRACE; break;
     case 'end': if (!NET.guest) return; S.t = m.st; S.kills = m.kills; S.lvl = m.lvl; S.coins = m.coins; S.shardsRun = m.shardsRun; S.mode = 'play'; endRun(m.cleared); break;
     case 'leave': netDrop('상대가 나갔다'); break;
   }
@@ -1299,6 +1352,7 @@ function netFrame(dt) { // 송신 주기
 // 로비 UI
 function coopStatus(s) { const el = document.getElementById('coopStatus'); if (el) el.textContent = s; }
 function openCoop(mode) { show('menu', false); show('coop', true); S.mode = 'coop'; document.getElementById('coopHostBox').classList.toggle('hide', mode === 'wait'); document.getElementById('coopJoinBox').classList.toggle('hide', mode === 'wait'); document.getElementById('coopGo').classList.toggle('hide', !(NET.host && NET.peer)); if (mode === 'wait') coopStatus('호스트가 다시 시작하면 따라갑니다…'); }
+document.getElementById('stNext2').addEventListener('click', () => { if (NET.guest && STP.pages.length) netSend('r', { t:'stnext' }); storyNext(); if (NET.host && STP.pages.length) netSend('r', { t:'stpage', i:STP.i }); });
 document.getElementById('coopBtn').addEventListener('click', () => { openCoop(); coopStatus('방을 만들거나 친구 코드로 입장'); document.getElementById('coopCode').textContent = '— — — —'; });
 document.getElementById('coopHostBtn').addEventListener('click', () => { coopStatus('방 만드는 중…'); coopHost(); });
 document.getElementById('coopJoinBtn').addEventListener('click', () => { const code = document.getElementById('coopIn').value.trim(); if (code.length !== 4) { coopStatus('4자리 코드'); return; } coopStatus('입장 중…'); coopJoin(code); });
@@ -1321,6 +1375,7 @@ function startGame() {
   S.spawnN = 0; S.need = needFor(1); PL.forEach((pl, i) => asP(pl, () => { const deck = pl === LP ? S.deck : (pl.deck || ['talisman']); P.x = i * 40; P.y = 0; P.dx = 0; P.dy = 1; P.w = { [deck[0]]:1 }; P.p = {}; P.used = new Set(); P.down = 0; P.revT = 0; P.hitT = P.burnT = P.slowT = P.grace = 0; S.maxhp = C.HP_PLAYER * mHp(); S.hp = S.maxhp; applyPassives(); })); cam.x = LP.x; cam.y = LP.y; rndState = S.chal ? S.chal.seed : 1;
   if (NET.host) netSend('r', { t:'start', stage:S.stage, diff:S.diff, deck:S.deck });
   JOY.on = false;
+  if (!NET.guest) { const pages = storyPagesFor(S.stage); if (pages.length) { S.mode = 'story'; if (NET.host) netSend('r', { t:'story', pages }); showStory(pages, () => { S.mode = 'play'; if (NET.host) netSend('r', { t:'resume' }); }); } }
 }
 function endRun(cleared) {
   if (S.mode !== 'play') return; S.mode = 'over'; S.cleared = cleared; if (cleared) SND.dawn(); else SND.death();
@@ -1337,7 +1392,7 @@ function endRun(cleared) {
   if (cleared && !S.chal && bestOf(S.diff) < S.stage + 1) { setBest(S.diff, S.stage + 1); toast(S.stage + 1 < nStages() ? `${STAGES[S.stage + 1].name} 해금!` : S.diff + 1 < DIFFS.length ? `모든 밤을 이겨냈다 — 「${DIFFS[S.diff + 1].name}」 난이도 해금!${S.diff === 0 ? ' · 뽑기 ×100 해금' : ''}` : '모든 밤, 모든 난이도를 이겨냈다'); } renderStages();
   saveMeta();
   document.getElementById('ovTitle').textContent = cleared ? '동이 텄다' : '쓰러졌다';
-  document.getElementById('ovSub').textContent = cleared ? `${STAGES[S.stage].name}의 밤을 이겨냈다` : S.t >= C.BOSS2_AT ? `${ENEMY[STAGES[S.stage].bosses[1]].name} 앞에서…` : S.t >= C.BOSS1_AT ? `${ENEMY[STAGES[S.stage].bosses[0]].name}에게…` : '요괴 떼에 둘러싸였다';
+  document.getElementById('ovSub').innerHTML = cleared && firstClear && S.diff === 0 && STORY.st[S.stage] ? `${STORY.st[S.stage].clear} <small>(심지 ${wicks()}/${nStages()})</small>` : cleared ? `${STAGES[S.stage].name}의 밤을 이겨냈다` : S.t >= C.BOSS2_AT ? `${ENEMY[STAGES[S.stage].bosses[1]].name} 앞에서…` : S.t >= C.BOSS1_AT ? `${ENEMY[STAGES[S.stage].bosses[0]].name}에게…` : '요괴 떼에 둘러싸였다';
   const m = Math.floor(S.t / 60), s = Math.floor(S.t % 60); document.getElementById('ovTime').textContent = `${m}:${String(s).padStart(2, '0')}`;
   document.getElementById('ovKills').textContent = S.kills; document.getElementById('ovLvl').textContent = S.lvl; document.getElementById('ovCoins').innerHTML = S.chal ? '챌린지는 보상 없음' : `${statImg('coin', 14)}+${coins} · ${statImg('shard', 14)}+${shards}${cleared ? ` <small>(뽑기 ${Math.floor(shards / GACHA_COST)}회분${firstClear ? ' · 첫 클리어 2배' : ''})</small>` : ''}`;
   if (unlockMsg) setTimeout(() => toast(unlockMsg), 900); renderMenu();
@@ -1345,6 +1400,7 @@ function endRun(cleared) {
   document.getElementById('regBox').classList.toggle('hide', !!store.get('ne-pinhash') || META.runs < 1);
   if (store.get('ne-nick')) document.getElementById('nick').value = store.get('ne-nick');
   setTimeout(() => show('over', true), cleared ? 900 : 700);
+  if (storyOn() && cleared && firstClear && S.stage === nStages() - 1 && STORY.end[S.diff] && !seenStory('e' + S.diff)) setTimeout(() => showStory([{ title:S.diff ? `${DIFFS[S.diff].name} — 등불` : '동이 텄다', lines:STORY.end[S.diff], keys:['e' + S.diff], btn:'닫기' }], null), 1600);
 }
 document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('againBtn').addEventListener('click', () => { S.chal = null; if (NET.guest) { show('over', false); openCoop('wait'); return; } startGame(); });
@@ -1373,10 +1429,11 @@ function renderStages() { const box = document.getElementById('stages'); box.inn
   const live = STAGES_LIVE, cur = Math.max(0, Math.min(live.length - 1, (META.stage || 1) - 1));
   live.forEach((st, i) => { const locked = i > bestOf(META.diff || 0), cleared = !locked && bestOf(META.diff || 0) >= i + 1; const c = document.createElement('div'); c.className = 'stcard' + (locked ? ' locked' : ''); c.dataset.i = i;
     const hz = st.shrink ? '안개가 조여옴' : st.strike ? (st.strike.kind === 'rock' ? '낙석' : '낙뢰') : st.obst && st.obst.tree ? '나무 장애물' : st.obst && st.obst.fire ? '벽·불구덩이' : '트인 들판';
-    c.innerHTML += `<div class="nm">${locked ? '<span class="seal">봉인</span>' : ''}${i + 1}. ${st.name}${cleared ? '<span class="chop" title="클리어"></span>' : ''}</div><div class="ds">${locked ? `${live[i - 1].name}을(를) 먼저 이겨내야 한다` : st.desc}</div>
+    c.innerHTML += `<div class="nm">${locked ? '<span class="seal">봉인</span>' : ''}${i + 1}. ${st.name}${cleared ? '<span class="chop" title="클리어"></span>' : ''}</div><div class="ds">${locked ? `${live[i - 1].name}을(를) 먼저 이겨내야 한다` : st.desc}</div>${!locked && STORY.st[i] && seenStory('i' + i) ? `<div class="lore">${bestOf(0) > i ? `<i class="wkon"></i>${STORY.st[i].wick} 회수` : `<i class="wkoff"></i>${STORY.st[i].intro[0]}`}</div>` : ''}
       <div class="mt"><span>${st.els.map(e => elImg(e, 15)).join('')}</span><span>×${st.mul}</span><span>${hz}</span></div>
       <div class="mt"><span>보스 ${st.bosses.map(id => `${elImg(ENEMY[id].el, 13)}${ENEMY[id].name}`).join(' · ')}</span></div>`;
     const cv2 = document.createElement('canvas'); c.insertBefore(cv2, c.firstChild); drawStageThumb(cv2, st, i); box.appendChild(c); });
+  const wr = document.getElementById('menuWicks'); if (wr) { wr.innerHTML = wickRow(); wr.classList.toggle('hide', !seenStory('pro')); }
   const dots = document.getElementById('stDots'); dots.innerHTML = live.map((_, i) => `<i class="${i === cur ? 'on' : ''}"></i>`).join('');
   const startBtn = document.getElementById('startBtn'), lockedCur = cur > bestOf(META.diff || 0); startBtn.disabled = lockedCur; startBtn.textContent = lockedCur ? '봉인된 밤' : '밤으로 나서기';
   STG.prog = performance.now(); requestAnimationFrame(() => { STG.prog = performance.now(); box.scrollTo({ left: cur * (box.firstChild ? box.firstChild.offsetWidth + 10 : 0), behavior: STG.first ? 'auto' : 'smooth' }); STG.first = false; }); }
@@ -1502,7 +1559,7 @@ function frame(ts) { let dt = (ts - last) / 1000 || 0; last = ts; if (dt > .1) d
   if (S.mode === 'play') { if (NET.guest) guestTick(dt); else tick(dt); } else if (S.mode === 'lv') lvTick(dt); else if (S.mode === 'chest' && !NET.guest) { CH.t += dt; if (CH.t >= 15) closeChest(); }
   if (NET.on) netFrame(dt); fx(dt); draw(); if (TEST) { frameMs.push(performance.now() - t0); if (frameMs.length > 600) frameMs.shift(); } requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
-if (TEST) window.GAME = { S, get P() { return P; }, P1, P2, PL, get LP() { return LP; }, NET, netRecv, buildSnapshot, applySnapshot, asP, setLocal, netReset, coopHost, coopJoin, LV, CH, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, WCD, dropGem, gachaPool, BEATS, LOOPS, arenaR, STRIKES, ARC, DIFFS, diffUnlocked, bestOf, gachaN, curDiff, elIcon, statIcon, renderStages, PFX, pfx, evoLook, FAM_NAME, TRAIN_MAX, TRAIN_MAX_HARD, trainMax, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate:m => pruneDeck(migrate(m)), isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
+if (TEST) window.GAME = { S, get P() { return P; }, P1, P2, PL, get LP() { return LP; }, NET, netRecv, buildSnapshot, applySnapshot, asP, setLocal, netReset, coopHost, coopJoin, LV, CH, E, B, G, EB, ZONE, CHESTS, META, WBY, ENEMY, GRIDS, EVOS, EBY, evoOptions, weaponOf, dmgOf, WCD, dropGem, gachaPool, BEATS, LOOPS, arenaR, STRIKES, ARC, DIFFS, diffUnlocked, bestOf, gachaN, curDiff, elIcon, statIcon, renderStages, PFX, pfx, STORY, showStory, storyNext, STP, wicks, seenStory, evoLook, FAM_NAME, TRAIN_MAX, TRAIN_MAX_HARD, trainMax, affinity, gacha, openShrine, renderShrine, openChal, CHAL_DECK, TRAIN, trainCost, hitWith, migrate:m => pruneDeck(migrate(m)), isoWeek, hashStr, openChest, bossPattern, nearObst, ELITE_AT, C, STAGES, WEAPONS, PASSIVES, tick, startGame, endRun, spawn, kill, levelUp, pick, choices, inputVec, KEY, JOY, frameMs: () => frameMs, enemyHp, hurtEnemy };
 </script>
 </body>
 </html>
